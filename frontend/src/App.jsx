@@ -1,18 +1,9 @@
-
-
-
-
-
-
+import Home from "./pages/Home";
 
 function App() {
-  return (
-    <div className="bg-black text-white min-h-screen flex items-center justify-center">
-      <h1 className="text-5xl font-bold">
-        Brand_Shoe
-      </h1>
-    </div>
-  )
+
+  return <Home />;
+
 }
 
-export default App
+export default App;

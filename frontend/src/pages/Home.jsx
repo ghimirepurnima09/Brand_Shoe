@@ -1,21 +1,28 @@
-import { useEffect } from "react";
-import axios from "axios";
+import Navbar from "./Navbar";
+import Hero from "./Hero";
+import Trending from "./Trending";
+import Collections from "./Collections";
+import Guarantee from "./Guarantee";
+import Footer from "./Footer";
 
 export default function Home() {
 
-  useEffect(() => {
-    axios.get("http://localhost:5000")
-      .then((res) => {
-        console.log(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
-
   return (
-    <div className="text-4xl">
-      Brand Shoe
+    <div className="bg-white">
+
+      <Navbar />
+
+      <Hero />
+
+      <Trending />
+
+      <Collections />
+
+      <Guarantee />
+
+      <Footer />
+
     </div>
   );
+
 }
