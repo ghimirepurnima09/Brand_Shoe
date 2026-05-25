@@ -8,7 +8,8 @@ import Footer from "./Footer";
 export default function Home() {
 
   return (
-    <div className="bg-white">
+
+    <div className="bg-white overflow-hidden">
 
       <Navbar />
 
@@ -23,6 +24,7 @@ export default function Home() {
       <Footer />
 
     </div>
+
   );
 
 }

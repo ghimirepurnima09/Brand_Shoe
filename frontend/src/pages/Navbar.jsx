@@ -1,62 +1,74 @@
-import { Search, ShoppingCart, User } from "lucide-react";
+import { Search, ShoppingBag, User } from "lucide-react";
 
 export default function Navbar() {
 
   return (
 
-    <nav className="bg-white flex items-center justify-between px-10 py-5">
+    <nav className="bg-white border-b border-gray-200">
 
-      <h1 className="text-2xl font-bold">
-        Brand_Shoe
-      </h1>
+      <div className="max-w-[1280px] mx-auto h-[82px] px-10 flex items-center justify-between">
 
-      <ul className="flex gap-8 text-sm font-medium">
+        {/* LOGO */}
 
-        <li className="cursor-pointer hover:text-gray-500">
-          Collections
-        </li>
+        <h1 className="text-[32px] font-black tracking-[-2px]">
 
-        <li className="cursor-pointer hover:text-gray-500">
-          Womens
-        </li>
+          Brand_Shoe
 
-        <li className="cursor-pointer hover:text-gray-500">
-          Kids
-        </li>
+        </h1>
 
-        <li className="cursor-pointer hover:text-gray-500">
-          Mens
-        </li>
+        {/* MENU */}
 
-        <li className="cursor-pointer hover:text-gray-500">
-          New Arrival
-        </li>
+        <ul className="flex gap-12 text-[15px] font-medium">
 
-      </ul>
+          <li className="cursor-pointer hover:text-gray-500 transition">
+            Home
+          </li>
 
-      <div className="flex items-center gap-5">
+          <li className="cursor-pointer hover:text-gray-500 transition">
+            Womens
+          </li>
 
-        <div className="flex items-center bg-gray-100 px-4 py-2 rounded-full">
+          <li className="cursor-pointer hover:text-gray-500 transition">
+            Kids
+          </li>
 
-          <Search size={16} />
+          <li className="cursor-pointer hover:text-gray-500 transition">
+            Male
+          </li>
 
-          <input
-            type="text"
-            placeholder="Search the collection..."
-            className="bg-transparent outline-none ml-2 text-sm"
+          <li className="cursor-pointer hover:text-gray-500 transition">
+            New Arrival
+          </li>
+
+        </ul>
+
+        {/* RIGHT */}
+
+        <div className="flex items-center gap-5">
+
+          <div className="bg-[#f5f5f5] w-[260px] h-[42px] rounded-full flex items-center px-5">
+
+            <Search size={18} className="text-gray-500" />
+
+            <input
+              type="text"
+              placeholder="Search the collection..."
+              className="bg-transparent outline-none ml-3 text-[14px] w-full"
+            />
+
+          </div>
+
+          <ShoppingBag
+            size={20}
+            className="cursor-pointer"
+          />
+
+          <User
+            size={20}
+            className="cursor-pointer"
           />
 
         </div>
-
-        <ShoppingCart
-          size={18}
-          className="cursor-pointer"
-        />
-
-        <User
-          size={18}
-          className="cursor-pointer"
-        />
 
       </div>
 
