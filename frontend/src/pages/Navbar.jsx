@@ -1,42 +1,64 @@
-import { Search, ShoppingBag, User } from "lucide-react";
+import logo from "../assets/logo.png";
+
+import {
+  Search,
+  ShoppingBag,
+  User
+} from "lucide-react";
 
 export default function Navbar() {
 
   return (
 
-    <nav className="bg-white border-b border-gray-200">
+    <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-gray-200">
 
-      <div className="max-w-[1280px] mx-auto h-[82px] px-10 flex items-center justify-between">
+      <div className="max-w-[1180px] mx-auto h-[78px] px-6 flex items-center justify-between">
 
-        {/* LOGO */}
+        {/* LEFT */}
 
-        <h1 className="text-[32px] font-black tracking-[-2px]">
+        <div className="flex items-center gap-4">
 
-          Brand_Shoe
+          {/* LOGO */}
 
-        </h1>
+          <div className="flex items-center gap-3">
 
-        {/* MENU */}
+            <img
+              src={logo}
+              alt=""
+              className="w-[48px] h-[48px] rounded-full object-cover border border-gray-200 shadow-md"
+            />
 
-        <ul className="flex gap-12 text-[15px] font-medium">
+            <h1 className="text-[28px] font-black tracking-[-2px]">
 
-          <li className="cursor-pointer hover:text-gray-500 transition">
+              Brand_Shoe
+
+            </h1>
+
+          </div>
+
+        </div>
+
+        {/* CENTER MENU */}
+
+        <ul className="hidden md:flex items-center gap-10 text-[14px] font-medium">
+
+          <li className="hover:text-red-600 transition cursor-pointer">
             Home
           </li>
 
-          <li className="cursor-pointer hover:text-gray-500 transition">
+          <li className="hover:text-red-600 transition cursor-pointer">
             Womens
           </li>
 
-          <li className="cursor-pointer hover:text-gray-500 transition">
+          <li className="hover:text-red-600 transition cursor-pointer">
             Kids
           </li>
 
-          <li className="cursor-pointer hover:text-gray-500 transition">
-            Male
+          <li className="hover:text-red-600 transition cursor-pointer">
+            Men
           </li>
 
-          <li className="cursor-pointer hover:text-gray-500 transition">
+          <li className="hover:text-red-600 transition cursor-pointer">
             New Arrival
           </li>
 
@@ -46,27 +68,35 @@ export default function Navbar() {
 
         <div className="flex items-center gap-5">
 
-          <div className="bg-[#f5f5f5] w-[260px] h-[42px] rounded-full flex items-center px-5">
+          {/* SEARCH */}
 
-            <Search size={18} className="text-gray-500" />
+          <div className="hidden md:flex items-center bg-[#f5f5f5] rounded-full px-4 h-[40px] w-[230px]">
+
+            <Search size={16} className="text-gray-500" />
 
             <input
               type="text"
-              placeholder="Search the collection..."
-              className="bg-transparent outline-none ml-3 text-[14px] w-full"
+              placeholder="Search..."
+              className="bg-transparent outline-none text-[13px] ml-3 w-full"
             />
 
           </div>
 
-          <ShoppingBag
-            size={20}
-            className="cursor-pointer"
-          />
+          {/* CART */}
 
-          <User
-            size={20}
-            className="cursor-pointer"
-          />
+          <div className="w-[40px] h-[40px] rounded-full bg-[#f5f5f5] flex items-center justify-center hover:bg-black hover:text-white transition cursor-pointer">
+
+            <ShoppingBag size={18} />
+
+          </div>
+
+          {/* PROFILE */}
+
+          <div className="w-[40px] h-[40px] rounded-full bg-[#f5f5f5] flex items-center justify-center hover:bg-black hover:text-white transition cursor-pointer">
+
+            <User size={18} />
+
+          </div>
 
         </div>
 

@@ -1,8 +1,15 @@
-import Shoe1 from "../assets/Shoe1.png";
 import Shoe2 from "../assets/Shoe2.png";
 import Shoe3 from "../assets/Shoe3.png";
 import Shoe4 from "../assets/Shoe4.png";
-import { Heart } from "lucide-react";
+import Shoe5 from "../assets/Shoe5.png";
+
+import {
+  Heart
+} from "lucide-react";
+
+import {
+  Link
+} from "react-router-dom";
 
 export default function Trending() {
 
@@ -10,19 +17,21 @@ export default function Trending() {
 
     {
       id: 1,
-      image: Shoe1,
-      tag: "AUTHENTIC SHIELD",
-      name: "RETRO VOLT HIGH",
-      category: "Technical Collection",
+      image: Shoe2,
+      badge: "AUTHENTIC SHIELD",
+      badgeColor: "white",
+      name: "Retro Volt High",
+      category: "Luxury Streetwear",
       price: "$240",
       status: "SOLD OUT"
     },
 
     {
       id: 2,
-      image: Shoe2,
-      tag: "NEW RELEASE",
-      name: "CARBON RACER X",
+      image: Shoe3,
+      badge: "NEW RELEASE",
+      badgeColor: "red",
+      name: "Carbon Racer",
       category: "Performance Elite",
       price: "$310",
       status: "LOW STOCK"
@@ -30,138 +39,158 @@ export default function Trending() {
 
     {
       id: 3,
-      image: Shoe3,
-      tag: "",
-      name: "IGNITE RED 01",
-      category: "Exclusives",
+      image: Shoe4,
+      badge: "",
+      badgeColor: "",
+      name: "Ignite Red",
+      category: "Premium Collection",
       price: "$185",
-      status: ""
+      status: "AVAILABLE"
     },
 
     {
       id: 4,
-      image: Shoe4,
-      tag: "",
-      name: "URBAN GREY SUEDE",
-      category: "Street Culture",
-      price: "$155",
-      status: "7 RECENTLY VIEWED"
+      image: Shoe5,
+      badge: "",
+      badgeColor: "",
+      name: "Urban Beige",
+      category: "Lifestyle Series",
+      price: "$210",
+      status: "NEW DROP"
     }
 
   ];
 
   return (
 
-    <section className="bg-[#f3f3f3] py-20">
+    <section className="bg-white py-20">
 
-      <div className="max-w-[1450px] mx-auto px-12">
+      <div className="max-w-[1180px] mx-auto px-6">
 
         {/* TOP */}
 
-        <div className="flex justify-between items-end mb-14">
+        <div className="flex items-end justify-between mb-12">
 
           <div>
 
-            <h1 className="text-[58px] font-black tracking-[-2px]">
+            <h1 className="text-[44px] font-black tracking-[-2px]">
 
-              TRENDING DROPS
+              TRENDING
 
             </h1>
 
-            <p className="text-gray-500 mt-2 text-[15px]">
+            <p className="text-gray-500 mt-2 text-[14px]">
 
-              The latest heat, verified by experts.
+              Curated premium sneaker releases.
 
             </p>
 
           </div>
 
-          <button className="border-b border-black text-[14px] pb-1 hover:opacity-70 transition">
+          <Link
+            to="/login"
+            className="text-[13px] border-b border-black pb-1 hover:text-red-600 hover:border-red-600 transition"
+          >
 
             View All Collections
 
-          </button>
+          </Link>
 
         </div>
 
-        {/* PRODUCTS */}
+        {/* GRID */}
 
-        <div className="grid grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
 
           {products.map((product) => (
 
-            <div key={product.id}>
+            <Link
+              to="/login"
+              key={product.id}
+              className="bg-[#f7f7f7] rounded-[26px] overflow-hidden hover:translate-y-[-8px] transition-all duration-300 hover:shadow-[0_20px_40px_rgba(0,0,0,0.08)]"
+            >
 
               {/* IMAGE */}
 
-              <div className="relative bg-[#ececec] h-[320px] flex items-center justify-center overflow-hidden">
+              <div className="relative h-[260px] flex items-center justify-center overflow-hidden">
 
-                {product.tag && (
+                {product.badge && (
 
-                  <span className="absolute top-4 left-4 bg-white text-[10px] px-3 py-1 tracking-[1px] font-bold">
+                  <span
+                    className={`absolute top-4 left-4 text-[10px] tracking-[1px] font-bold px-3 py-2 rounded-full ${
+                      product.badgeColor === "red"
+                        ? "bg-red-600 text-white"
+                        : "bg-white text-black"
+                    }`}
+                  >
 
-                    {product.tag}
+                    {product.badge}
 
                   </span>
 
                 )}
 
+                {/* HEART */}
+
+                <button className="absolute top-4 right-4 bg-white w-[34px] h-[34px] rounded-full flex items-center justify-center shadow-md hover:bg-red-600 hover:text-white transition">
+
+                  <Heart size={16} />
+
+                </button>
+
                 <img
                   src={product.image}
                   alt=""
-                  className="w-[250px] object-contain"
+                  className="w-[230px] hover:scale-110 transition duration-500"
                 />
 
               </div>
 
               {/* CONTENT */}
 
-              <div className="mt-5">
+              <div className="p-6">
 
-                <h2 className="text-[22px] font-semibold tracking-[-1px]">
+                <h2 className="text-[22px] font-bold tracking-[-1px]">
 
                   {product.name}
 
                 </h2>
 
-                <p className="text-gray-500 text-[14px] mt-1">
+                <p className="text-gray-500 text-[13px] mt-2">
 
                   {product.category}
 
                 </p>
 
-                <div className="flex justify-between items-center mt-4">
+                <div className="flex justify-between items-end mt-6">
 
                   <div>
 
-                    <h3 className="text-[24px] font-semibold">
+                    <h3 className="text-[24px] font-black">
 
                       {product.price}
 
                     </h3>
 
-                    {product.status && (
+                    <p className="text-[10px] tracking-[1px] text-red-600 mt-1">
 
-                      <p className="text-[10px] text-red-600 tracking-[1px] mt-1">
+                      {product.status}
 
-                        {product.status}
-
-                      </p>
-
-                    )}
+                    </p>
 
                   </div>
 
-                  <Heart
-                    size={16}
-                    className="text-gray-500 cursor-pointer"
-                  />
+                  <button className="bg-black text-white text-[11px] px-5 py-3 rounded-full hover:bg-red-600 transition">
+
+                    BUY
+
+                  </button>
 
                 </div>
 
               </div>
 
-            </div>
+            </Link>
 
           ))}
 
