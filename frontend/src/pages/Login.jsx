@@ -7,6 +7,8 @@ import {
   Lock
 } from "lucide-react";
 
+import { Link } from "react-router-dom";
+
 import Shoe6 from "../assets/Shoe6.png";
 import logo from "../assets/logo.png";
 
@@ -18,7 +20,7 @@ export default function Login() {
 
     <section className="min-h-screen bg-[#ececec] flex overflow-hidden">
 
-      {/* LEFT SIDE */}
+      {/* LEFT */}
 
       <div className="hidden lg:flex flex-1 bg-black relative items-center justify-center overflow-hidden">
 
@@ -54,23 +56,13 @@ export default function Login() {
 
         <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/30"></div>
 
-        {/* COPYRIGHT */}
-
-        <p className="absolute bottom-5 left-6 text-gray-500 text-[10px] tracking-[1px] z-20">
-
-          © 2026 BRAND_SHOE.
-
-        </p>
-
       </div>
 
-      {/* RIGHT SIDE */}
+      {/* RIGHT */}
 
       <div className="flex-1 bg-[#ececec] flex items-center justify-center px-5">
 
         <div className="w-full max-w-[360px]">
-
-          {/* TITLE */}
 
           <h1 className="text-[40px] leading-[42px] font-black tracking-[-2px] text-black">
 
@@ -178,67 +170,22 @@ export default function Login() {
 
             </button>
 
-            {/* DIVIDER */}
-
-            <div className="flex items-center gap-3 my-8">
-
-              <div className="flex-1 h-[1px] bg-gray-300"></div>
-
-              <p className="text-gray-500 tracking-[1px] text-[10px] font-semibold">
-
-                OR CONTINUE WITH
-
-              </p>
-
-              <div className="flex-1 h-[1px] bg-gray-300"></div>
-
-            </div>
-
-            {/* GOOGLE */}
-
-            <button className="w-full h-[54px] border border-gray-300 rounded-[10px] bg-white hover:bg-black hover:text-white transition duration-300 flex items-center justify-center gap-3 text-[14px] font-semibold shadow-sm">
-
-              <img
-                src="https://cdn-icons-png.flaticon.com/512/2991/2991148.png"
-                alt=""
-                className="w-[18px]"
-              />
-
-              GOOGLE
-
-            </button>
-
             {/* REGISTER */}
 
             <p className="text-center text-gray-500 text-[13px] mt-10">
 
               Don’t have Account?
 
-              <span className="text-black font-semibold cursor-pointer ml-2 hover:text-[#c8161d] transition">
+              <Link
+                to="/register"
+                className="text-black font-semibold ml-2 hover:text-[#c8161d] transition"
+              >
 
                 Register
 
-              </span>
+              </Link>
 
             </p>
-
-          </div>
-
-          {/* FOOTER */}
-
-          <div className="flex justify-end gap-6 mt-14 text-gray-400 text-[10px] tracking-[1px]">
-
-            <button className="hover:text-black transition">
-
-              AUTHENTICITY
-
-            </button>
-
-            <button className="hover:text-black transition">
-
-              PRIVACY
-
-            </button>
 
           </div>
 
