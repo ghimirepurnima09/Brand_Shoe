@@ -1,104 +1,100 @@
-import logo from "../assets/logo.png";
+import { Search } from "lucide-react";
 
-import {
-  Search,
-  ShoppingBag,
-  User
-} from "lucide-react";
+import { Link } from "react-router-dom";
+
+import logo from "../assets/logo.png";
 
 export default function Navbar() {
 
   return (
 
-    <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-gray-200">
+    <nav className="w-full h-[84px] bg-white border-b border-gray-200 flex items-center justify-between px-6 lg:px-14 sticky top-0 z-50">
 
-      <div className="max-w-[1180px] mx-auto h-[78px] px-6 flex items-center justify-between">
+      {/* LEFT */}
 
-        {/* LEFT */}
+      <div className="flex items-center gap-3">
 
-        <div className="flex items-center gap-4">
+        <img
+          src={logo}
+          alt=""
+          className="w-[48px] h-[48px] rounded-full object-cover shadow-md"
+        />
 
-          {/* LOGO */}
+        <h1 className="text-[28px] font-black tracking-[-2px] text-black">
 
-          <div className="flex items-center gap-3">
+          Brand_Shoe
 
-            <img
-              src={logo}
-              alt=""
-              className="w-[48px] h-[48px] rounded-full object-cover border border-gray-200 shadow-md"
-            />
+        </h1>
 
-            <h1 className="text-[28px] font-black tracking-[-2px]">
+      </div>
 
-              Brand_Shoe
+      {/* CENTER */}
 
-            </h1>
+      <div className="hidden lg:flex items-center gap-9 text-[14px] font-semibold text-gray-600">
 
-          </div>
+        <button className="hover:text-black transition duration-300">
 
-        </div>
+          Home
 
-        {/* CENTER MENU */}
+        </button>
 
-        <ul className="hidden md:flex items-center gap-10 text-[14px] font-medium">
+        <button className="hover:text-black transition duration-300">
 
-          <li className="hover:text-red-600 transition cursor-pointer">
-            Home
-          </li>
+          Womens
 
-          <li className="hover:text-red-600 transition cursor-pointer">
-            Womens
-          </li>
+        </button>
 
-          <li className="hover:text-red-600 transition cursor-pointer">
-            Kids
-          </li>
+        <button className="hover:text-black transition duration-300">
 
-          <li className="hover:text-red-600 transition cursor-pointer">
-            Men
-          </li>
+          Kids
 
-          <li className="hover:text-red-600 transition cursor-pointer">
-            New Arrival
-          </li>
+        </button>
 
-        </ul>
+        <button className="hover:text-black transition duration-300">
 
-        {/* RIGHT */}
+          Men
 
-        <div className="flex items-center gap-5">
+        </button>
 
-          {/* SEARCH */}
+        <button className="hover:text-black transition duration-300">
 
-          <div className="hidden md:flex items-center bg-[#f5f5f5] rounded-full px-4 h-[40px] w-[230px]">
+          New Arrival
 
-            <Search size={16} className="text-gray-500" />
+        </button>
 
-            <input
-              type="text"
-              placeholder="Search..."
-              className="bg-transparent outline-none text-[13px] ml-3 w-full"
-            />
+      </div>
 
-          </div>
+      {/* RIGHT */}
 
-          {/* CART */}
+      <div className="flex items-center gap-4">
 
-          <div className="w-[40px] h-[40px] rounded-full bg-[#f5f5f5] flex items-center justify-center hover:bg-black hover:text-white transition cursor-pointer">
+        {/* SEARCH */}
 
-            <ShoppingBag size={18} />
+        <div className="hidden md:flex items-center gap-3 bg-[#f5f5f5] px-5 h-[44px] rounded-full border border-gray-200 shadow-sm">
 
-          </div>
+          <Search
+            size={15}
+            className="text-gray-500"
+          />
 
-          {/* PROFILE */}
-
-          <div className="w-[40px] h-[40px] rounded-full bg-[#f5f5f5] flex items-center justify-center hover:bg-black hover:text-white transition cursor-pointer">
-
-            <User size={18} />
-
-          </div>
+          <input
+            type="text"
+            placeholder="Search premium sneakers..."
+            className="bg-transparent outline-none text-[13px] w-[240px]"
+          />
 
         </div>
+
+        {/* LOGIN */}
+
+        <Link
+          to="/login"
+          className="px-6 h-[42px] rounded-full bg-black text-white text-[13px] font-semibold tracking-[1px] flex items-center justify-center hover:bg-[#c8161d] transition duration-300 shadow-md"
+        >
+
+          LOGIN
+
+        </Link>
 
       </div>
 

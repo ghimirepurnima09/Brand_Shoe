@@ -6,22 +6,18 @@ import {
   Lock,
   Eye,
   EyeOff,
-  ShoppingCart,
-  UserCircle,
   ArrowLeft
 } from "lucide-react";
 
 import { Link } from "react-router-dom";
 
-import Shoe6 from "../assets/Shoe6.png";
+import image from "../assets/image.png";
 import logo from "../assets/logo.png";
 
 export default function Register() {
 
   const [showPassword, setShowPassword] = useState(false);
   const [password, setPassword] = useState("");
-
-  // PASSWORD CHECKS
 
   const hasLength = password.length >= 8;
   const hasSpecial = /[@$!%*?&]/.test(password);
@@ -56,58 +52,6 @@ export default function Register() {
 
         </div>
 
-        {/* CENTER */}
-
-        <div className="hidden lg:flex items-center gap-10 text-[14px] font-semibold text-gray-600">
-
-          <button className="hover:text-black transition">
-
-            Collections
-
-          </button>
-
-          <button className="hover:text-black transition">
-
-            Womens
-
-          </button>
-
-          <button className="hover:text-black transition">
-
-            Kids
-
-          </button>
-
-          <button className="hover:text-black transition">
-
-            Mens
-
-          </button>
-
-          <button className="hover:text-black transition">
-
-            New Arrival
-
-          </button>
-
-        </div>
-
-        {/* RIGHT */}
-
-        <div className="flex items-center gap-4">
-
-          <ShoppingCart
-            size={22}
-            className="cursor-pointer hover:scale-110 transition"
-          />
-
-          <UserCircle
-            size={24}
-            className="cursor-pointer hover:scale-110 transition"
-          />
-
-        </div>
-
       </nav>
 
       {/* MAIN */}
@@ -116,11 +60,11 @@ export default function Register() {
 
         <div className="w-full max-w-[1280px] grid lg:grid-cols-2 gap-8 items-center">
 
-          {/* LEFT SIDE */}
+          {/* LEFT */}
 
           <div className="relative rounded-[24px] overflow-hidden bg-black h-[560px] shadow-2xl">
 
-            {/* BACK BUTTON */}
+            {/* BACK */}
 
             <Link
               to="/login"
@@ -134,7 +78,7 @@ export default function Register() {
             {/* IMAGE */}
 
             <img
-              src={Shoe6}
+              src={image}
               alt=""
               className="absolute inset-0 w-full h-full object-cover opacity-95"
             />
@@ -143,37 +87,11 @@ export default function Register() {
 
             <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-black/20"></div>
 
-            {/* GLOW */}
-
-            <div className="absolute top-[-60px] left-[30%] w-[280px] h-[280px] bg-white/10 rounded-full blur-3xl"></div>
-
-            {/* CARD */}
-
-            <div className="absolute bottom-6 left-6 bg-white/92 backdrop-blur-md rounded-[20px] p-6 max-w-[300px] shadow-2xl">
-
-              <h2 className="text-[34px] font-black leading-[36px] tracking-[-2px] text-black">
-
-                THE VAULT
-                <br />
-                IS OPEN.
-
-              </h2>
-
-              <p className="text-gray-600 text-[15px] leading-[26px] mt-4">
-
-                Access the most exclusive releases and limited edition drops before anyone else.
-
-              </p>
-
-            </div>
-
           </div>
 
-          {/* RIGHT SIDE */}
+          {/* RIGHT */}
 
           <div className="px-1 lg:px-4">
-
-            {/* TITLE */}
 
             <h1 className="text-[64px] leading-[64px] font-black tracking-[-4px] text-black">
 
@@ -205,10 +123,7 @@ export default function Register() {
 
                 <div className="mt-2 h-[58px] rounded-[14px] border border-gray-300 bg-white px-4 flex items-center gap-3 shadow-sm">
 
-                  <User
-                    size={18}
-                    className="text-gray-400"
-                  />
+                  <User size={18} className="text-gray-400" />
 
                   <input
                     type="text"
@@ -232,10 +147,7 @@ export default function Register() {
 
                 <div className="mt-2 h-[58px] rounded-[14px] border border-gray-300 bg-white px-4 flex items-center gap-3 shadow-sm">
 
-                  <Mail
-                    size={18}
-                    className="text-gray-400"
-                  />
+                  <Mail size={18} className="text-gray-400" />
 
                   <input
                     type="email"
@@ -259,10 +171,7 @@ export default function Register() {
 
                 <div className="mt-2 h-[58px] rounded-[14px] border border-gray-300 bg-white px-4 flex items-center gap-3 shadow-sm">
 
-                  <Lock
-                    size={18}
-                    className="text-gray-400"
-                  />
+                  <Lock size={18} className="text-gray-400" />
 
                   <input
                     type={showPassword ? "text" : "password"}
@@ -275,7 +184,6 @@ export default function Register() {
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="text-gray-400 hover:text-black transition"
                   >
 
                     {showPassword ? (
@@ -294,78 +202,31 @@ export default function Register() {
 
               </div>
 
-              {/* PASSWORD STRENGTH */}
+              {/* PASSWORD STATUS */}
 
-              <div className="space-y-3">
+              <div className="space-y-2">
 
-                <div className="flex gap-2">
+                <p className={hasLength ? "text-green-600 text-[12px]" : "text-gray-500 text-[12px]"}>
 
-                  <div className={`flex-1 h-[5px] rounded-full ${hasLength ? "bg-green-500" : "bg-gray-300"}`}></div>
-
-                  <div className={`flex-1 h-[5px] rounded-full ${hasSpecial ? "bg-green-500" : "bg-gray-300"}`}></div>
-
-                  <div className={`flex-1 h-[5px] rounded-full ${hasUpper ? "bg-green-500" : "bg-gray-300"}`}></div>
-
-                </div>
-
-                <div className="text-[12px] space-y-1">
-
-                  <p className={hasLength ? "text-green-600" : "text-gray-500"}>
-
-                    ✓ Minimum 8 characters
-
-                  </p>
-
-                  <p className={hasSpecial ? "text-green-600" : "text-gray-500"}>
-
-                    ✓ Must contain @ or special character
-
-                  </p>
-
-                  <p className={hasUpper ? "text-green-600" : "text-gray-500"}>
-
-                    ✓ At least one uppercase letter
-
-                  </p>
-
-                </div>
-
-                <p className={`text-[12px] font-bold tracking-[1px] ${strongPassword ? "text-green-600" : "text-red-500"}`}>
-
-                  {strongPassword
-                    ? "STRONG PASSWORD"
-                    : "WEAK PASSWORD"}
+                  ✓ Minimum 8 characters
 
                 </p>
 
-              </div>
+                <p className={hasSpecial ? "text-green-600 text-[12px]" : "text-gray-500 text-[12px]"}>
 
-              {/* TERMS */}
+                  ✓ Must contain @ or special character
 
-              <div className="flex items-start gap-3 pt-1">
+                </p>
 
-                <input
-                  type="checkbox"
-                  className="mt-1 w-[18px] h-[18px] accent-black"
-                />
+                <p className={hasUpper ? "text-green-600 text-[12px]" : "text-gray-500 text-[12px]"}>
 
-                <p className="text-gray-600 text-[14px] leading-[24px]">
+                  ✓ At least one uppercase letter
 
-                  I agree to the
+                </p>
 
-                  <span className="text-black underline cursor-pointer ml-1">
+                <p className={strongPassword ? "text-green-600 text-[12px] font-bold" : "text-red-500 text-[12px] font-bold"}>
 
-                    Terms of Access
-
-                  </span>
-
-                  {" "}and{" "}
-
-                  <span className="text-black underline cursor-pointer">
-
-                    Privacy Policy
-
-                  </span>
+                  {strongPassword ? "STRONG PASSWORD" : "WEAK PASSWORD"}
 
                 </p>
 

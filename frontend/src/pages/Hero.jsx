@@ -1,87 +1,115 @@
-﻿import Shoe1 from "../assets/Shoe1.png";
+﻿// Hero.jsx
 
-import {
-  ShoppingCart
-} from "lucide-react";
+import { Link } from "react-router-dom";
+
+import Shoe1 from "../assets/Shoe1.png";
 
 export default function Hero() {
 
   return (
 
-    <section className="bg-[#f2f2f2] overflow-hidden">
+    <section className="relative min-h-[92vh] overflow-hidden bg-[#f3f3f3] flex items-center px-6 lg:px-16">
 
-      <div className="max-w-[1180px] mx-auto min-h-[640px] px-6 flex flex-col lg:flex-row items-center justify-between relative">
+      {/* BLACK SHOE BACKGROUND */}
 
-        {/* LEFT */}
+      <img
+        src={Shoe1}
+        alt=""
+        className="absolute right-[-280px] top-[40px] w-[1100px] opacity-[0.07] rotate-[-18deg] select-none pointer-events-none"
+      />
 
-        <div className="max-w-[500px] z-10 pt-16 lg:pt-0">
+      {/* LIGHT EFFECT */}
 
-          <span className="bg-[#b91c1c] text-white text-[10px] uppercase tracking-[2px] font-bold px-4 py-2 rounded-full shadow-md">
+      <div className="absolute top-[-120px] right-[-100px] w-[600px] h-[600px] bg-black/5 rounded-full blur-3xl"></div>
 
-            LIMITED RELEASE
+      {/* LEFT */}
 
-          </span>
+      <div className="flex-1 relative z-10">
 
-          <h1 className="text-[58px] md:text-[70px] leading-[62px] md:leading-[74px] font-black tracking-[-4px] mt-7">
+        <p className="text-[#c8161d] font-bold tracking-[4px] text-[13px]">
 
-            Luxury in
-            <br />
-            Every Step
+          LIMITED RELEASE
 
-          </h1>
+        </p>
 
-          <p className="text-gray-500 text-[15px] leading-[30px] mt-7 max-w-[460px]">
+        <h1 className="text-[70px] lg:text-[110px] leading-[88%] font-black tracking-[-7px] text-black mt-6">
 
-            Precision-crafted sneakers blending luxury fashion,
-            elite comfort, and futuristic streetwear aesthetics.
+          Luxury
+          <br />
+          in Every
+          <br />
+          Step
 
-          </p>
+        </h1>
 
-          {/* BUTTONS */}
+        <p className="text-gray-600 text-[18px] leading-[34px] max-w-[520px] mt-8">
 
-          <div className="flex items-center gap-4 mt-10 flex-wrap">
+          Premium luxury sneakers inspired by elite streetwear culture and modern fashion aesthetics.
 
-            <button className="bg-black text-white px-7 py-3 rounded-full text-[12px] tracking-[2px] font-semibold hover:bg-[#222] transition-all duration-300 flex items-center gap-3 shadow-xl">
+        </p>
 
-              <ShoppingCart size={16} />
+        {/* BUTTONS */}
 
-              ADD TO CART
+        <div className="flex items-center gap-5 mt-10">
 
-            </button>
+          <Link
+            to="/login"
+            className="px-9 h-[56px] rounded-full bg-black text-white flex items-center justify-center font-semibold hover:bg-[#c8161d] transition duration-300 shadow-xl"
+          >
 
-            <button className="border border-black px-7 py-3 rounded-full text-[12px] tracking-[2px] font-semibold hover:bg-black hover:text-white transition-all duration-300">
+            Shop Now
 
-              VIEW DETAILS
+          </Link>
 
-            </button>
+          <Link
+            to="/login"
+            className="px-9 h-[56px] rounded-full border border-black text-black flex items-center justify-center font-semibold hover:bg-black hover:text-white transition duration-300"
+          >
 
-          </div>
+            View Details
 
-        </div>
-
-        {/* RIGHT */}
-
-        <div className="relative z-10 mt-16 lg:mt-0">
-
-          <div className="bg-white/40 backdrop-blur-2xl border border-white/50 rounded-[34px] p-8 shadow-[0_20px_70px_rgba(0,0,0,0.18)] hover:translate-y-[-10px] transition duration-500">
-
-            <img
-              src={Shoe1}
-              alt=""
-              className="w-[430px] md:w-[520px] drop-shadow-[0_45px_35px_rgba(0,0,0,0.35)]"
-            />
-
-          </div>
+          </Link>
 
         </div>
 
-        {/* BACKGROUND SHOE */}
+      </div>
 
-        <img
-          src={Shoe1}
-          alt=""
-          className="absolute w-[900px] opacity-[0.10] right-[-120px] top-[20px] blur-[1px]"
-        />
+      {/* RIGHT */}
+
+      <div className="flex-1 relative flex justify-center items-center z-10">
+
+        {/* SHADOW */}
+
+        <div className="absolute bottom-[120px] w-[340px] h-[55px] bg-black/20 blur-2xl rounded-full"></div>
+
+        {/* CARD */}
+
+        <Link
+          to="/login"
+          className="relative w-[500px] h-[500px] rounded-[38px] bg-white/70 backdrop-blur-xl border border-white shadow-[0_25px_60px_rgba(0,0,0,0.12)] flex items-center justify-center overflow-hidden group"
+        >
+
+          {/* CARD LIGHT */}
+
+          <div className="absolute top-[-80px] right-[-60px] w-[240px] h-[240px] bg-white/70 blur-3xl rounded-full"></div>
+
+          {/* SMALL BLACK SHOE BG */}
+
+          <img
+            src={Shoe1}
+            alt=""
+            className="absolute w-[520px] opacity-[0.08] rotate-[-18deg]"
+          />
+
+          {/* MAIN SHOE */}
+
+          <img
+            src={Shoe1}
+            alt=""
+            className="relative z-10 w-[500px] rotate-[-18deg] object-contain group-hover:scale-105 transition duration-700 drop-shadow-[0_35px_35px_rgba(0,0,0,0.35)]"
+          />
+
+        </Link>
 
       </div>
 

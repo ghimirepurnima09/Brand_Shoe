@@ -1,52 +1,48 @@
-import {
-  ShieldCheck
-} from "lucide-react";
+// Guarantee.jsx
+
+import { Link } from "react-router-dom";
+
+import { ShieldCheck } from "lucide-react";
 
 export default function Guarantee() {
 
   return (
 
-    <section className="bg-[#f8f8f8] py-12">
+    <section className="py-24 px-6 bg-[#ededed] flex flex-col items-center text-center">
 
-      <div className="max-w-[850px] mx-auto px-6">
+      <div className="w-[90px] h-[90px] rounded-full bg-white shadow-lg flex items-center justify-center">
 
-        <div className="bg-[#f1f1f1] rounded-[28px] py-10 px-8 text-center shadow-sm">
+        <ShieldCheck
+          size={42}
+          className="text-[#c8161d]"
+        />
 
-          <ShieldCheck
-            size={38}
-            className="mx-auto"
-          />
+      </div>
 
-          <h1 className="text-[34px] font-black tracking-[-2px] mt-6">
+      <h1 className="text-[54px] font-black tracking-[-3px] text-black mt-8">
 
-            EVERY PAIR GUARANTEED
+        EVERY PAIR
+        <br />
+        GUARANTEED
 
-          </h1>
+      </h1>
 
-          <p className="text-gray-500 text-[14px] leading-7 mt-4 max-w-[560px] mx-auto">
+      <p className="text-gray-600 max-w-[620px] leading-[34px] mt-6 text-[17px]">
 
-            Every sneaker goes through our premium verification
-            process to ensure authenticity and elite quality.
+        Every sneaker is authenticated and verified before shipping.
 
-          </p>
+      </p>
 
-          <div className="flex flex-col sm:flex-row justify-center gap-4 mt-7">
+      <div className="flex gap-4 mt-10">
 
-            <button className="bg-white px-8 py-3 rounded-full text-[12px] tracking-[2px] font-semibold hover:bg-black hover:text-white transition">
+        <Link
+          to="/login"
+          className="px-8 h-[54px] rounded-full bg-black text-white flex items-center justify-center font-semibold"
+        >
 
-              JOIN THE INSIDE
+          Start Shopping
 
-            </button>
-
-            <button className="bg-black text-white px-8 py-3 rounded-full text-[12px] tracking-[2px] font-semibold hover:bg-red-600 transition">
-
-              GET ACCESS
-
-            </button>
-
-          </div>
-
-        </div>
+        </Link>
 
       </div>
 
