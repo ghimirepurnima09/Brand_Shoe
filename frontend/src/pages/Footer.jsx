@@ -1,35 +1,76 @@
-// Footer.jsx
-
 import { Link } from "react-router-dom";
 
 export default function Footer() {
 
   return (
 
-    <footer className="bg-black py-14 px-6 text-center">
+    <footer className="bg-black py-12 px-6 overflow-hidden">
 
-      <h1 className="text-white text-[40px] font-black tracking-[-3px]">
+      <div className="max-w-[1200px] mx-auto">
 
-        BRAND_SHOE
+        {/* LOGO */}
 
-      </h1>
+        <h1 className="text-white text-center text-[34px] lg:text-[42px] font-black tracking-[-3px]">
 
-      <div className="flex flex-wrap justify-center gap-10 mt-8 text-gray-400 text-[14px]">
+          BRAND_SHOE
 
-        <Link to="/login">Authenticity</Link>
-        <Link to="/login">Returns</Link>
-        <Link to="/login">Privacy</Link>
-        <Link to="/login">Global Access</Link>
+        </h1>
+
+        {/* LINKS */}
+
+        <div className="flex flex-wrap justify-center gap-6 lg:gap-10 mt-7 text-gray-400 text-[13px] lg:text-[14px] font-medium">
+
+          <Link
+            to="/login"
+            className="hover:text-[#8da27f] transition duration-300"
+          >
+
+            Authenticity
+
+          </Link>
+
+          <Link
+            to="/login"
+            className="hover:text-[#8da27f] transition duration-300"
+          >
+
+            Returns
+
+          </Link>
+
+          <Link
+            to="/login"
+            className="hover:text-[#8da27f] transition duration-300"
+          >
+
+            Privacy
+
+          </Link>
+
+          <Link
+            to="/login"
+            className="hover:text-[#8da27f] transition duration-300"
+          >
+
+            Global Access
+
+          </Link>
+
+        </div>
+
+        {/* LINE */}
+
+        <div className="w-full h-[1px] bg-white/10 mt-8"></div>
+
+        {/* COPYRIGHT */}
+
+        <p className="text-gray-500 text-[12px] lg:text-[13px] text-center mt-6">
+
+          © 2026 BRAND_SHOE. All Rights Reserved.
+
+        </p>
 
       </div>
-
-      <div className="w-full h-[1px] bg-white/10 mt-10"></div>
-
-      <p className="text-gray-500 text-[13px] mt-8">
-
-        © 2026 BRAND_SHOE. All Rights Reserved.
-
-      </p>
 
     </footer>
 

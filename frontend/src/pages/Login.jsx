@@ -18,13 +18,21 @@ export default function Login() {
 
   return (
 
-    <section className="min-h-screen bg-[#ececec] flex overflow-hidden">
+    <section className="min-h-screen bg-[#f3f3f3] flex overflow-hidden">
 
       {/* LEFT SIDE */}
 
       <div className="hidden lg:flex flex-1 bg-black relative items-center justify-center overflow-hidden">
 
-        {/* LOGO + TEXT */}
+        {/* BACKGROUND IMAGE */}
+
+        <img
+          src="https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?q=80&w=1400&auto=format&fit=crop"
+          alt=""
+          className="absolute inset-0 w-full h-full object-cover opacity-40"
+        />
+
+        {/* LOGO */}
 
         <div className="absolute top-6 left-6 z-20 flex items-center gap-3">
 
@@ -42,15 +50,7 @@ export default function Login() {
 
         </div>
 
-        {/* GLOW */}
-
-        <div className="absolute w-[650px] h-[650px] bg-white/10 rounded-full blur-3xl"></div>
-
-        {/* RED LIGHT */}
-
-        <div className="absolute bottom-[-60px] w-[380px] h-[180px] bg-red-600/20 blur-3xl rounded-full"></div>
-
-        {/* SHOE IMAGE */}
+        {/* SHOE */}
 
         <img
           src={Shoe6}
@@ -60,35 +60,45 @@ export default function Login() {
 
         {/* OVERLAY */}
 
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/30"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-black/30"></div>
 
-        {/* COPYRIGHT */}
+        {/* TEXT */}
 
-        <p className="absolute bottom-5 left-6 text-gray-500 text-[10px] tracking-[1px] z-20">
+        <div className="absolute bottom-14 left-10 z-20">
 
-          © 2026 BRAND_SHOE.
+          <h1 className="text-white text-[58px] leading-[90%] font-black tracking-[-4px]">
 
-        </p>
+            ENTER THE
+            <br />
+            SNEAKER
+            <br />
+            WORLD
+
+          </h1>
+
+        </div>
 
       </div>
 
       {/* RIGHT SIDE */}
 
-      <div className="flex-1 bg-[#ececec] flex items-center justify-center px-5">
+      <div className="flex-1 bg-[#f3f3f3] flex items-center justify-center px-5">
 
-        <div className="w-full max-w-[360px]">
+        <div className="w-full max-w-[380px]">
 
           {/* TITLE */}
 
-          <h1 className="text-[40px] leading-[42px] font-black tracking-[-2px] text-black">
+          <h1 className="text-[46px] leading-[46px] font-black tracking-[-3px] text-black">
 
-            Welcome back.
+            Welcome
+            <br />
+            Back.
 
           </h1>
 
-          <p className="text-gray-500 text-[14px] mt-3">
+          <p className="text-gray-500 text-[15px] mt-4 leading-[28px]">
 
-            Authenticate your identity to access the drops.
+            Login to continue exploring premium sneaker collections.
 
           </p>
 
@@ -106,10 +116,10 @@ export default function Login() {
 
               </label>
 
-              <div className="mt-2 bg-[#ececec] border border-gray-300 rounded-[10px] h-[54px] px-4 flex items-center gap-3 shadow-sm">
+              <div className="mt-2 bg-white border border-gray-300 rounded-[14px] h-[58px] px-4 flex items-center gap-3 shadow-sm">
 
                 <Mail
-                  size={16}
+                  size={18}
                   className="text-gray-400"
                 />
 
@@ -143,10 +153,10 @@ export default function Login() {
 
               </div>
 
-              <div className="mt-2 bg-[#ececec] border border-gray-300 rounded-[10px] h-[54px] px-4 flex items-center gap-3 shadow-sm">
+              <div className="mt-2 bg-white border border-gray-300 rounded-[14px] h-[58px] px-4 flex items-center gap-3 shadow-sm">
 
                 <Lock
-                  size={16}
+                  size={18}
                   className="text-gray-400"
                 />
 
@@ -178,9 +188,9 @@ export default function Login() {
 
             </div>
 
-            {/* SIGN IN */}
+            {/* BUTTON */}
 
-            <button className="w-full h-[54px] bg-[#c8161d] text-white rounded-[10px] mt-8 text-[13px] tracking-[3px] font-bold hover:bg-black transition duration-300 shadow-lg">
+            <button className="w-full h-[58px] bg-black text-white rounded-[14px] mt-8 text-[13px] tracking-[3px] font-bold hover:bg-[#6f8f62] transition duration-300 shadow-xl">
 
               SIGN IN
 
@@ -204,7 +214,7 @@ export default function Login() {
 
             {/* GOOGLE */}
 
-            <button className="w-full h-[54px] border border-gray-300 rounded-[10px] bg-white hover:bg-black hover:text-white transition duration-300 flex items-center justify-center gap-3 text-[14px] font-semibold shadow-sm">
+            <button className="w-full h-[58px] border border-gray-300 rounded-[14px] bg-white hover:bg-black hover:text-white transition duration-300 flex items-center justify-center gap-3 text-[14px] font-semibold shadow-sm">
 
               <img
                 src="https://cdn-icons-png.flaticon.com/512/2991/2991148.png"
@@ -218,13 +228,13 @@ export default function Login() {
 
             {/* REGISTER */}
 
-            <p className="text-center text-gray-500 text-[13px] mt-10">
+            <p className="text-center text-gray-500 text-[14px] mt-10">
 
-              Don’t have Account?
+              Don’t have an Account?
 
               <Link
                 to="/register"
-                className="text-black font-semibold ml-2 hover:text-[#c8161d] transition"
+                className="text-black font-semibold ml-2 hover:text-[#6f8f62] transition"
               >
 
                 Register
@@ -232,24 +242,6 @@ export default function Login() {
               </Link>
 
             </p>
-
-          </div>
-
-          {/* FOOTER */}
-
-          <div className="flex justify-end gap-6 mt-14 text-gray-400 text-[10px] tracking-[1px]">
-
-            <button className="hover:text-black transition">
-
-              AUTHENTICITY
-
-            </button>
-
-            <button className="hover:text-black transition">
-
-              PRIVACY
-
-            </button>
 
           </div>
 

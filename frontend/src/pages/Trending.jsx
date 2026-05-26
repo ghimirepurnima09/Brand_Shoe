@@ -1,4 +1,6 @@
+// ==========================
 // Trending.jsx
+// ==========================
 
 import { Link } from "react-router-dom";
 
@@ -40,19 +42,21 @@ export default function Trending() {
 
   return (
 
-    <section className="px-6 lg:px-16 py-24 bg-white">
+    <section className="px-6 lg:px-16 py-16 bg-white">
 
-      <div className="flex items-end justify-between mb-14">
+      {/* HEADER */}
+
+      <div className="flex items-end justify-between mb-10">
 
         <div>
 
-          <p className="text-[#c8161d] font-bold tracking-[3px] text-[13px]">
+          <p className="text-[#8da27f] font-bold tracking-[3px] text-[12px]">
 
             NEW RELEASE
 
           </p>
 
-          <h1 className="text-[52px] font-black tracking-[-3px] text-black mt-3">
+          <h1 className="text-[48px] lg:text-[56px] font-black tracking-[-3px] text-black mt-2">
 
             TRENDING
 
@@ -62,7 +66,7 @@ export default function Trending() {
 
         <Link
           to="/login"
-          className="text-black font-semibold hover:text-[#c8161d]"
+          className="text-black font-semibold hover:text-[#8da27f] transition"
         >
 
           View All Collections →
@@ -71,41 +75,60 @@ export default function Trending() {
 
       </div>
 
-      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-7">
+      {/* CARDS */}
+
+      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
 
         {shoes.map((shoe, index) => (
 
           <Link
             key={index}
             to="/login"
-            className="group bg-[#f7f7f7] rounded-[30px] p-6 overflow-hidden hover:shadow-2xl transition"
+            className="group bg-[#f7f7f7] rounded-[26px] p-5 overflow-hidden hover:shadow-2xl transition duration-300"
           >
 
-            <div className="flex justify-between items-center">
+            {/* TOP */}
+
+            <div className="flex items-center justify-between">
 
               <p className="bg-white px-4 py-2 rounded-full text-[11px] font-bold">
 
-                AUTHENTIC SHIELD
+                AUTHENTIC
 
               </p>
 
-              <Heart className="text-gray-400 group-hover:text-red-500 transition" />
+              {/* WISHLIST */}
+
+              <button className="w-[38px] h-[38px] rounded-full bg-white flex items-center justify-center shadow-sm hover:bg-[#8da27f] transition group">
+
+                <Heart
+                  size={18}
+                  className="text-gray-500 group-hover:text-white transition"
+                />
+
+              </button>
 
             </div>
+
+            {/* IMAGE */}
 
             <img
               src={shoe.image}
               alt=""
-              className="w-full mt-8 group-hover:scale-110 transition duration-700"
+              className="w-full mt-6 group-hover:scale-105 transition duration-700"
             />
 
-            <h2 className="text-[24px] font-black mt-8">
+            {/* TITLE */}
+
+            <h2 className="text-[24px] font-black mt-6">
 
               {shoe.title}
 
             </h2>
 
-            <div className="flex justify-between mt-6 items-center">
+            {/* PRICE */}
+
+            <div className="flex justify-between items-center mt-5">
 
               <h3 className="text-[24px] font-black">
 
@@ -113,7 +136,7 @@ export default function Trending() {
 
               </h3>
 
-              <p className="text-[#c8161d] text-[13px] font-bold">
+              <p className="text-[#8da27f] text-[12px] font-bold">
 
                 {shoe.stock}
 

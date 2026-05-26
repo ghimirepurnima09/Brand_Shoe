@@ -11,30 +11,25 @@ import {
 
 import { Link } from "react-router-dom";
 
-import image from "../assets/image.png";
 import logo from "../assets/logo.png";
 
 export default function Register() {
 
   const [showPassword, setShowPassword] = useState(false);
   const [password, setPassword] = useState("");
+  const [agree, setAgree] = useState(false);
 
   const hasLength = password.length >= 8;
   const hasSpecial = /[@$!%*?&]/.test(password);
   const hasUpper = /[A-Z]/.test(password);
 
-  const strongPassword =
-    hasLength && hasSpecial && hasUpper;
-
   return (
 
-    <section className="min-h-screen bg-[#efefef] flex flex-col">
+    <section className="min-h-screen bg-[#f3f3f3] flex flex-col">
 
       {/* NAVBAR */}
 
       <nav className="w-full h-[78px] bg-white border-b border-gray-200 flex items-center justify-between px-6 lg:px-14">
-
-        {/* LEFT */}
 
         <div className="flex items-center gap-4">
 
@@ -62,9 +57,9 @@ export default function Register() {
 
           {/* LEFT */}
 
-          <div className="relative rounded-[24px] overflow-hidden bg-black h-[560px] shadow-2xl">
+          <div className="relative rounded-[30px] overflow-hidden bg-black h-[560px] shadow-2xl">
 
-            {/* BACK */}
+            {/* BACK BUTTON */}
 
             <Link
               to="/login"
@@ -78,22 +73,38 @@ export default function Register() {
             {/* IMAGE */}
 
             <img
-              src={image}
+              src="https://images.unsplash.com/photo-1600269452121-4f2416e55c28?q=80&w=1400&auto=format&fit=crop"
               alt=""
-              className="absolute inset-0 w-full h-full object-cover opacity-95"
+              className="absolute inset-0 w-full h-full object-cover opacity-90"
             />
 
             {/* OVERLAY */}
 
             <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-black/20"></div>
 
+            {/* TEXT */}
+
+            <div className="absolute bottom-10 left-10 z-20">
+
+              <h1 className="text-white text-[62px] leading-[90%] font-black tracking-[-4px]">
+
+                CREATE
+                <br />
+                YOUR
+                <br />
+                STYLE
+
+              </h1>
+
+            </div>
+
           </div>
 
           {/* RIGHT */}
 
-          <div className="px-1 lg:px-4">
+          <div className="px-1 lg:px-8">
 
-            <h1 className="text-[64px] leading-[64px] font-black tracking-[-4px] text-black">
+            <h1 className="text-[62px] leading-[60px] font-black tracking-[-4px] text-black">
 
               Join the
               <br />
@@ -101,9 +112,9 @@ export default function Register() {
 
             </h1>
 
-            <p className="text-gray-500 text-[18px] mt-4">
+            <p className="text-gray-500 text-[17px] mt-4">
 
-              Create your profile to start your collection journey.
+              Create your profile to start your sneaker journey.
 
             </p>
 
@@ -121,7 +132,7 @@ export default function Register() {
 
                 </label>
 
-                <div className="mt-2 h-[58px] rounded-[14px] border border-gray-300 bg-white px-4 flex items-center gap-3 shadow-sm">
+                <div className="mt-2 h-[58px] rounded-[16px] border border-gray-300 bg-white px-4 flex items-center gap-3 shadow-sm">
 
                   <User size={18} className="text-gray-400" />
 
@@ -145,7 +156,7 @@ export default function Register() {
 
                 </label>
 
-                <div className="mt-2 h-[58px] rounded-[14px] border border-gray-300 bg-white px-4 flex items-center gap-3 shadow-sm">
+                <div className="mt-2 h-[58px] rounded-[16px] border border-gray-300 bg-white px-4 flex items-center gap-3 shadow-sm">
 
                   <Mail size={18} className="text-gray-400" />
 
@@ -169,7 +180,7 @@ export default function Register() {
 
                 </label>
 
-                <div className="mt-2 h-[58px] rounded-[14px] border border-gray-300 bg-white px-4 flex items-center gap-3 shadow-sm">
+                <div className="mt-2 h-[58px] rounded-[16px] border border-gray-300 bg-white px-4 flex items-center gap-3 shadow-sm">
 
                   <Lock size={18} className="text-gray-400" />
 
@@ -184,6 +195,7 @@ export default function Register() {
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
+                    className="text-gray-400 hover:text-black transition"
                   >
 
                     {showPassword ? (
@@ -206,27 +218,72 @@ export default function Register() {
 
               <div className="space-y-2">
 
-                <p className={hasLength ? "text-green-600 text-[12px]" : "text-gray-500 text-[12px]"}>
+                <p
+                  className={
+                    hasLength
+                      ? "text-green-600 text-[12px]"
+                      : "text-gray-500 text-[12px]"
+                  }
+                >
 
                   ✓ Minimum 8 characters
 
                 </p>
 
-                <p className={hasSpecial ? "text-green-600 text-[12px]" : "text-gray-500 text-[12px]"}>
+                <p
+                  className={
+                    hasSpecial
+                      ? "text-green-600 text-[12px]"
+                      : "text-gray-500 text-[12px]"
+                  }
+                >
 
-                  ✓ Must contain @ or special character
+                  ✓ Must contain special character
 
                 </p>
 
-                <p className={hasUpper ? "text-green-600 text-[12px]" : "text-gray-500 text-[12px]"}>
+                <p
+                  className={
+                    hasUpper
+                      ? "text-green-600 text-[12px]"
+                      : "text-gray-500 text-[12px]"
+                  }
+                >
 
                   ✓ At least one uppercase letter
 
                 </p>
 
-                <p className={strongPassword ? "text-green-600 text-[12px] font-bold" : "text-red-500 text-[12px] font-bold"}>
+              </div>
 
-                  {strongPassword ? "STRONG PASSWORD" : "WEAK PASSWORD"}
+              {/* TERMS CHECKBOX */}
+
+              <div className="flex items-start gap-3 pt-2">
+
+                <input
+                  type="checkbox"
+                  checked={agree}
+                  onChange={(e) => setAgree(e.target.checked)}
+                  className="mt-1 w-[16px] h-[16px] accent-black cursor-pointer"
+                />
+
+                <p className="text-gray-500 text-[12px] leading-[22px]">
+
+                  I agree to the
+
+                  <span className="text-black font-semibold cursor-pointer hover:text-[#6f8f62] transition">
+
+                    {" "}Terms & Conditions
+
+                  </span>
+
+                  {" "}and{" "}
+
+                  <span className="text-black font-semibold cursor-pointer hover:text-[#6f8f62] transition">
+
+                    Privacy Policy
+
+                  </span>
 
                 </p>
 
@@ -234,7 +291,14 @@ export default function Register() {
 
               {/* BUTTON */}
 
-              <button className="w-full h-[60px] bg-black text-white rounded-[15px] text-[15px] font-bold tracking-[2px] hover:bg-[#c8161d] transition duration-300 shadow-xl">
+              <button
+                disabled={!agree}
+                className={`w-full h-[60px] rounded-[16px] text-[15px] font-bold tracking-[2px] transition duration-300 shadow-xl ${
+                  agree
+                    ? "bg-black text-white hover:bg-[#6f8f62]"
+                    : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                }`}
+              >
 
                 CREATE ACCOUNT
 
@@ -244,11 +308,11 @@ export default function Register() {
 
               <p className="text-center text-gray-600 text-[15px] pt-2">
 
-                Already have Account?
+                Already have an Account?
 
                 <Link
                   to="/login"
-                  className="text-black font-semibold ml-2 hover:text-[#c8161d] transition"
+                  className="text-black font-semibold ml-2 hover:text-[#6f8f62] transition"
                 >
 
                   Log in

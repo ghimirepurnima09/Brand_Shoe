@@ -1,4 +1,6 @@
-﻿// Hero.jsx
+﻿// ==========================
+// Hero.jsx
+// ==========================
 
 import { Link } from "react-router-dom";
 
@@ -8,108 +10,99 @@ export default function Hero() {
 
   return (
 
-    <section className="relative min-h-[92vh] overflow-hidden bg-[#f3f3f3] flex items-center px-6 lg:px-16">
+    <section className="relative min-h-[88vh] overflow-hidden bg-black">
 
-      {/* BLACK SHOE BACKGROUND */}
+      {/* BACKGROUND */}
 
       <img
-        src={Shoe1}
+        src="https://images.unsplash.com/photo-1491553895911-0055eca6402d?q=80&w=1600&auto=format&fit=crop"
         alt=""
-        className="absolute right-[-280px] top-[40px] w-[1100px] opacity-[0.07] rotate-[-18deg] select-none pointer-events-none"
+        className="absolute inset-0 w-full h-full object-cover"
       />
 
-      {/* LIGHT EFFECT */}
+      {/* OVERLAY */}
 
-      <div className="absolute top-[-120px] right-[-100px] w-[600px] h-[600px] bg-black/5 rounded-full blur-3xl"></div>
+      <div className="absolute inset-0 bg-black/65"></div>
 
-      {/* LEFT */}
+      {/* CONTENT */}
 
-      <div className="flex-1 relative z-10">
+      <div className="relative z-10 grid lg:grid-cols-2 items-center min-h-[88vh] px-6 lg:px-16">
 
-        <p className="text-[#c8161d] font-bold tracking-[4px] text-[13px]">
+        {/* LEFT */}
 
-          LIMITED RELEASE
+        <div className="max-w-[580px]">
 
-        </p>
+          <p className="text-white/70 tracking-[4px] text-[11px] font-semibold uppercase">
 
-        <h1 className="text-[70px] lg:text-[110px] leading-[88%] font-black tracking-[-7px] text-black mt-6">
+            Premium Sneaker Collection
 
-          Luxury
-          <br />
-          in Every
-          <br />
-          Step
+          </p>
 
-        </h1>
+          {/* ANIMATED TITLE */}
 
-        <p className="text-gray-600 text-[18px] leading-[34px] max-w-[520px] mt-8">
+          <h1 className="text-white text-[56px] lg:text-[78px] leading-[95%] font-black tracking-[-5px] mt-4 animate-pulse">
 
-          Premium luxury sneakers inspired by elite streetwear culture and modern fashion aesthetics.
+            LUXURY
+            <br />
+            IN EVERY
+            <br />
 
-        </p>
+            <span className="text-[#8da27f]">
 
-        {/* BUTTONS */}
+              STEP
 
-        <div className="flex items-center gap-5 mt-10">
+            </span>
 
-          <Link
-            to="/login"
-            className="px-9 h-[56px] rounded-full bg-black text-white flex items-center justify-center font-semibold hover:bg-[#c8161d] transition duration-300 shadow-xl"
-          >
+          </h1>
 
-            Shop Now
+          {/* PROFESSIONAL TEXT */}
 
-          </Link>
+          <p className="text-gray-300 text-[16px] leading-[28px] mt-6 max-w-[520px]">
 
-          <Link
-            to="/login"
-            className="px-9 h-[56px] rounded-full border border-black text-black flex items-center justify-center font-semibold hover:bg-black hover:text-white transition duration-300"
-          >
+            Discover high-end sneaker collections designed to blend luxury craftsmanship, urban performance, and timeless streetwear identity.
 
-            View Details
+          </p>
 
-          </Link>
+          {/* BUTTONS */}
+
+          <div className="flex gap-4 mt-8">
+
+            <Link
+              to="/login"
+              className="px-8 h-[54px] rounded-full bg-[#8da27f] text-white flex items-center justify-center font-semibold hover:bg-white hover:text-black transition duration-300 shadow-lg"
+            >
+
+              SHOP NOW →
+
+            </Link>
+
+            <button className="px-8 h-[54px] rounded-full border border-white text-white font-semibold hover:bg-white hover:text-black transition duration-300">
+
+              EXPLORE
+
+            </button>
+
+          </div>
 
         </div>
 
-      </div>
+        {/* RIGHT */}
 
-      {/* RIGHT */}
+        <div className="relative flex items-center justify-center mt-10 lg:mt-0">
 
-      <div className="flex-1 relative flex justify-center items-center z-10">
+          {/* GLOW */}
 
-        {/* SHADOW */}
+          <div className="absolute w-[430px] h-[430px] bg-[#8da27f]/20 rounded-full blur-3xl"></div>
 
-        <div className="absolute bottom-[120px] w-[340px] h-[55px] bg-black/20 blur-2xl rounded-full"></div>
-
-        {/* CARD */}
-
-        <Link
-          to="/login"
-          className="relative w-[500px] h-[500px] rounded-[38px] bg-white/70 backdrop-blur-xl border border-white shadow-[0_25px_60px_rgba(0,0,0,0.12)] flex items-center justify-center overflow-hidden group"
-        >
-
-          {/* CARD LIGHT */}
-
-          <div className="absolute top-[-80px] right-[-60px] w-[240px] h-[240px] bg-white/70 blur-3xl rounded-full"></div>
-
-          {/* SMALL BLACK SHOE BG */}
+          {/* SHOE */}
 
           <img
             src={Shoe1}
             alt=""
-            className="absolute w-[520px] opacity-[0.08] rotate-[-18deg]"
+            className="relative z-10 w-[540px] lg:w-[600px] drop-shadow-[0_35px_35px_rgba(0,0,0,0.8)] hover:scale-105 transition duration-700"
           />
 
-          {/* MAIN SHOE */}
-
-          <img
-            src={Shoe1}
-            alt=""
-            className="relative z-10 w-[500px] rotate-[-18deg] object-contain group-hover:scale-105 transition duration-700 drop-shadow-[0_35px_35px_rgba(0,0,0,0.35)]"
-          />
-
-        </Link>
+        </div>
 
       </div>
 

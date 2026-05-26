@@ -1,4 +1,6 @@
+// ==========================
 // Guarantee.jsx
+// ==========================
 
 import { Link } from "react-router-dom";
 
@@ -8,18 +10,22 @@ export default function Guarantee() {
 
   return (
 
-    <section className="py-24 px-6 bg-[#ededed] flex flex-col items-center text-center">
+    <section className="py-16 px-6 bg-[#f5f5f5] flex flex-col items-center text-center">
 
-      <div className="w-[90px] h-[90px] rounded-full bg-white shadow-lg flex items-center justify-center">
+      {/* ICON */}
+
+      <div className="w-[82px] h-[82px] rounded-full bg-white shadow-lg flex items-center justify-center">
 
         <ShieldCheck
-          size={42}
-          className="text-[#c8161d]"
+          size={38}
+          className="text-[#8da27f]"
         />
 
       </div>
 
-      <h1 className="text-[54px] font-black tracking-[-3px] text-black mt-8">
+      {/* TITLE */}
+
+      <h1 className="text-[48px] lg:text-[56px] leading-[95%] font-black tracking-[-3px] text-black mt-7">
 
         EVERY PAIR
         <br />
@@ -27,17 +33,21 @@ export default function Guarantee() {
 
       </h1>
 
-      <p className="text-gray-600 max-w-[620px] leading-[34px] mt-6 text-[17px]">
+      {/* TEXT */}
 
-        Every sneaker is authenticated and verified before shipping.
+      <p className="text-gray-600 max-w-[560px] leading-[28px] mt-5 text-[16px]">
+
+        Every sneaker is authenticated and verified before shipping to ensure premium quality and originality.
 
       </p>
 
-      <div className="flex gap-4 mt-10">
+      {/* BUTTON */}
+
+      <div className="flex gap-4 mt-7">
 
         <Link
           to="/login"
-          className="px-8 h-[54px] rounded-full bg-black text-white flex items-center justify-center font-semibold"
+          className="px-8 h-[52px] rounded-full bg-black text-white flex items-center justify-center font-semibold hover:bg-[#8da27f] transition duration-300 shadow-lg"
         >
 
           Start Shopping
