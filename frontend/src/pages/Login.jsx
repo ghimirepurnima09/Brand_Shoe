@@ -1,3 +1,7 @@
+// ==============================
+// Login.jsx
+// ==============================
+
 import { useState } from "react";
 
 import {
@@ -7,7 +11,7 @@ import {
   Lock
 } from "lucide-react";
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import Shoe6 from "../assets/Shoe6.png";
 import logo from "../assets/logo.png";
@@ -16,6 +20,15 @@ export default function Login() {
 
   const [showPassword, setShowPassword] = useState(false);
 
+  const navigate = useNavigate();
+
+  const handleLogin = () => {
+
+    // AFTER LOGIN GO TO MAIN HOME
+    navigate("/mainhome");
+
+  };
+
   return (
 
     <section className="min-h-screen bg-[#f3f3f3] flex overflow-hidden">
@@ -23,8 +36,6 @@ export default function Login() {
       {/* LEFT SIDE */}
 
       <div className="hidden lg:flex flex-1 bg-black relative items-center justify-center overflow-hidden">
-
-        {/* BACKGROUND IMAGE */}
 
         <img
           src="https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?q=80&w=1400&auto=format&fit=crop"
@@ -86,8 +97,6 @@ export default function Login() {
 
         <div className="w-full max-w-[380px]">
 
-          {/* TITLE */}
-
           <h1 className="text-[46px] leading-[46px] font-black tracking-[-3px] text-black">
 
             Welcome
@@ -101,8 +110,6 @@ export default function Login() {
             Login to continue exploring premium sneaker collections.
 
           </p>
-
-          {/* FORM */}
 
           <div className="mt-10">
 
@@ -145,12 +152,6 @@ export default function Login() {
 
                 </label>
 
-                <button className="text-[11px] font-bold text-gray-500 hover:text-black transition">
-
-                  FORGOT?
-
-                </button>
-
               </div>
 
               <div className="mt-2 bg-white border border-gray-300 rounded-[14px] h-[58px] px-4 flex items-center gap-3 shadow-sm">
@@ -190,39 +191,12 @@ export default function Login() {
 
             {/* BUTTON */}
 
-            <button className="w-full h-[58px] bg-black text-white rounded-[14px] mt-8 text-[13px] tracking-[3px] font-bold hover:bg-[#6f8f62] transition duration-300 shadow-xl">
+            <button
+              onClick={handleLogin}
+              className="w-full h-[58px] bg-black text-white rounded-[14px] mt-8 text-[13px] tracking-[3px] font-bold hover:bg-[#6f8f62] transition duration-300 shadow-xl"
+            >
 
               SIGN IN
-
-            </button>
-
-            {/* DIVIDER */}
-
-            <div className="flex items-center gap-3 my-8">
-
-              <div className="flex-1 h-[1px] bg-gray-300"></div>
-
-              <p className="text-gray-500 tracking-[1px] text-[10px] font-semibold">
-
-                OR CONTINUE WITH
-
-              </p>
-
-              <div className="flex-1 h-[1px] bg-gray-300"></div>
-
-            </div>
-
-            {/* GOOGLE */}
-
-            <button className="w-full h-[58px] border border-gray-300 rounded-[14px] bg-white hover:bg-black hover:text-white transition duration-300 flex items-center justify-center gap-3 text-[14px] font-semibold shadow-sm">
-
-              <img
-                src="https://cdn-icons-png.flaticon.com/512/2991/2991148.png"
-                alt=""
-                className="w-[18px]"
-              />
-
-              GOOGLE
 
             </button>
 

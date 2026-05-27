@@ -1,8 +1,8 @@
-// ==========================
+// ======================================
 // Trending.jsx
-// ==========================
+// ======================================
 
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 import { Heart } from "lucide-react";
 
@@ -12,6 +12,11 @@ import Shoe4 from "../assets/Shoe4.png";
 import Shoe5 from "../assets/Shoe5.png";
 
 export default function Trending() {
+
+  const location = useLocation();
+
+  // CHECK IF USER IS IN ACTUAL HOME PAGE
+  const isActualHome = location.pathname === "/mainhome";
 
   const shoes = [
     {
@@ -42,21 +47,21 @@ export default function Trending() {
 
   return (
 
-    <section className="px-6 lg:px-16 py-16 bg-white">
+    <section className="px-6 lg:px-16 py-24 bg-white">
 
-      {/* HEADER */}
+      {/* TOP */}
 
-      <div className="flex items-end justify-between mb-10">
+      <div className="flex items-end justify-between mb-14">
 
         <div>
 
-          <p className="text-[#8da27f] font-bold tracking-[3px] text-[12px]">
+          <p className="text-[#8da27f] font-bold tracking-[3px] text-[13px]">
 
             NEW RELEASE
 
           </p>
 
-          <h1 className="text-[48px] lg:text-[56px] font-black tracking-[-3px] text-black mt-2">
+          <h1 className="text-[52px] font-black tracking-[-3px] text-black mt-3">
 
             TRENDING
 
@@ -64,9 +69,11 @@ export default function Trending() {
 
         </div>
 
+        {/* IMPORTANT FIX */}
+
         <Link
-          to="/login"
-          className="text-black font-semibold hover:text-[#8da27f] transition"
+          to={isActualHome ? "/collections" : "/login"}
+          className="text-black font-semibold hover:text-[#8da27f] transition duration-300"
         >
 
           View All Collections →
@@ -75,38 +82,29 @@ export default function Trending() {
 
       </div>
 
-      {/* CARDS */}
+      {/* SHOES */}
 
-      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
+      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-7">
 
         {shoes.map((shoe, index) => (
 
           <Link
             key={index}
-            to="/login"
-            className="group bg-[#f7f7f7] rounded-[26px] p-5 overflow-hidden hover:shadow-2xl transition duration-300"
+            to={isActualHome ? "/collections" : "/login"}
+            className="group bg-[#f7f7f7] rounded-[30px] p-6 overflow-hidden hover:shadow-2xl transition"
           >
 
             {/* TOP */}
 
-            <div className="flex items-center justify-between">
+            <div className="flex justify-between items-center">
 
               <p className="bg-white px-4 py-2 rounded-full text-[11px] font-bold">
 
-                AUTHENTIC
+                AUTHENTIC SHIELD
 
               </p>
 
-              {/* WISHLIST */}
-
-              <button className="w-[38px] h-[38px] rounded-full bg-white flex items-center justify-center shadow-sm hover:bg-[#8da27f] transition group">
-
-                <Heart
-                  size={18}
-                  className="text-gray-500 group-hover:text-white transition"
-                />
-
-              </button>
+              <Heart className="text-gray-400 group-hover:text-red-500 transition" />
 
             </div>
 
@@ -115,20 +113,28 @@ export default function Trending() {
             <img
               src={shoe.image}
               alt=""
-              className="w-full mt-6 group-hover:scale-105 transition duration-700"
+              className="w-full mt-8 group-hover:scale-110 transition duration-700"
             />
 
             {/* TITLE */}
 
-            <h2 className="text-[24px] font-black mt-6">
+            <h2 className="text-[24px] font-black mt-8">
 
               {shoe.title}
 
             </h2>
 
+            {/* TEXT */}
+
+            <p className="text-gray-500 text-[14px] leading-[26px] mt-4">
+
+              Premium luxury sneaker crafted with elite comfort, timeless streetwear aesthetics, and modern performance styling.
+
+            </p>
+
             {/* PRICE */}
 
-            <div className="flex justify-between items-center mt-5">
+            <div className="flex justify-between mt-6 items-center">
 
               <h3 className="text-[24px] font-black">
 
@@ -136,7 +142,7 @@ export default function Trending() {
 
               </h3>
 
-              <p className="text-[#8da27f] text-[12px] font-bold">
+              <p className="text-[#8da27f] text-[13px] font-bold">
 
                 {shoe.stock}
 
