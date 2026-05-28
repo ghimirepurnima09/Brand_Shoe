@@ -1,59 +1,54 @@
-// ==============================
-// Login.jsx
-// ==============================
-
 import { useState } from "react";
 
 import {
+  User,
+  Mail,
+  Lock,
   Eye,
   EyeOff,
-  Mail,
-  Lock
+  ArrowLeft
 } from "lucide-react";
 
-import { Link, useNavigate } from "react-router-dom";
+import {
+  Link,
+  useNavigate
+} from "react-router-dom";
 
-import Shoe6 from "../assets/Shoe6.png";
 import logo from "../assets/logo.png";
 
-export default function Login() {
+export default function Register() {
 
   const [showPassword, setShowPassword] = useState(false);
 
+  const [password, setPassword] = useState("");
+
+  const [agree, setAgree] = useState(false);
+
   const navigate = useNavigate();
 
-  const handleLogin = () => {
+  const hasLength = password.length >= 8;
 
-    // AFTER LOGIN GO TO MAIN HOME
-    navigate("/mainhome");
+  const hasSpecial = /[@$!%*?&]/.test(password);
 
-  };
+  const hasUpper = /[A-Z]/.test(password);
 
   return (
 
-    <section className="min-h-screen bg-[#f3f3f3] flex overflow-hidden">
+    <section className="min-h-screen bg-[#f3f3f3] flex flex-col">
 
-      {/* LEFT SIDE */}
+      {/* NAVBAR */}
 
-      <div className="hidden lg:flex flex-1 bg-black relative items-center justify-center overflow-hidden">
+      <nav className="w-full h-[78px] bg-white border-b border-gray-200 flex items-center px-6 lg:px-14">
 
-        <img
-          src="https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?q=80&w=1400&auto=format&fit=crop"
-          alt=""
-          className="absolute inset-0 w-full h-full object-cover opacity-40"
-        />
-
-        {/* LOGO */}
-
-        <div className="absolute top-6 left-6 z-20 flex items-center gap-3">
+        <div className="flex items-center gap-4">
 
           <img
             src={logo}
             alt=""
-            className="w-[48px] h-[48px] rounded-full object-cover border border-white/20 shadow-lg"
+            className="w-[46px] h-[46px] rounded-full"
           />
 
-          <h1 className="text-white text-[30px] font-black tracking-[-2px]">
+          <h1 className="text-[30px] font-black tracking-[-2px]">
 
             Brand_Shoe
 
@@ -61,161 +56,213 @@ export default function Login() {
 
         </div>
 
-        {/* SHOE */}
+      </nav>
 
-        <img
-          src={Shoe6}
-          alt=""
-          className="w-[520px] z-10 drop-shadow-[0_35px_35px_rgba(255,255,255,0.18)] hover:scale-105 transition duration-700"
-        />
+      {/* MAIN */}
 
-        {/* OVERLAY */}
+      <div className="flex-1 flex items-center justify-center px-5 py-8">
 
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-black/30"></div>
+        <div className="w-full max-w-[1280px] grid lg:grid-cols-2 gap-8 items-center">
 
-        {/* TEXT */}
+          {/* LEFT */}
 
-        <div className="absolute bottom-14 left-10 z-20">
+          <div className="relative rounded-[30px] overflow-hidden h-[560px]">
 
-          <h1 className="text-white text-[58px] leading-[90%] font-black tracking-[-4px]">
+            <Link
+              to="/login"
+              className="absolute top-5 left-5 z-20 w-[42px] h-[42px] rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white"
+            >
 
-            ENTER THE
-            <br />
-            SNEAKER
-            <br />
-            WORLD
+              <ArrowLeft size={20} />
 
-          </h1>
+            </Link>
 
-        </div>
+            <img
+              src="https://images.unsplash.com/photo-1600269452121-4f2416e55c28?q=80&w=1400&auto=format&fit=crop"
+              alt=""
+              className="absolute inset-0 w-full h-full object-cover"
+            />
 
-      </div>
+            <div className="absolute inset-0 bg-black/40"></div>
 
-      {/* RIGHT SIDE */}
+          </div>
 
-      <div className="flex-1 bg-[#f3f3f3] flex items-center justify-center px-5">
+          {/* RIGHT */}
 
-        <div className="w-full max-w-[380px]">
+          <div className="px-1 lg:px-8">
 
-          <h1 className="text-[46px] leading-[46px] font-black tracking-[-3px] text-black">
+            <h1 className="text-[62px] leading-[60px] font-black tracking-[-4px]">
 
-            Welcome
-            <br />
-            Back.
+              Join the
+              <br />
+              Brand_Shoe
 
-          </h1>
+            </h1>
 
-          <p className="text-gray-500 text-[15px] mt-4 leading-[28px]">
+            <p className="text-gray-500 text-[17px] mt-4">
 
-            Login to continue exploring premium sneaker collections.
+              Create your profile to start your sneaker journey.
 
-          </p>
+            </p>
 
-          <div className="mt-10">
+            {/* FORM */}
 
-            {/* EMAIL */}
+            <div className="mt-9 space-y-5">
 
-            <div>
+              <div>
 
-              <label className="text-[11px] tracking-[2px] text-gray-500 font-bold">
+                <label className="text-[12px] font-bold tracking-[2px] text-gray-500">
 
-                EMAIL ADDRESS
+                  FULL NAME
 
-              </label>
+                </label>
 
-              <div className="mt-2 bg-white border border-gray-300 rounded-[14px] h-[58px] px-4 flex items-center gap-3 shadow-sm">
+                <div className="mt-2 h-[58px] rounded-[16px] border border-gray-300 bg-white px-4 flex items-center gap-3">
 
-                <Mail
-                  size={18}
-                  className="text-gray-400"
-                />
+                  <User size={18} className="text-gray-400" />
 
-                <input
-                  type="email"
-                  placeholder="name@domain.com"
-                  className="bg-transparent outline-none w-full text-[15px]"
-                />
+                  <input
+                    type="text"
+                    placeholder="John Doe"
+                    className="w-full outline-none"
+                  />
+
+                </div>
 
               </div>
 
-            </div>
+              <div>
 
-            {/* PASSWORD */}
+                <label className="text-[12px] font-bold tracking-[2px] text-gray-500">
 
-            <div className="mt-6">
+                  EMAIL ADDRESS
 
-              <div className="flex justify-between items-center">
+                </label>
 
-                <label className="text-[11px] tracking-[2px] text-gray-500 font-bold">
+                <div className="mt-2 h-[58px] rounded-[16px] border border-gray-300 bg-white px-4 flex items-center gap-3">
+
+                  <Mail size={18} className="text-gray-400" />
+
+                  <input
+                    type="email"
+                    placeholder="john@brandshoe.com"
+                    className="w-full outline-none"
+                  />
+
+                </div>
+
+              </div>
+
+              <div>
+
+                <label className="text-[12px] font-bold tracking-[2px] text-gray-500">
 
                   PASSWORD
 
                 </label>
 
+                <div className="mt-2 h-[58px] rounded-[16px] border border-gray-300 bg-white px-4 flex items-center gap-3">
+
+                  <Lock size={18} className="text-gray-400" />
+
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Create strong password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="w-full outline-none"
+                  />
+
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+
+                    {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+
+                  </button>
+
+                </div>
+
               </div>
 
-              <div className="mt-2 bg-white border border-gray-300 rounded-[14px] h-[58px] px-4 flex items-center gap-3 shadow-sm">
+              {/* PASSWORD RULES */}
 
-                <Lock
-                  size={18}
-                  className="text-gray-400"
-                />
+              <div className="space-y-2">
+
+                <p className={hasLength ? "text-green-600 text-[12px]" : "text-gray-500 text-[12px]"}>
+
+                  ✓ Minimum 8 characters
+
+                </p>
+
+                <p className={hasSpecial ? "text-green-600 text-[12px]" : "text-gray-500 text-[12px]"}>
+
+                  ✓ Must contain special character
+
+                </p>
+
+                <p className={hasUpper ? "text-green-600 text-[12px]" : "text-gray-500 text-[12px]"}>
+
+                  ✓ At least one uppercase letter
+
+                </p>
+
+              </div>
+
+              {/* TERMS */}
+
+              <div className="flex items-start gap-3">
 
                 <input
-                  type={showPassword ? "text" : "password"}
-                  placeholder="••••••••"
-                  className="bg-transparent outline-none w-full text-[15px]"
+                  type="checkbox"
+                  checked={agree}
+                  onChange={(e) => setAgree(e.target.checked)}
+                  className="mt-1"
                 />
 
-                <button
-                  onClick={() => setShowPassword(!showPassword)}
-                  type="button"
-                  className="text-gray-400 hover:text-black transition"
-                >
+                <p className="text-[12px] text-gray-500 leading-[22px]">
 
-                  {showPassword ? (
+                  I agree to the Terms & Conditions and Privacy Policy
 
-                    <EyeOff size={18} />
-
-                  ) : (
-
-                    <Eye size={18} />
-
-                  )}
-
-                </button>
+                </p>
 
               </div>
 
-            </div>
+              {/* BUTTON */}
 
-            {/* BUTTON */}
-
-            <button
-              onClick={handleLogin}
-              className="w-full h-[58px] bg-black text-white rounded-[14px] mt-8 text-[13px] tracking-[3px] font-bold hover:bg-[#6f8f62] transition duration-300 shadow-xl"
-            >
-
-              SIGN IN
-
-            </button>
-
-            {/* REGISTER */}
-
-            <p className="text-center text-gray-500 text-[14px] mt-10">
-
-              Don’t have an Account?
-
-              <Link
-                to="/register"
-                className="text-black font-semibold ml-2 hover:text-[#6f8f62] transition"
+              <button
+                onClick={() => navigate("/login")}
+                disabled={!agree}
+                className={`w-full h-[60px] rounded-[16px] text-[15px] font-bold tracking-[2px] ${
+                  agree
+                    ? "bg-black text-white hover:bg-[#6f8f62]"
+                    : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                }`}
               >
 
-                Register
+                CREATE ACCOUNT
 
-              </Link>
+              </button>
 
-            </p>
+              {/* LOGIN */}
+
+              <p className="text-center text-gray-600 text-[15px]">
+
+                Already have an Account?
+
+                <Link
+                  to="/login"
+                  className="text-black font-semibold ml-2"
+                >
+
+                  Log in
+
+                </Link>
+
+              </p>
+
+            </div>
 
           </div>
 

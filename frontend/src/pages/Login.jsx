@@ -1,3 +1,7 @@
+// ==============================
+// Login.jsx
+// ==============================
+
 import { useState } from "react";
 
 import {
@@ -20,6 +24,7 @@ export default function Login() {
 
   const handleLogin = () => {
 
+    // AFTER LOGIN GO TO MAIN HOME
     navigate("/mainhome");
 
   };
@@ -146,6 +151,8 @@ export default function Login() {
                   PASSWORD
 
                 </label>
+
+                {/* FORGOT PASSWORD */}
 
                 <Link
                   to="/forgotpassword"

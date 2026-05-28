@@ -7,6 +7,8 @@ import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import ForgotPassword from "./pages/ForgetPassword";
+
 import MainHome from "./pages/MainHome";
 
 import CollectionsPage from "./pages/CollectionsPage";
@@ -16,10 +18,6 @@ import OffersPage from "./pages/OffersPage";
 import Women from "./pages/Women";
 import Men from "./pages/Men";
 import Kids from "./pages/Kids";
-
-/* FORGOT PASSWORD */
-
-import ForgotPassword from "./pages/ForgetPassword";
 
 export default function App() {
 
@@ -83,21 +81,17 @@ export default function App() {
         element={<OffersPage />}
       />
 
-      {/* WOMEN */}
+      {/* CATEGORY */}
 
       <Route
         path="/women"
         element={<Women />}
       />
 
-      {/* MEN */}
-
       <Route
         path="/men"
         element={<Men />}
       />
-
-      {/* KIDS */}
 
       <Route
         path="/kids"

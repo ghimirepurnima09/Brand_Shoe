@@ -2,12 +2,15 @@
 // ForgotPassword.jsx
 // ==============================
 
-import { Mail, ArrowLeft } from "lucide-react";
-
 import { Link } from "react-router-dom";
 
+import {
+  Mail,
+  ArrowLeft,
+  ShieldCheck
+} from "lucide-react";
+
 import logo from "../assets/logo.png";
-import Shoe6 from "../assets/Shoe6.png";
 
 export default function ForgotPassword() {
 
@@ -22,7 +25,7 @@ export default function ForgotPassword() {
         {/* BACKGROUND */}
 
         <img
-          src="https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?q=80&w=1400&auto=format&fit=crop"
+          src="https://images.unsplash.com/photo-1491553895911-0055eca6402d?q=80&w=1600&auto=format&fit=crop"
           alt=""
           className="absolute inset-0 w-full h-full object-cover opacity-40"
         />
@@ -48,9 +51,9 @@ export default function ForgotPassword() {
         {/* SHOE */}
 
         <img
-          src={Shoe6}
+          src="https://images.unsplash.com/photo-1543508282-6319a3e2621f?q=80&w=1400&auto=format&fit=crop"
           alt=""
-          className="w-[520px] z-10 drop-shadow-[0_35px_35px_rgba(255,255,255,0.18)] hover:scale-105 transition duration-700"
+          className="w-[560px] z-10 object-contain drop-shadow-[0_35px_35px_rgba(255,255,255,0.18)] hover:scale-105 transition duration-700"
         />
 
         {/* OVERLAY */}
@@ -70,7 +73,7 @@ export default function ForgotPassword() {
 
             <span className="text-[#8da27f]">
 
-              QUICKLY
+              SECURELY
 
             </span>
 
@@ -86,96 +89,117 @@ export default function ForgotPassword() {
 
         <div className="w-full max-w-[390px]">
 
-          {/* BACK BUTTON */}
+          {/* BACK */}
 
           <Link
             to="/login"
-            className="flex items-center gap-2 text-gray-500 hover:text-black transition mb-8"
+            className="flex items-center gap-2 text-gray-500 hover:text-black transition mb-7 font-medium"
           >
 
-            <ArrowLeft size={18} />
+            <ArrowLeft size={17} />
 
             Back to Login
 
           </Link>
 
-          {/* TITLE */}
-
-          <h1 className="text-[48px] leading-[48px] font-black tracking-[-3px] text-black">
+          <h1 className="text-[46px] leading-[46px] font-black tracking-[-3px] text-black">
 
             Forgot
             <br />
-            Password?
+            Password.
 
           </h1>
 
-          {/* DESCRIPTION */}
+          <p className="text-gray-500 text-[15px] mt-4 leading-[28px]">
 
-          <p className="text-gray-500 text-[15px] mt-5 leading-[28px]">
-
-            Don’t worry. Enter your registered email address and we’ll send you a password reset link.
+            Enter your email address and we’ll send you a password reset OTP code.
 
           </p>
 
-          {/* FORM */}
+          {/* EMAIL */}
 
           <div className="mt-10">
 
-            {/* EMAIL */}
+            <label className="text-[11px] tracking-[2px] text-gray-500 font-bold">
 
-            <div>
+              EMAIL ADDRESS
 
-              <label className="text-[11px] tracking-[2px] text-gray-500 font-bold">
+            </label>
 
-                EMAIL ADDRESS
+            <div className="mt-2 bg-white border border-gray-300 rounded-[14px] h-[58px] px-4 flex items-center gap-3 shadow-sm">
 
-              </label>
+              <Mail
+                size={18}
+                className="text-gray-400"
+              />
 
-              <div className="mt-2 bg-white border border-gray-300 rounded-[14px] h-[58px] px-4 flex items-center gap-3 shadow-sm">
-
-                <Mail
-                  size={18}
-                  className="text-gray-400"
-                />
-
-                <input
-                  type="email"
-                  placeholder="name@domain.com"
-                  className="bg-transparent outline-none w-full text-[15px]"
-                />
-
-              </div>
+              <input
+                type="email"
+                placeholder="name@domain.com"
+                className="bg-transparent outline-none w-full text-[15px]"
+              />
 
             </div>
 
-            {/* BUTTON */}
+          </div>
 
-            <button
-              className="w-full h-[58px] bg-black text-white rounded-[14px] mt-8 text-[13px] tracking-[3px] font-bold hover:bg-[#6f8f62] transition duration-300 shadow-xl"
-            >
+          {/* BUTTON */}
 
-              SEND RESET LINK
+          <button
+            className="w-full h-[58px] bg-black text-white rounded-[14px] mt-8 text-[13px] tracking-[3px] font-bold hover:bg-[#6f8f62] transition duration-300 shadow-xl"
+          >
 
-            </button>
+            SEND OTP 
 
-            {/* LOGIN */}
+          </button>
 
-            <p className="text-center text-gray-500 text-[14px] mt-10">
+          {/* EXTRA BOX */}
 
-              Remember your password?
+          <div className="mt-8 bg-white border border-gray-200 rounded-[20px] p-5 shadow-sm flex items-start gap-4">
 
-              <Link
-                to="/login"
-                className="text-black font-semibold ml-2 hover:text-[#6f8f62] transition"
-              >
+            <div className="w-[52px] h-[52px] rounded-full bg-[#8da27f]/10 flex items-center justify-center">
 
-                Login
+              <ShieldCheck
+                size={24}
+                className="text-[#8da27f]"
+              />
 
-              </Link>
+            </div>
 
-            </p>
+            <div>
+
+              <h3 className="font-bold text-[16px] text-black">
+
+                Secure Recovery
+
+              </h3>
+
+              <p className="text-gray-500 text-[14px] leading-[24px] mt-1">
+
+                Your account security is protected with encrypted password recovery.
+
+              </p>
+
+            </div>
 
           </div>
+
+          {/* LOGIN */}
+
+          <p className="text-center text-gray-500 text-[14px] mt-8">
+
+            Remember your password?
+
+            <Link
+              to="/login"
+              className="text-black font-semibold ml-2 hover:text-[#6f8f62] transition"
+            >
+
+              Login
+
+            </Link>
+
+          </p>
 
         </div>
 
