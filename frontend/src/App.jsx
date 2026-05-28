@@ -7,7 +7,9 @@ import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+
 import ForgotPassword from "./pages/ForgetPassword";
+import ResetPassword from "./pages/ResetPassword";
 
 import MainHome from "./pages/MainHome";
 
@@ -53,7 +55,14 @@ export default function App() {
         element={<ForgotPassword />}
       />
 
-      {/* MAIN HOME */}
+      {/* RESET PASSWORD + OTP PAGE */}
+
+      <Route
+        path="/resetpassword"
+        element={<ResetPassword />}
+      />
+
+      {/* HOME AFTER LOGIN */}
 
       <Route
         path="/mainhome"
@@ -81,7 +90,7 @@ export default function App() {
         element={<OffersPage />}
       />
 
-      {/* CATEGORY */}
+      {/* CATEGORY PAGES */}
 
       <Route
         path="/women"

@@ -2,7 +2,7 @@
 // ForgotPassword.jsx
 // ==============================
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import {
   Mail,
@@ -13,6 +13,16 @@ import {
 import logo from "../assets/logo.png";
 
 export default function ForgotPassword() {
+
+  const navigate = useNavigate();
+
+  const handleSendOtp = () => {
+
+    // OPEN RESET PASSWORD PAGE
+
+    navigate("/resetpassword");
+
+  };
 
   return (
 
@@ -146,10 +156,11 @@ export default function ForgotPassword() {
           {/* BUTTON */}
 
           <button
+            onClick={handleSendOtp}
             className="w-full h-[58px] bg-black text-white rounded-[14px] mt-8 text-[13px] tracking-[3px] font-bold hover:bg-[#6f8f62] transition duration-300 shadow-xl"
           >
 
-            SEND OTP 
+            SEND OTP
 
           </button>
 
