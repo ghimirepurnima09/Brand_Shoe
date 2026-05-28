@@ -1,4 +1,6 @@
+// ==============================
 // App.jsx
+// ==============================
 
 import { Routes, Route } from "react-router-dom";
 
@@ -15,13 +17,17 @@ import Women from "./pages/Women";
 import Men from "./pages/Men";
 import Kids from "./pages/Kids";
 
+/* FORGOT PASSWORD */
+
+import ForgotPassword from "./pages/ForgetPassword";
+
 export default function App() {
 
   return (
 
     <Routes>
 
-      {/* FIRST HOME PAGE */}
+      {/* LANDING PAGE */}
 
       <Route
         path="/"
@@ -42,7 +48,14 @@ export default function App() {
         element={<Register />}
       />
 
-      {/* ACTUAL HOME PAGE AFTER LOGIN */}
+      {/* FORGOT PASSWORD */}
+
+      <Route
+        path="/forgotpassword"
+        element={<ForgotPassword />}
+      />
+
+      {/* MAIN HOME */}
 
       <Route
         path="/mainhome"
@@ -56,31 +69,35 @@ export default function App() {
         element={<CollectionsPage />}
       />
 
-      {/* MOST SOLD PAGE */}
+      {/* MOST SOLD */}
 
       <Route
         path="/mostsold"
         element={<MostSoldPage />}
       />
 
-      {/* OFFERS PAGE */}
+      {/* OFFERS */}
 
       <Route
         path="/offers"
         element={<OffersPage />}
       />
 
-      {/* CATEGORY PAGES */}
+      {/* WOMEN */}
 
       <Route
         path="/women"
         element={<Women />}
       />
 
+      {/* MEN */}
+
       <Route
         path="/men"
         element={<Men />}
       />
+
+      {/* KIDS */}
 
       <Route
         path="/kids"

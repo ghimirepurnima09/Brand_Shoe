@@ -1,7 +1,3 @@
-// ==============================
-// Login.jsx
-// ==============================
-
 import { useState } from "react";
 
 import {
@@ -24,7 +20,6 @@ export default function Login() {
 
   const handleLogin = () => {
 
-    // AFTER LOGIN GO TO MAIN HOME
     navigate("/mainhome");
 
   };
@@ -151,6 +146,15 @@ export default function Login() {
                   PASSWORD
 
                 </label>
+
+                <Link
+                  to="/forgotpassword"
+                  className="text-[12px] font-semibold text-[#6f8f62] hover:text-black transition"
+                >
+
+                  Forgot Password?
+
+                </Link>
 
               </div>
 

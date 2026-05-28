@@ -1,82 +1,164 @@
 // CollectionsPage.jsx
 
 import { Link } from "react-router-dom";
+
 import {
   Sparkles,
   Flame,
-  Star,
+  Tag,
   Heart
 } from "lucide-react";
 
 export default function CollectionsPage() {
+    // Replace ONLY the shoes array in CollectionsPage.jsx with this
 
-  const newCollections = [
+const shoes = [
 
-    {
-      image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=1200&auto=format&fit=crop",
-      name: "Nike Air Max Elite",
-      price: "$340",
-      description: "Luxury-crafted sneakers with elite cushioning and iconic modern streetwear styling."
-    },
+  {
+    image:
+      "https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=1200&auto=format&fit=crop",
+    name: "Nike Air Max 270",
+    price: "$320",
+    description:
+      "Premium lifestyle sneakers featuring iconic Air cushioning, lightweight comfort, and modern streetwear styling."
+  },
 
-    {
-      image: "https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?q=80&w=1200&auto=format&fit=crop",
-      name: "Adidas Ultraboost Prime",
-      price: "$310",
-      description: "Premium performance sneakers designed with lightweight comfort and sleek urban aesthetics."
-    },
+  {
+    image:
+      "https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?q=80&w=1200&auto=format&fit=crop",
+    name: "Adidas Ultraboost 22",
+    price: "$340",
+    description:
+      "Luxury running sneakers crafted with responsive Boost cushioning and sleek modern performance aesthetics."
+  },
 
-    {
-      image: "https://images.unsplash.com/photo-1515955656352-a1fa3ffcd111?q=80&w=1200&auto=format&fit=crop",
-      name: "Puma Future Rider",
-      price: "$270",
-      description: "Modern luxury sneakers inspired by futuristic comfort and bold fashion identity."
-    },
+  {
+    image:
+      "https://images.unsplash.com/photo-1515955656352-a1fa3ffcd111?q=80&w=1200&auto=format&fit=crop",
+    name: "Puma RS-X",
+    price: "$280",
+    description:
+      "Bold designer sneakers inspired by retro streetwear culture with premium comfort technology."
+  },
 
-    {
-      image: "https://images.unsplash.com/photo-1608231387042-66d1773070a5?q=80&w=1200&auto=format&fit=crop",
-      name: "Jordan Velocity X",
-      price: "$390",
-      description: "Elite basketball-inspired sneakers with iconic layered detailing and premium cushioning."
-    },
+  {
+    image:
+      "https://images.unsplash.com/photo-1608231387042-66d1773070a5?q=80&w=1200&auto=format&fit=crop",
+    name: "Air Jordan 1 Retro High",
+    price: "$520",
+    description:
+      "Legendary basketball sneakers combining iconic heritage styling with luxurious modern craftsmanship."
+  },
 
-    {
-      image: "https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?q=80&w=1200&auto=format&fit=crop",
-      name: "Converse Street Lift",
-      price: "$240",
-      description: "Timeless streetwear sneakers crafted with premium comfort support and urban styling."
-    },
+  {
+    image:
+      "https://images.unsplash.com/photo-1605348532760-6753d2c43329?q=80&w=1200&auto=format&fit=crop",
+    name: "Nike Dunk Low",
+    price: "$390",
+    description:
+      "Premium low-top sneakers designed for modern sneaker culture with timeless urban aesthetics."
+  },
 
-    {
-      image: "https://images.unsplash.com/photo-1607522370275-f14206abe5d3?q=80&w=1200&auto=format&fit=crop",
-      name: "Nike Noir Shadow",
-      price: "$350",
-      description: "Elegant black luxury sneakers featuring futuristic design and superior comfort."
-    },
+  {
+    image:
+      "https://images.unsplash.com/photo-1543508282-6319a3e2621f?q=80&w=1200&auto=format&fit=crop",
+    name: "Air Jordan 4",
+    price: "$560",
+    description:
+      "Luxury performance sneakers featuring iconic layered design and elite basketball-inspired comfort."
+  },
 
-    {
-      image: "https://images.unsplash.com/photo-1600269452121-4f2416e55c28?q=80&w=1200&auto=format&fit=crop",
-      name: "Puma Velocity Max",
-      price: "$260",
-      description: "Premium sneakers engineered with lightweight structure and elevated sneaker culture styling."
-    },
+  {
+    image:
+      "https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?q=80&w=1200&auto=format&fit=crop",
+    name: "Converse Chuck Taylor",
+    price: "$240",
+    description:
+      "Classic premium sneakers reimagined with modern comfort and timeless streetwear identity."
+  },
 
-    {
-      image: "https://images.unsplash.com/photo-1560769629-975ec94e6a86?q=80&w=1200&auto=format&fit=crop",
-      name: "Nike Lunar Drift",
-      price: "$370",
-      description: "Luxury sneaker collection designed for iconic style and all-day premium comfort."
-    }
+  {
+    image:
+      "https://images.unsplash.com/photo-1491553895911-0055eca6402d?q=80&w=1200&auto=format&fit=crop",
+    name: "Nike Air Force 1",
+    price: "$410",
+    description:
+      "Iconic luxury sneakers known for premium leather construction and legendary urban fashion styling."
+  },
 
-  ];
+  {
+    image:
+      "https://images.unsplash.com/photo-1514989940723-e8e51635b782?q=80&w=1200&auto=format&fit=crop",
+    name: "New Balance 550",
+    price: "$300",
+    description:
+      "Premium retro-inspired sneakers delivering elegant simplicity and modern everyday comfort."
+  },
+
+  {
+    image:
+      "https://images.unsplash.com/photo-1511556532299-8f662fc26c06?q=80&w=1200&auto=format&fit=crop",
+    name: "Nike Blazer Mid 77",
+    price: "$360",
+    description:
+      "Vintage-inspired sneakers crafted with premium detailing and modern luxury streetwear appeal."
+  },
+
+  {
+    image:
+      "https://images.unsplash.com/photo-1607522370275-f14206abe5d3?q=80&w=1200&auto=format&fit=crop",
+    name: "Adidas NMD R1",
+    price: "$330",
+    description:
+      "Futuristic sneakers designed with responsive comfort technology and clean urban aesthetics."
+  },
+
+  {
+    image:
+      "https://images.unsplash.com/photo-1603808033192-082d6919d3e1?q=80&w=1200&auto=format&fit=crop",
+    name: "Puma Suede Classic",
+    price: "$250",
+    description:
+      "Luxury suede sneakers blending timeless fashion culture with premium modern comfort."
+  },
+
+  {
+    image:
+      "https://images.unsplash.com/photo-1579338559194-a162d19bf842?q=80&w=1200&auto=format&fit=crop",
+    name: "Nike React Vision",
+    price: "$370",
+    description:
+      "Modern lifestyle sneakers engineered with lightweight cushioning and futuristic design elements."
+  },
+
+  {
+    image:
+      "https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?q=80&w=1200&auto=format&fit=crop",
+    name: "Vans Old Skool",
+    price: "$220",
+    description:
+      "Classic skate-inspired sneakers crafted with durable premium materials and timeless street styling."
+  },
+
+  {
+    image:
+      "https://images.unsplash.com/photo-1608667508764-33cf0726b13a?q=80&w=1200&auto=format&fit=crop",
+    name: "Air Jordan 11",
+    price: "$590",
+    description:
+      "Elite luxury basketball sneakers featuring glossy patent leather and iconic championship heritage."
+  }
+
+];
+  
 
   return (
 
-    <section className="bg-[#f5f5f5] min-h-screen">
+    <section className="bg-[#f3f3f3] min-h-screen pb-20">
 
-      {/* HERO */}
+      {/* HERO SECTION */}
 
-      <div className="relative h-[500px] overflow-hidden rounded-b-[50px]">
+      <div className="relative h-[520px] overflow-hidden rounded-b-[50px]">
 
         <img
           src="https://images.unsplash.com/photo-1491553895911-0055eca6402d?q=80&w=1800&auto=format&fit=crop"
@@ -84,28 +166,28 @@ export default function CollectionsPage() {
           className="absolute inset-0 w-full h-full object-cover"
         />
 
-        <div className="absolute inset-0 bg-black/60"></div>
+        <div className="absolute inset-0 bg-black/70"></div>
 
         <div className="relative z-10 h-full flex flex-col justify-center px-6 lg:px-16">
 
-          <p className="text-[#d8e6d1] tracking-[4px] text-[12px] font-bold">
+          <p className="text-[#d7e5d0] tracking-[4px] text-[12px] font-bold">
 
-            BRAND_SHOE EXCLUSIVE COLLECTION
+            BRAND_SHOE PREMIUM COLLECTION
 
           </p>
 
-          <h1 className="text-white text-[62px] lg:text-[92px] leading-[88%] font-black tracking-[-6px] mt-5">
+          <h1 className="text-white text-[65px] lg:text-[95px] leading-[88%] font-black tracking-[-6px] mt-5">
 
-            NEW
+            LUXURY
             <br />
             COLLECTIONS
 
           </h1>
 
-          <p className="text-gray-200 text-[16px] leading-[32px] mt-7 max-w-[700px]">
+          <p className="text-gray-200 text-[16px] leading-[32px] mt-7 max-w-[720px]">
 
-            Discover premium sneaker collections inspired by luxury fashion,
-            modern performance engineering, and iconic global streetwear culture.
+            Discover world-class luxury sneakers inspired by elite fashion,
+            premium comfort engineering, and modern global streetwear culture.
 
           </p>
 
@@ -113,13 +195,14 @@ export default function CollectionsPage() {
 
       </div>
 
-      {/* TOP BUTTONS */}
+      {/* CATEGORY BUTTONS */}
 
       <div className="flex flex-wrap gap-4 px-6 lg:px-16 mt-12">
 
         <button className="h-[54px] px-8 rounded-full bg-[#8da27f] text-white font-bold tracking-[2px] text-[12px] flex items-center gap-2 shadow-lg">
 
           <Sparkles size={18} />
+
           NEW COLLECTIONS
 
         </button>
@@ -130,6 +213,7 @@ export default function CollectionsPage() {
         >
 
           <Flame size={18} />
+
           MOST SOLD
 
         </Link>
@@ -139,7 +223,8 @@ export default function CollectionsPage() {
           className="h-[54px] px-8 rounded-full bg-white text-black font-bold tracking-[2px] text-[12px] flex items-center gap-2 shadow-md hover:bg-black hover:text-white transition"
         >
 
-          <Star size={18} />
+          <Tag size={18} />
+
           OFFERS
 
         </Link>
@@ -150,14 +235,16 @@ export default function CollectionsPage() {
 
       <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 px-6 lg:px-16 py-16">
 
-        {newCollections.map((shoe, index) => (
+        {shoes.map((shoe, index) => (
 
           <div
             key={index}
             className="bg-white rounded-[34px] overflow-hidden shadow-xl hover:-translate-y-2 transition duration-500"
           >
 
-            <div className="relative h-[290px] overflow-hidden">
+            {/* IMAGE */}
+
+            <div className="relative h-[300px] overflow-hidden">
 
               <img
                 src={shoe.image}
@@ -165,13 +252,17 @@ export default function CollectionsPage() {
                 className="w-full h-full object-cover hover:scale-110 transition duration-700"
               />
 
-              <button className="absolute top-5 right-5 w-[42px] h-[42px] rounded-full bg-white flex items-center justify-center shadow-lg">
+              {/* WISHLIST */}
+
+              <button className="absolute top-5 right-5 w-[44px] h-[44px] rounded-full bg-white flex items-center justify-center shadow-lg hover:bg-black hover:text-white transition">
 
                 <Heart size={18} />
 
               </button>
 
             </div>
+
+            {/* CONTENT */}
 
             <div className="p-6">
 
