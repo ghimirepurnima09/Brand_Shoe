@@ -14,6 +14,8 @@ import {
 
 import { useState } from "react";
 
+import axios from "axios";
+
 import logo from "../assets/logo.png";
 
 export default function ResetPassword() {
@@ -24,11 +26,67 @@ export default function ResetPassword() {
 
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const handleReset = () => {
+  const [otp, setOtp] = useState("");
 
-    alert("Password Reset Successfully!");
+  const [newPassword, setNewPassword] = useState("");
 
-    navigate("/login");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  const [loading, setLoading] = useState(false);
+
+  const email = localStorage.getItem("resetEmail");
+
+  const handleReset = async () => {
+
+    if (!otp || !newPassword || !confirmPassword) {
+
+      alert("Please fill all fields");
+
+      return;
+
+    }
+
+    if (newPassword !== confirmPassword) {
+
+      alert("Passwords do not match");
+
+      return;
+
+    }
+
+    try {
+
+      setLoading(true);
+
+      const response = await axios.post(
+        "http://localhost:5000/api/auth/resetpassword",
+        {
+          email,
+          otp,
+          password: newPassword
+        }
+      );
+
+      alert(response.data.message);
+
+      localStorage.removeItem("resetEmail");
+
+      navigate("/login");
+
+    } catch (error) {
+
+      console.log(error);
+
+      alert(
+        error.response?.data?.message ||
+        "Something went wrong"
+      );
+
+    } finally {
+
+      setLoading(false);
+
+    }
 
   };
 
@@ -149,6 +207,8 @@ export default function ResetPassword() {
             <input
               type="text"
               placeholder="Enter OTP"
+              value={otp}
+              onChange={(e) => setOtp(e.target.value)}
               className="mt-2 w-full h-[58px] bg-white border border-gray-300 rounded-[14px] px-4 outline-none shadow-sm text-[15px]"
             />
 
@@ -174,6 +234,8 @@ export default function ResetPassword() {
               <input
                 type={showPassword ? "text" : "password"}
                 placeholder="Enter new password"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
                 className="bg-transparent outline-none w-full text-[15px]"
               />
 
@@ -221,6 +283,8 @@ export default function ResetPassword() {
               <input
                 type={showConfirmPassword ? "text" : "password"}
                 placeholder="Confirm password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
                 className="bg-transparent outline-none w-full text-[15px]"
               />
 
@@ -252,10 +316,15 @@ export default function ResetPassword() {
 
           <button
             onClick={handleReset}
+            disabled={loading}
             className="w-full h-[58px] bg-black text-white rounded-[14px] mt-8 text-[13px] tracking-[3px] font-bold hover:bg-[#6f8f62] transition duration-300 shadow-xl"
           >
 
-            RESET PASSWORD
+            {
+              loading
+                ? "RESETTING..."
+                : "RESET PASSWORD"
+            }
 
           </button>
 

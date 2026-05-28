@@ -1,3 +1,7 @@
+// ==============================
+// Register.jsx
+// ==============================
+
 import { useState } from "react";
 
 import {
@@ -14,15 +18,23 @@ import {
   useNavigate
 } from "react-router-dom";
 
+import axios from "axios";
+
 import logo from "../assets/logo.png";
 
 export default function Register() {
 
   const [showPassword, setShowPassword] = useState(false);
 
+  const [name, setName] = useState("");
+
+  const [email, setEmail] = useState("");
+
   const [password, setPassword] = useState("");
 
   const [agree, setAgree] = useState(false);
+
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -31,6 +43,54 @@ export default function Register() {
   const hasSpecial = /[@$!%*?&]/.test(password);
 
   const hasUpper = /[A-Z]/.test(password);
+
+  // ==============================
+  // REGISTER FUNCTION
+  // ==============================
+
+  const handleRegister = async () => {
+
+    if (!name || !email || !password) {
+
+      alert("Please fill all fields");
+
+      return;
+
+    }
+
+    try {
+
+      setLoading(true);
+
+      const response = await axios.post(
+        "http://localhost:5000/api/auth/register",
+        {
+          name,
+          email,
+          password
+        }
+      );
+
+      alert(response.data.message);
+
+      navigate("/login");
+
+    } catch (error) {
+
+      console.log(error);
+
+      alert(
+        error.response?.data?.message ||
+        "Registration Failed"
+      );
+
+    } finally {
+
+      setLoading(false);
+
+    }
+
+  };
 
   return (
 
@@ -109,6 +169,8 @@ export default function Register() {
 
             <div className="mt-9 space-y-5">
 
+              {/* NAME */}
+
               <div>
 
                 <label className="text-[12px] font-bold tracking-[2px] text-gray-500">
@@ -124,12 +186,16 @@ export default function Register() {
                   <input
                     type="text"
                     placeholder="John Doe"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
                     className="w-full outline-none"
                   />
 
                 </div>
 
               </div>
+
+              {/* EMAIL */}
 
               <div>
 
@@ -146,12 +212,16 @@ export default function Register() {
                   <input
                     type="email"
                     placeholder="john@brandshoe.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     className="w-full outline-none"
                   />
 
                 </div>
 
               </div>
+
+              {/* PASSWORD */}
 
               <div>
 
@@ -232,8 +302,8 @@ export default function Register() {
               {/* BUTTON */}
 
               <button
-                onClick={() => navigate("/login")}
-                disabled={!agree}
+                onClick={handleRegister}
+                disabled={!agree || loading}
                 className={`w-full h-[60px] rounded-[16px] text-[15px] font-bold tracking-[2px] ${
                   agree
                     ? "bg-black text-white hover:bg-[#6f8f62]"
@@ -241,7 +311,11 @@ export default function Register() {
                 }`}
               >
 
-                CREATE ACCOUNT
+                {
+                  loading
+                    ? "CREATING..."
+                    : "CREATE ACCOUNT"
+                }
 
               </button>
 

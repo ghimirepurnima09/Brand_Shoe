@@ -20,12 +20,51 @@ export default function Login() {
 
   const [showPassword, setShowPassword] = useState(false);
 
+  const [email, setEmail] = useState("");
+
+  const [password, setPassword] = useState("");
+
   const navigate = useNavigate();
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
 
-    // AFTER LOGIN GO TO MAIN HOME
-    navigate("/mainhome");
+    try {
+
+      const response = await fetch(
+        "http://localhost:5000/api/auth/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            email,
+            password
+          })
+        }
+      );
+
+      const data = await response.json();
+
+      if (response.ok) {
+
+        alert(data.message);
+
+        navigate("/mainhome");
+
+      } else {
+
+        alert(data.message);
+
+      }
+
+    } catch (error) {
+
+      console.log(error);
+
+      alert("Server Error");
+
+    }
 
   };
 
@@ -133,6 +172,8 @@ export default function Login() {
                 <input
                   type="email"
                   placeholder="name@domain.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   className="bg-transparent outline-none w-full text-[15px]"
                 />
 
@@ -151,8 +192,6 @@ export default function Login() {
                   PASSWORD
 
                 </label>
-
-                {/* FORGOT PASSWORD */}
 
                 <Link
                   to="/forgotpassword"
@@ -175,6 +214,8 @@ export default function Login() {
                 <input
                   type={showPassword ? "text" : "password"}
                   placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   className="bg-transparent outline-none w-full text-[15px]"
                 />
 

@@ -2,6 +2,8 @@
 // ForgotPassword.jsx
 // ==============================
 
+import { useState } from "react";
+
 import { Link, useNavigate } from "react-router-dom";
 
 import {
@@ -10,17 +12,63 @@ import {
   ShieldCheck
 } from "lucide-react";
 
+import axios from "axios";
+
 import logo from "../assets/logo.png";
 
 export default function ForgotPassword() {
 
   const navigate = useNavigate();
 
-  const handleSendOtp = () => {
+  const [email, setEmail] = useState("");
 
-    // OPEN RESET PASSWORD PAGE
+  const [loading, setLoading] = useState(false);
 
-    navigate("/resetpassword");
+  const handleSendOtp = async () => {
+
+    if (!email) {
+
+      alert("Please enter email");
+
+      return;
+
+    }
+
+    try {
+
+      setLoading(true);
+
+      const response = await axios.post(
+        "http://localhost:5000/api/auth/sendotp",
+        {
+          email
+        }
+      );
+
+      alert(response.data.message);
+
+      // SAVE EMAIL
+
+      localStorage.setItem("resetEmail", email);
+
+      // OPEN RESET PASSWORD PAGE
+
+      navigate("/resetpassword");
+
+    } catch (error) {
+
+      console.log(error);
+
+      alert(
+        error.response?.data?.message ||
+        "Something went wrong"
+      );
+
+    } finally {
+
+      setLoading(false);
+
+    }
 
   };
 
@@ -146,6 +194,8 @@ export default function ForgotPassword() {
               <input
                 type="email"
                 placeholder="name@domain.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 className="bg-transparent outline-none w-full text-[15px]"
               />
 
@@ -157,10 +207,15 @@ export default function ForgotPassword() {
 
           <button
             onClick={handleSendOtp}
+            disabled={loading}
             className="w-full h-[58px] bg-black text-white rounded-[14px] mt-8 text-[13px] tracking-[3px] font-bold hover:bg-[#6f8f62] transition duration-300 shadow-xl"
           >
 
-            SEND OTP
+            {
+              loading
+                ? "SENDING..."
+                : "SEND OTP"
+            }
 
           </button>
 
