@@ -9,11 +9,3 @@ export const GetProducts = async () => {
   return await axios.get(`${API}/getproducts`);
 
 };
-
-// ADD PRODUCT
-
-export const AddProductApi = async (data) => {
-
-  return await axios.post(`${API}/addproduct`, data);
-
-};
