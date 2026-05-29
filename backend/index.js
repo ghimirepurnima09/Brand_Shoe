@@ -1,10 +1,8 @@
 import express from "express";
 import cors from "cors";
-import dotenv from "dotenv";
 
 import authRoutes from "./routes/authRoutes.js";
-
-dotenv.config();
+import productRoutes from "./routes/productRoutes.js";
 
 const app = express();
 
@@ -14,12 +12,8 @@ app.use(express.json());
 
 app.use("/api/auth", authRoutes);
 
-app.get("/", (req, res) => {
-  res.send("Brand_Shoe Backend Running");
-});
+app.use("/api/product", productRoutes);
 
-app.listen(process.env.PORT, () => {
-
-    console.log(`Server Running On ${process.env.PORT}`);
-
+app.listen(5000, () => {
+    console.log("Server Running On 5000");
 });

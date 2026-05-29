@@ -1,11 +1,7 @@
 import pool from "../config/db.js";
-
 import bcrypt from "bcryptjs";
-
 import jwt from "jsonwebtoken";
-
 import nodemailer from "nodemailer";
-
 
 // ================= REGISTER =================
 
@@ -13,13 +9,7 @@ export const register = async (req, res) => {
 
     try {
 
-        const {
-            name,
-            email,
-            password
-        } = req.body;
-
-        // CHECK USER
+        const { name, email, password } = req.body;
 
         const userExists = await pool.query(
             "SELECT * FROM users WHERE email=$1",
@@ -35,16 +25,11 @@ export const register = async (req, res) => {
 
         }
 
-        // HASH PASSWORD
-
         const hashedPassword = await bcrypt.hash(password, 10);
-
-        // INSERT USER
 
         await pool.query(
             `
-            INSERT INTO users
-            (name, email, password)
+            INSERT INTO users(name,email,password)
             VALUES($1,$2,$3)
             `,
             [name, email, hashedPassword]
@@ -68,19 +53,13 @@ export const register = async (req, res) => {
 
 };
 
-
 // ================= LOGIN =================
 
 export const login = async (req, res) => {
 
     try {
 
-        const {
-            email,
-            password
-        } = req.body;
-
-        // FIND USER
+        const { email, password } = req.body;
 
         const user = await pool.query(
             "SELECT * FROM users WHERE email=$1",
@@ -96,8 +75,6 @@ export const login = async (req, res) => {
 
         }
 
-        // CHECK PASSWORD
-
         const validPassword = await bcrypt.compare(
             password,
             user.rows[0].password
@@ -111,8 +88,6 @@ export const login = async (req, res) => {
             });
 
         }
-
-        // TOKEN
 
         const token = jwt.sign(
 
@@ -135,11 +110,9 @@ export const login = async (req, res) => {
             token,
 
             user: {
-
                 id: user.rows[0].id,
                 name: user.rows[0].name,
                 email: user.rows[0].email
-
             },
 
             message: "Login Successful"
@@ -159,7 +132,6 @@ export const login = async (req, res) => {
 
 };
 
-
 // ================= SEND OTP =================
 
 export const sendOTP = async (req, res) => {
@@ -167,8 +139,6 @@ export const sendOTP = async (req, res) => {
     try {
 
         const { email } = req.body;
-
-        // FIND USER
 
         const user = await pool.query(
             "SELECT * FROM users WHERE email=$1",
@@ -184,36 +154,25 @@ export const sendOTP = async (req, res) => {
 
         }
 
-        // GENERATE OTP
-
         const otp = Math.floor(
             100000 + Math.random() * 900000
         ).toString();
-
-        // SAVE OTP
 
         await pool.query(
             "UPDATE users SET otp=$1 WHERE email=$2",
             [otp, email]
         );
 
-        // EMAIL TRANSPORTER
-
         const transporter = nodemailer.createTransport({
 
             service: "gmail",
 
             auth: {
-
                 user: process.env.EMAIL_USER,
-
                 pass: process.env.EMAIL_PASS
-
             }
 
         });
-
-        // SEND MAIL
 
         await transporter.sendMail({
 
@@ -221,7 +180,7 @@ export const sendOTP = async (req, res) => {
 
             to: email,
 
-            subject: "Brand_Shoe OTP Verification",
+            subject: "Brand_Shoe OTP",
 
             text: `Your OTP is ${otp}`
 
@@ -247,20 +206,13 @@ export const sendOTP = async (req, res) => {
 
 };
 
-
 // ================= RESET PASSWORD =================
 
 export const resetPassword = async (req, res) => {
 
     try {
 
-        const {
-            email,
-            otp,
-            password
-        } = req.body;
-
-        // FIND USER
+        const { email, otp, password } = req.body;
 
         const user = await pool.query(
             "SELECT * FROM users WHERE email=$1",
@@ -276,8 +228,6 @@ export const resetPassword = async (req, res) => {
 
         }
 
-        // VERIFY OTP
-
         if (user.rows[0].otp != otp) {
 
             return res.status(400).json({
@@ -287,11 +237,23 @@ export const resetPassword = async (req, res) => {
 
         }
 
-        // HASH PASSWORD
+        // OLD PASSWORD CHECK
+
+        const samePassword = await bcrypt.compare(
+            password,
+            user.rows[0].password
+        );
+
+        if (samePassword) {
+
+            return res.status(400).json({
+                success: false,
+                message: "New password cannot be old password"
+            });
+
+        }
 
         const hashedPassword = await bcrypt.hash(password, 10);
-
-        // UPDATE PASSWORD
 
         await pool.query(
             `

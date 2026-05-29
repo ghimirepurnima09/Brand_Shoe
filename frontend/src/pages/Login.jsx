@@ -13,6 +13,8 @@ import {
 
 import { Link, useNavigate } from "react-router-dom";
 
+import { toast } from "react-hot-toast";
+
 import Shoe6 from "../assets/Shoe6.png";
 import logo from "../assets/logo.png";
 
@@ -24,19 +26,33 @@ export default function Login() {
 
   const [password, setPassword] = useState("");
 
+  const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
 
   const handleLogin = async () => {
 
+    if (!email || !password) {
+
+      toast.error("Please fill all fields");
+
+      return;
+
+    }
+
     try {
+
+      setLoading(true);
 
       const response = await fetch(
         "http://localhost:5000/api/auth/login",
         {
           method: "POST",
+
           headers: {
             "Content-Type": "application/json"
           },
+
           body: JSON.stringify({
             email,
             password
@@ -48,13 +64,24 @@ export default function Login() {
 
       if (response.ok) {
 
-        alert(data.message);
+        toast.success(data.message);
 
-        navigate("/mainhome");
+        localStorage.setItem("token", data.token);
+
+        localStorage.setItem(
+          "user",
+          JSON.stringify(data.user)
+        );
+
+        setTimeout(() => {
+
+          navigate("/mainhome");
+
+        }, 1500);
 
       } else {
 
-        alert(data.message);
+        toast.error(data.message);
 
       }
 
@@ -62,7 +89,11 @@ export default function Login() {
 
       console.log(error);
 
-      alert("Server Error");
+      toast.error("Server Error");
+
+    } finally {
+
+      setLoading(false);
 
     }
 
@@ -225,15 +256,11 @@ export default function Login() {
                   className="text-gray-400 hover:text-black transition"
                 >
 
-                  {showPassword ? (
-
-                    <EyeOff size={18} />
-
-                  ) : (
-
-                    <Eye size={18} />
-
-                  )}
+                  {
+                    showPassword
+                      ? <EyeOff size={18} />
+                      : <Eye size={18} />
+                  }
 
                 </button>
 
@@ -245,10 +272,15 @@ export default function Login() {
 
             <button
               onClick={handleLogin}
+              disabled={loading}
               className="w-full h-[58px] bg-black text-white rounded-[14px] mt-8 text-[13px] tracking-[3px] font-bold hover:bg-[#6f8f62] transition duration-300 shadow-xl"
             >
 
-              SIGN IN
+              {
+                loading
+                  ? "SIGNING IN..."
+                  : "SIGN IN"
+              }
 
             </button>
 

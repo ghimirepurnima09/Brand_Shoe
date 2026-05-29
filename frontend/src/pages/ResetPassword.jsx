@@ -1,7 +1,3 @@
-// ==============================
-// ResetPassword.jsx
-// ==============================
-
 import { Link, useNavigate } from "react-router-dom";
 
 import {
@@ -16,11 +12,17 @@ import { useState } from "react";
 
 import axios from "axios";
 
+import toast from "react-hot-toast";
+
 import logo from "../assets/logo.png";
 
 export default function ResetPassword() {
 
   const navigate = useNavigate();
+
+  const email = localStorage.getItem("resetEmail");
+
+  const oldPassword = localStorage.getItem("oldPassword");
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -28,27 +30,55 @@ export default function ResetPassword() {
 
   const [otp, setOtp] = useState("");
 
-  const [newPassword, setNewPassword] = useState("");
+  const [password, setPassword] = useState("");
 
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const [loading, setLoading] = useState(false);
 
-  const email = localStorage.getItem("resetEmail");
+  const [resending, setResending] = useState(false);
+
+  // PASSWORD RULES
+
+  const hasLength = password.length >= 8;
+
+  const hasUpper = /[A-Z]/.test(password);
+
+  const hasSpecial = /[@$!%*?&]/.test(password);
+
+  const hasNumber = /[0-9]/.test(password);
+
+  // RESET PASSWORD
 
   const handleReset = async () => {
 
-    if (!otp || !newPassword || !confirmPassword) {
+    if (!otp || !password || !confirmPassword) {
 
-      alert("Please fill all fields");
+      toast.error("Please fill all fields");
 
       return;
 
     }
 
-    if (newPassword !== confirmPassword) {
+    if (password !== confirmPassword) {
 
-      alert("Passwords do not match");
+      toast.error("Passwords do not match");
+
+      return;
+
+    }
+
+    if (!hasLength || !hasUpper || !hasSpecial || !hasNumber) {
+
+      toast.error("Create stronger password");
+
+      return;
+
+    }
+
+    if (password === oldPassword) {
+
+      toast.error("New password cannot be same as old password");
 
       return;
 
@@ -63,21 +93,25 @@ export default function ResetPassword() {
         {
           email,
           otp,
-          password: newPassword
+          password
         }
       );
 
-      alert(response.data.message);
+      toast.success(response.data.message);
 
       localStorage.removeItem("resetEmail");
 
-      navigate("/login");
+      setTimeout(() => {
+
+        navigate("/login");
+
+      }, 1800);
 
     } catch (error) {
 
       console.log(error);
 
-      alert(
+      toast.error(
         error.response?.data?.message ||
         "Something went wrong"
       );
@@ -90,6 +124,38 @@ export default function ResetPassword() {
 
   };
 
+  // RESEND OTP
+
+  const resendOTP = async () => {
+
+    try {
+
+      setResending(true);
+
+      const response = await axios.post(
+        "http://localhost:5000/api/auth/sendotp",
+        {
+          email
+        }
+      );
+
+      toast.success(response.data.message);
+
+    } catch (error) {
+
+      toast.error(
+        error.response?.data?.message ||
+        "Failed to resend OTP"
+      );
+
+    } finally {
+
+      setResending(false);
+
+    }
+
+  };
+
   return (
 
     <section className="min-h-screen bg-[#f3f3f3] flex overflow-hidden">
@@ -97,8 +163,6 @@ export default function ResetPassword() {
       {/* LEFT SIDE */}
 
       <div className="hidden lg:flex flex-1 bg-black relative items-center justify-center overflow-hidden">
-
-        {/* BACKGROUND */}
 
         <img
           src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=1600&auto=format&fit=crop"
@@ -124,12 +188,12 @@ export default function ResetPassword() {
 
         </div>
 
-        {/* SHOE IMAGE */}
+        {/* SHOE */}
 
         <img
           src="https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?q=80&w=1400&auto=format&fit=crop"
           alt=""
-          className="w-[650px] z-10 object-contain drop-shadow-[0_35px_35px_rgba(255,255,255,0.12)] hover:scale-105 transition duration-700"
+          className="w-[650px] z-10 object-contain drop-shadow-[0_35px_35px_rgba(255,255,255,0.15)] hover:scale-105 transition duration-700"
         />
 
         {/* OVERLAY */}
@@ -163,7 +227,7 @@ export default function ResetPassword() {
 
       <div className="flex-1 bg-[#f3f3f3] flex items-center justify-center px-5">
 
-        <div className="w-full max-w-[390px]">
+        <div className="w-full max-w-[390px] animate-fadeIn">
 
           {/* BACK */}
 
@@ -190,7 +254,7 @@ export default function ResetPassword() {
 
           <p className="text-gray-500 text-[15px] mt-4 leading-[28px]">
 
-            Create a strong new password for your Brand_Shoe account.
+            Create a strong new password for your account.
 
           </p>
 
@@ -209,12 +273,26 @@ export default function ResetPassword() {
               placeholder="Enter OTP"
               value={otp}
               onChange={(e) => setOtp(e.target.value)}
-              className="mt-2 w-full h-[58px] bg-white border border-gray-300 rounded-[14px] px-4 outline-none shadow-sm text-[15px]"
+              className="mt-2 w-full h-[58px] bg-white border border-gray-300 rounded-[14px] px-4 outline-none shadow-sm focus:border-[#6f8f62]"
             />
+
+            <button
+              onClick={resendOTP}
+              disabled={resending}
+              className="mt-3 text-[#6f8f62] font-semibold text-[14px] hover:underline"
+            >
+
+              {
+                resending
+                  ? "Sending..."
+                  : "Send OTP Again"
+              }
+
+            </button>
 
           </div>
 
-          {/* NEW PASSWORD */}
+          {/* PASSWORD */}
 
           <div className="mt-6">
 
@@ -224,7 +302,7 @@ export default function ResetPassword() {
 
             </label>
 
-            <div className="mt-2 bg-white border border-gray-300 rounded-[14px] h-[58px] px-4 flex items-center gap-3 shadow-sm">
+            <div className="mt-2 bg-white border border-gray-300 rounded-[14px] h-[58px] px-4 flex items-center gap-3 shadow-sm focus-within:border-[#6f8f62]">
 
               <Lock
                 size={18}
@@ -234,32 +312,55 @@ export default function ResetPassword() {
               <input
                 type={showPassword ? "text" : "password"}
                 placeholder="Enter new password"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 className="bg-transparent outline-none w-full text-[15px]"
               />
 
-              {
-                showPassword ? (
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+              >
 
-                  <EyeOff
-                    size={20}
-                    className="text-gray-500 cursor-pointer"
-                    onClick={() => setShowPassword(false)}
-                  />
+                {
+                  showPassword
+                    ? <EyeOff size={18} />
+                    : <Eye size={18} />
+                }
 
-                ) : (
-
-                  <Eye
-                    size={20}
-                    className="text-gray-500 cursor-pointer"
-                    onClick={() => setShowPassword(true)}
-                  />
-
-                )
-              }
+              </button>
 
             </div>
+
+          </div>
+
+          {/* PASSWORD RULES */}
+
+          <div className="mt-4 space-y-2">
+
+            <p className={hasLength ? "text-green-600 text-sm" : "text-gray-500 text-sm"}>
+
+              ✓ Minimum 8 characters
+
+            </p>
+
+            <p className={hasUpper ? "text-green-600 text-sm" : "text-gray-500 text-sm"}>
+
+              ✓ One uppercase letter
+
+            </p>
+
+            <p className={hasSpecial ? "text-green-600 text-sm" : "text-gray-500 text-sm"}>
+
+              ✓ One special character
+
+            </p>
+
+            <p className={hasNumber ? "text-green-600 text-sm" : "text-gray-500 text-sm"}>
+
+              ✓ One number
+
+            </p>
 
           </div>
 
@@ -288,25 +389,18 @@ export default function ResetPassword() {
                 className="bg-transparent outline-none w-full text-[15px]"
               />
 
-              {
-                showConfirmPassword ? (
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              >
 
-                  <EyeOff
-                    size={20}
-                    className="text-gray-500 cursor-pointer"
-                    onClick={() => setShowConfirmPassword(false)}
-                  />
+                {
+                  showConfirmPassword
+                    ? <EyeOff size={18} />
+                    : <Eye size={18} />
+                }
 
-                ) : (
-
-                  <Eye
-                    size={20}
-                    className="text-gray-500 cursor-pointer"
-                    onClick={() => setShowConfirmPassword(true)}
-                  />
-
-                )
-              }
+              </button>
 
             </div>
 
@@ -351,7 +445,7 @@ export default function ResetPassword() {
 
               <p className="text-gray-500 text-[14px] leading-[24px] mt-1">
 
-                Use at least 8 characters with numbers and symbols for stronger protection.
+                Strong passwords keep your sneaker account protected.
 
               </p>
 

@@ -1,3 +1,4 @@
+
 // ==============================
 // ForgotPassword.jsx
 // ==============================
@@ -24,11 +25,18 @@ export default function ForgotPassword() {
 
   const [loading, setLoading] = useState(false);
 
+  const [message, setMessage] = useState("");
+
+  const [errorMessage, setErrorMessage] = useState("");
+
   const handleSendOtp = async () => {
+
+    setMessage("");
+    setErrorMessage("");
 
     if (!email) {
 
-      alert("Please enter email");
+      setErrorMessage("Please enter your email");
 
       return;
 
@@ -45,7 +53,9 @@ export default function ForgotPassword() {
         }
       );
 
-      alert(response.data.message);
+      // SUCCESS MESSAGE
+
+      setMessage(response.data.message);
 
       // SAVE EMAIL
 
@@ -53,13 +63,17 @@ export default function ForgotPassword() {
 
       // OPEN RESET PASSWORD PAGE
 
-      navigate("/resetpassword");
+      setTimeout(() => {
+
+        navigate("/resetpassword");
+
+      }, 1500);
 
     } catch (error) {
 
       console.log(error);
 
-      alert(
+      setErrorMessage(
         error.response?.data?.message ||
         "Something went wrong"
       );
@@ -99,9 +113,7 @@ export default function ForgotPassword() {
           />
 
           <h1 className="text-white text-[30px] font-black tracking-[-2px]">
-
             Brand_Shoe
-
           </h1>
 
         </div>
@@ -130,9 +142,7 @@ export default function ForgotPassword() {
             <br />
 
             <span className="text-[#8da27f]">
-
               SECURELY
-
             </span>
 
           </h1>
@@ -174,9 +184,37 @@ export default function ForgotPassword() {
 
           </p>
 
+          {/* SUCCESS MESSAGE */}
+
+          {
+            message && (
+
+              <div className="mt-5 bg-green-100 border border-green-300 text-green-700 px-4 py-3 rounded-xl text-sm">
+
+                {message}
+
+              </div>
+
+            )
+          }
+
+          {/* ERROR MESSAGE */}
+
+          {
+            errorMessage && (
+
+              <div className="mt-5 bg-red-100 border border-red-300 text-red-700 px-4 py-3 rounded-xl text-sm">
+
+                {errorMessage}
+
+              </div>
+
+            )
+          }
+
           {/* EMAIL */}
 
-          <div className="mt-10">
+          <div className="mt-8">
 
             <label className="text-[11px] tracking-[2px] text-gray-500 font-bold">
 
@@ -208,7 +246,7 @@ export default function ForgotPassword() {
           <button
             onClick={handleSendOtp}
             disabled={loading}
-            className="w-full h-[58px] bg-black text-white rounded-[14px] mt-8 text-[13px] tracking-[3px] font-bold hover:bg-[#6f8f62] transition duration-300 shadow-xl"
+            className="w-full h-[58px] bg-black text-white rounded-[14px] mt-8 text-[13px] tracking-[3px] font-bold hover:bg-[#6f8f62] transition duration-300 shadow-xl disabled:opacity-70"
           >
 
             {
@@ -235,9 +273,7 @@ export default function ForgotPassword() {
             <div>
 
               <h3 className="font-bold text-[16px] text-black">
-
                 Secure Recovery
-
               </h3>
 
               <p className="text-gray-500 text-[14px] leading-[24px] mt-1">
@@ -276,3 +312,4 @@ export default function ForgotPassword() {
   );
 
 }
+

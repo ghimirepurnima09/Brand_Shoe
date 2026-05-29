@@ -1,3 +1,4 @@
+
 // ==============================
 // Register.jsx
 // ==============================
@@ -6,7 +7,7 @@ import { useState } from "react";
 
 import {
   User,
-  Mail,
+ Mail,
   Lock,
   Eye,
   EyeOff,
@@ -36,7 +37,13 @@ export default function Register() {
 
   const [loading, setLoading] = useState(false);
 
+  const [message, setMessage] = useState("");
+
+  const [errorMessage, setErrorMessage] = useState("");
+
   const navigate = useNavigate();
+
+  // PASSWORD RULES
 
   const hasLength = password.length >= 8;
 
@@ -50,9 +57,30 @@ export default function Register() {
 
   const handleRegister = async () => {
 
+    setMessage("");
+    setErrorMessage("");
+
+    // VALIDATION
+
     if (!name || !email || !password) {
 
-      alert("Please fill all fields");
+      setErrorMessage("Please fill all fields");
+
+      return;
+
+    }
+
+    if (!hasLength || !hasSpecial || !hasUpper) {
+
+      setErrorMessage("Password is not strong enough");
+
+      return;
+
+    }
+
+    if (!agree) {
+
+      setErrorMessage("Please agree to Terms & Conditions");
 
       return;
 
@@ -71,15 +99,29 @@ export default function Register() {
         }
       );
 
-      alert(response.data.message);
+      // SUCCESS MESSAGE
 
-      navigate("/login");
+      setMessage(response.data.message);
+
+      // CLEAR INPUTS
+
+      setName("");
+      setEmail("");
+      setPassword("");
+
+      // REDIRECT
+
+      setTimeout(() => {
+
+        navigate("/login");
+
+      }, 1500);
 
     } catch (error) {
 
       console.log(error);
 
-      alert(
+      setErrorMessage(
         error.response?.data?.message ||
         "Registration Failed"
       );
@@ -98,14 +140,14 @@ export default function Register() {
 
       {/* NAVBAR */}
 
-      <nav className="w-full h-[78px] bg-white border-b border-gray-200 flex items-center px-6 lg:px-14">
+      <nav className="w-full h-[78px] bg-white border-b border-gray-200 flex items-center px-6 lg:px-14 sticky top-0 z-50 shadow-sm">
 
         <div className="flex items-center gap-4">
 
           <img
             src={logo}
             alt=""
-            className="w-[46px] h-[46px] rounded-full"
+            className="w-[46px] h-[46px] rounded-full object-cover"
           />
 
           <h1 className="text-[30px] font-black tracking-[-2px]">
@@ -124,18 +166,22 @@ export default function Register() {
 
         <div className="w-full max-w-[1280px] grid lg:grid-cols-2 gap-8 items-center">
 
-          {/* LEFT */}
+          {/* LEFT SIDE */}
 
           <div className="relative rounded-[30px] overflow-hidden h-[560px]">
 
+            {/* BACK BUTTON */}
+
             <Link
               to="/login"
-              className="absolute top-5 left-5 z-20 w-[42px] h-[42px] rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white"
+              className="absolute top-5 left-5 z-20 w-[42px] h-[42px] rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white hover:bg-white/30 transition"
             >
 
               <ArrowLeft size={20} />
 
             </Link>
+
+            {/* IMAGE */}
 
             <img
               src="https://images.unsplash.com/photo-1600269452121-4f2416e55c28?q=80&w=1400&auto=format&fit=crop"
@@ -143,15 +189,38 @@ export default function Register() {
               className="absolute inset-0 w-full h-full object-cover"
             />
 
+            {/* OVERLAY */}
+
             <div className="absolute inset-0 bg-black/40"></div>
+
+            {/* TEXT */}
+
+            <div className="absolute bottom-10 left-10 z-20">
+
+              <h1 className="text-white text-[60px] leading-[90%] font-black tracking-[-4px]">
+
+                JOIN THE
+                <br />
+                SNEAKER
+                <br />
+
+                <span className="text-[#8da27f]">
+
+                  CULTURE
+
+                </span>
+
+              </h1>
+
+            </div>
 
           </div>
 
-          {/* RIGHT */}
+          {/* RIGHT SIDE */}
 
           <div className="px-1 lg:px-8">
 
-            <h1 className="text-[62px] leading-[60px] font-black tracking-[-4px]">
+            <h1 className="text-[62px] leading-[60px] font-black tracking-[-4px] text-black">
 
               Join the
               <br />
@@ -164,6 +233,34 @@ export default function Register() {
               Create your profile to start your sneaker journey.
 
             </p>
+
+            {/* SUCCESS MESSAGE */}
+
+            {
+              message && (
+
+                <div className="mt-6 bg-green-100 border border-green-300 text-green-700 px-4 py-3 rounded-xl text-sm shadow-sm">
+
+                  {message}
+
+                </div>
+
+              )
+            }
+
+            {/* ERROR MESSAGE */}
+
+            {
+              errorMessage && (
+
+                <div className="mt-6 bg-red-100 border border-red-300 text-red-700 px-4 py-3 rounded-xl text-sm shadow-sm">
+
+                  {errorMessage}
+
+                </div>
+
+              )
+            }
 
             {/* FORM */}
 
@@ -179,16 +276,19 @@ export default function Register() {
 
                 </label>
 
-                <div className="mt-2 h-[58px] rounded-[16px] border border-gray-300 bg-white px-4 flex items-center gap-3">
+                <div className="mt-2 h-[58px] rounded-[16px] border border-gray-300 bg-white px-4 flex items-center gap-3 shadow-sm">
 
-                  <User size={18} className="text-gray-400" />
+                  <User
+                    size={18}
+                    className="text-gray-400"
+                  />
 
                   <input
                     type="text"
                     placeholder="John Doe"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="w-full outline-none"
+                    className="w-full outline-none bg-transparent text-[15px]"
                   />
 
                 </div>
@@ -205,16 +305,19 @@ export default function Register() {
 
                 </label>
 
-                <div className="mt-2 h-[58px] rounded-[16px] border border-gray-300 bg-white px-4 flex items-center gap-3">
+                <div className="mt-2 h-[58px] rounded-[16px] border border-gray-300 bg-white px-4 flex items-center gap-3 shadow-sm">
 
-                  <Mail size={18} className="text-gray-400" />
+                  <Mail
+                    size={18}
+                    className="text-gray-400"
+                  />
 
                   <input
                     type="email"
                     placeholder="john@brandshoe.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full outline-none"
+                    className="w-full outline-none bg-transparent text-[15px]"
                   />
 
                 </div>
@@ -231,24 +334,32 @@ export default function Register() {
 
                 </label>
 
-                <div className="mt-2 h-[58px] rounded-[16px] border border-gray-300 bg-white px-4 flex items-center gap-3">
+                <div className="mt-2 h-[58px] rounded-[16px] border border-gray-300 bg-white px-4 flex items-center gap-3 shadow-sm">
 
-                  <Lock size={18} className="text-gray-400" />
+                  <Lock
+                    size={18}
+                    className="text-gray-400"
+                  />
 
                   <input
                     type={showPassword ? "text" : "password"}
                     placeholder="Create strong password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full outline-none"
+                    className="w-full outline-none bg-transparent text-[15px]"
                   />
 
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
+                    className="text-gray-500 hover:text-black transition"
                   >
 
-                    {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                    {
+                      showPassword
+                        ? <EyeOff size={20} />
+                        : <Eye size={20} />
+                    }
 
                   </button>
 
@@ -303,11 +414,11 @@ export default function Register() {
 
               <button
                 onClick={handleRegister}
-                disabled={!agree || loading}
-                className={`w-full h-[60px] rounded-[16px] text-[15px] font-bold tracking-[2px] ${
-                  agree
-                    ? "bg-black text-white hover:bg-[#6f8f62]"
-                    : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                disabled={loading}
+                className={`w-full h-[60px] rounded-[16px] text-[15px] font-bold tracking-[2px] transition duration-300 shadow-lg ${
+                  loading
+                    ? "bg-gray-400 text-white cursor-not-allowed"
+                    : "bg-black text-white hover:bg-[#6f8f62]"
                 }`}
               >
 
@@ -327,7 +438,7 @@ export default function Register() {
 
                 <Link
                   to="/login"
-                  className="text-black font-semibold ml-2"
+                  className="text-black font-semibold ml-2 hover:text-[#6f8f62] transition"
                 >
 
                   Log in
