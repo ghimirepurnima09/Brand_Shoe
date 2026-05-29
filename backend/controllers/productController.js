@@ -214,6 +214,7 @@ export const deleteProduct = async (req, res) => {
 };
 
 
+
 // ================= UPDATE PRODUCT =================
 
 export const updateProduct = async (req, res) => {

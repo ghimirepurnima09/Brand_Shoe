@@ -17,7 +17,6 @@ export default function Navbar() {
 
   const location = useLocation();
 
-  // AFTER LOGIN HOME
   const isLoggedInHome =
     location.pathname === "/mainhome" ||
     location.pathname === "/collections" ||
@@ -27,7 +26,7 @@ export default function Navbar() {
 
   return (
 
-    <nav className="w-full h-[82px] bg-white flex items-center justify-between px-6 lg:px-14 border-b border-gray-200 sticky top-0 z-50">
+    <nav className="fixed top-0 left-0 w-full h-[82px] bg-white flex items-center justify-between px-6 lg:px-14 border-b border-gray-200 z-[9999] shadow-sm">
 
       {/* LEFT LOGO */}
 
@@ -51,8 +50,6 @@ export default function Navbar() {
 
       <div className="hidden lg:flex items-center gap-9 text-[15px] font-semibold">
 
-        {/* HOME */}
-
         <Link
           to="/mainhome"
           className={`transition duration-300 ${
@@ -61,12 +58,8 @@ export default function Navbar() {
               : "text-gray-600 hover:text-black"
           }`}
         >
-
           Home
-
         </Link>
-
-        {/* WOMENS */}
 
         <Link
           to="/women"
@@ -76,12 +69,8 @@ export default function Navbar() {
               : "text-gray-600 hover:text-black"
           }`}
         >
-
           Womens
-
         </Link>
-
-        {/* KIDS */}
 
         <Link
           to="/kids"
@@ -91,12 +80,8 @@ export default function Navbar() {
               : "text-gray-600 hover:text-black"
           }`}
         >
-
           Kids
-
         </Link>
-
-        {/* MEN */}
 
         <Link
           to="/men"
@@ -106,12 +91,8 @@ export default function Navbar() {
               : "text-gray-600 hover:text-black"
           }`}
         >
-
           Men
-
         </Link>
-
-        {/* COLLECTION */}
 
         <Link
           to="/collections"
@@ -121,9 +102,7 @@ export default function Navbar() {
               : "text-gray-600 hover:text-black"
           }`}
         >
-
           New Arrival
-
         </Link>
 
       </div>
@@ -131,8 +110,6 @@ export default function Navbar() {
       {/* RIGHT SIDE */}
 
       <div className="flex items-center gap-4">
-
-        {/* SEARCH */}
 
         <div className="hidden lg:flex items-center gap-3 bg-[#f5f5f5] border border-gray-200 px-5 rounded-full w-[290px] h-[48px]">
 
@@ -149,13 +126,9 @@ export default function Navbar() {
 
         </div>
 
-        {/* AFTER LOGIN */}
-
         {isLoggedInHome ? (
 
           <>
-
-            {/* WISHLIST */}
 
             <button className="w-[46px] h-[46px] rounded-full border border-gray-200 bg-white flex items-center justify-center hover:bg-[#8da27f] hover:text-white transition duration-300 shadow-sm">
 
@@ -163,15 +136,11 @@ export default function Navbar() {
 
             </button>
 
-            {/* CART */}
-
             <button className="w-[46px] h-[46px] rounded-full bg-black text-white flex items-center justify-center hover:bg-[#8da27f] transition duration-300 shadow-lg">
 
               <ShoppingCart size={19} />
 
             </button>
-
-            {/* PROFILE */}
 
             <button className="w-[46px] h-[46px] rounded-full border border-gray-200 bg-white flex items-center justify-center hover:bg-black hover:text-white transition duration-300 shadow-sm">
 
@@ -182,8 +151,6 @@ export default function Navbar() {
           </>
 
         ) : (
-
-          /* BEFORE LOGIN */
 
           <Link
             to="/login"

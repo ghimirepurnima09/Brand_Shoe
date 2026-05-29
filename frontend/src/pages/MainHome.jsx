@@ -5,6 +5,7 @@ import Collections from "./Collections";
 import Guarantee from "./Guarantee";
 import Footer from "./Footer";
 
+
 export default function MainHome() {
 
   return (

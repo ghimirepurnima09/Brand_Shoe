@@ -4,6 +4,8 @@
 
 import { Routes, Route } from "react-router-dom";
 
+// PAGES
+
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -21,76 +23,80 @@ import Women from "./pages/Women";
 import Men from "./pages/Men";
 import Kids from "./pages/Kids";
 
+// ADD PRODUCT PAGE
+
+import AddProduct from "./pages/AddProduct";
+
 export default function App() {
 
   return (
 
     <Routes>
 
-      {/* LANDING PAGE */}
+      {/* ================= HOME ================= */}
 
       <Route
         path="/"
         element={<Home />}
       />
 
-      {/* LOGIN */}
+      {/* ================= LOGIN ================= */}
 
       <Route
         path="/login"
         element={<Login />}
       />
 
-      {/* REGISTER */}
+      {/* ================= REGISTER ================= */}
 
       <Route
         path="/register"
         element={<Register />}
       />
 
-      {/* FORGOT PASSWORD */}
+      {/* ================= FORGOT PASSWORD ================= */}
 
       <Route
         path="/forgotpassword"
         element={<ForgotPassword />}
       />
 
-      {/* RESET PASSWORD + OTP PAGE */}
+      {/* ================= RESET PASSWORD ================= */}
 
       <Route
         path="/resetpassword"
         element={<ResetPassword />}
       />
 
-      {/* HOME AFTER LOGIN */}
+      {/* ================= MAIN HOME ================= */}
 
       <Route
         path="/mainhome"
         element={<MainHome />}
       />
 
-      {/* COLLECTIONS */}
+      {/* ================= COLLECTIONS ================= */}
 
       <Route
         path="/collections"
         element={<CollectionsPage />}
       />
 
-      {/* MOST SOLD */}
+      {/* ================= MOST SOLD ================= */}
 
       <Route
         path="/mostsold"
         element={<MostSoldPage />}
       />
 
-      {/* OFFERS */}
+      {/* ================= OFFERS ================= */}
 
       <Route
         path="/offers"
         element={<OffersPage />}
       />
 
-      {/* CATEGORY PAGES */}
+      {/* ================= CATEGORY PAGES ================= */}
 
       <Route
         path="/women"
@@ -105,6 +111,13 @@ export default function App() {
       <Route
         path="/kids"
         element={<Kids />}
+      />
+
+      {/* ================= ADD PRODUCT ================= */}
+
+      <Route
+        path="/addproduct"
+        element={<AddProduct />}
       />
 
     </Routes>

@@ -1,6 +1,4 @@
-﻿
-
-import { Link } from "react-router-dom";
+﻿import { Link } from "react-router-dom";
 
 import Shoe1 from "../assets/Shoe1.png";
 
@@ -8,23 +6,27 @@ export default function Hero() {
 
   return (
 
-    <section className="relative min-h-[88vh] overflow-hidden bg-black">
+    <section className="relative min-h-screen overflow-hidden bg-black">
 
       {/* BACKGROUND */}
 
       <img
         src="https://images.unsplash.com/photo-1491553895911-0055eca6402d?q=80&w=1600&auto=format&fit=crop"
         alt=""
-        className="absolute inset-0 w-full h-full object-cover"
+        className="absolute inset-0 w-full h-full object-cover scale-110"
       />
 
-      {/* OVERLAY */}
+      {/* DARK OVERLAY */}
 
-      <div className="absolute inset-0 bg-black/65"></div>
+      <div className="absolute inset-0 bg-black/70"></div>
+
+      {/* EXTRA SHADOW */}
+
+      <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-black/20"></div>
 
       {/* CONTENT */}
 
-      <div className="relative z-10 grid lg:grid-cols-2 items-center min-h-[88vh] px-6 lg:px-16">
+      <div className="relative z-10 grid lg:grid-cols-2 items-center min-h-screen px-6 lg:px-16 pt-[40px] pb-[40px]">
 
         {/* LEFT */}
 
@@ -36,9 +38,9 @@ export default function Hero() {
 
           </p>
 
-          {/* ANIMATED TITLE */}
+          {/* TITLE */}
 
-          <h1 className="text-white text-[56px] lg:text-[78px] leading-[95%] font-black tracking-[-5px] mt-4 animate-pulse">
+          <h1 className="text-white text-[62px] lg:text-[92px] leading-[88%] font-black tracking-[-6px] mt-5">
 
             LUXURY
             <br />
@@ -53,9 +55,9 @@ export default function Hero() {
 
           </h1>
 
-          {/* PROFESSIONAL TEXT */}
+          {/* TEXT */}
 
-          <p className="text-gray-300 text-[16px] leading-[28px] mt-6 max-w-[520px]">
+          <p className="text-gray-300 text-[17px] leading-[32px] mt-8 max-w-[540px]">
 
             Discover high-end sneaker collections designed to blend luxury craftsmanship, urban performance, and timeless streetwear identity.
 
@@ -63,18 +65,18 @@ export default function Hero() {
 
           {/* BUTTONS */}
 
-          <div className="flex gap-4 mt-8">
+          <div className="flex gap-4 mt-10">
 
             <Link
               to="/login"
-              className="px-8 h-[54px] rounded-full bg-[#8da27f] text-white flex items-center justify-center font-semibold hover:bg-white hover:text-black transition duration-300 shadow-lg"
+              className="px-9 h-[58px] rounded-full bg-[#8da27f] text-white flex items-center justify-center font-semibold hover:bg-white hover:text-black transition duration-300 shadow-2xl"
             >
 
               SHOP NOW →
 
             </Link>
 
-            <button className="px-8 h-[54px] rounded-full border border-white text-white font-semibold hover:bg-white hover:text-black transition duration-300">
+            <button className="px-9 h-[58px] rounded-full border border-white/60 text-white font-semibold hover:bg-white hover:text-black transition duration-300 backdrop-blur-md">
 
               EXPLORE
 
@@ -86,18 +88,32 @@ export default function Hero() {
 
         {/* RIGHT */}
 
-        <div className="relative flex items-center justify-center mt-10 lg:mt-0">
+        <div className="relative flex items-center justify-center mt-16 lg:mt-0">
 
-          {/* GLOW */}
+          {/* GREEN GLOW */}
 
-          <div className="absolute w-[430px] h-[430px] bg-[#8da27f]/20 rounded-full blur-3xl"></div>
+          <div className="absolute w-[520px] h-[520px] bg-[#8da27f]/20 rounded-full blur-3xl"></div>
+
+          {/* BLACK SHADOW */}
+
+          <div className="absolute w-[420px] h-[420px] bg-black/60 rounded-full blur-2xl"></div>
 
           {/* SHOE */}
 
           <img
             src={Shoe1}
             alt=""
-            className="relative z-10 w-[540px] lg:w-[600px] drop-shadow-[0_35px_35px_rgba(0,0,0,0.8)] hover:scale-105 transition duration-700"
+            className="
+              relative z-10
+              w-[560px]
+              lg:w-[720px]
+              object-contain
+              drop-shadow-[0_45px_45px_rgba(0,0,0,0.9)]
+              hover:scale-105
+              hover:-rotate-2
+              transition-all
+              duration-700
+            "
           />
 
         </div>

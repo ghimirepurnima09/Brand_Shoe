@@ -1,12 +1,24 @@
+import Navbar from "./Navbar";
+
 export default function Women() {
 
   return (
 
-    <div className="min-h-screen flex items-center justify-center text-[40px] font-black">
+    <>
+    
+      <Navbar />
 
-      WOMEN PAGE
+      <section className="min-h-screen bg-white pt-[90px]">
 
-    </div>
+        <h1 className="text-5xl font-black text-center">
+
+          WOMEN COLLECTION
+
+        </h1>
+
+      </section>
+
+    </>
 
   );
 

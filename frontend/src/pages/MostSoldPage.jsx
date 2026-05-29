@@ -1,13 +1,19 @@
 // MostSoldPage.jsx
 
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 import {
   Heart,
-  Star
+  Star,
+  Sparkles,
+  Flame,
+  Tag,
+  ArrowLeft
 } from "lucide-react";
 
 export default function MostSoldPage() {
+
+  const location = useLocation();
 
   const shoes = [
 
@@ -51,88 +57,48 @@ export default function MostSoldPage() {
       name: "Jordan Midnight Pro",
       sold: "29K+ Sold",
       price: "$410"
-    },
-
-    {
-      image: "https://images.unsplash.com/photo-1587563871167-1ee9c731aefb?q=80&w=1200&auto=format&fit=crop",
-      name: "Adidas Galaxy Boost",
-      sold: "25K+ Sold",
-      price: "$360"
-    },
-
-    {
-      image: "https://images.unsplash.com/photo-1603808033192-082d6919d3e1?q=80&w=1200&auto=format&fit=crop",
-      name: "Puma Neon Runner",
-      sold: "18K+ Sold",
-      price: "$280"
-    },
-
-    {
-      image: "https://images.unsplash.com/photo-1460353581641-37baddab0fa2?q=80&w=1200&auto=format&fit=crop",
-      name: "Nike Phantom Edge",
-      sold: "26K+ Sold",
-      price: "$370"
-    },
-
-    {
-      image: "https://images.unsplash.com/photo-1556906781-9a412961c28c?q=80&w=1200&auto=format&fit=crop",
-      name: "Adidas Future X",
-      sold: "20K+ Sold",
-      price: "$315"
-    },
-
-    {
-      image: "https://images.unsplash.com/photo-1608667508764-33cf0726b13a?q=80&w=1200&auto=format&fit=crop",
-      name: "Jordan Royal Impact",
-      sold: "32K+ Sold",
-      price: "$450"
-    },
-
-    {
-      image: "https://images.unsplash.com/photo-1514996937319-344454492b37?q=80&w=1200&auto=format&fit=crop",
-      name: "Nike Street Nova",
-      sold: "21K+ Sold",
-      price: "$300"
-    },
-
-    {
-      image: "https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?q=80&w=1200&auto=format&fit=crop",
-      name: "Puma Velocity Drift",
-      sold: "17K+ Sold",
-      price: "$290"
-    },
-
-    {
-      image: "https://images.unsplash.com/photo-1575537302964-96cd47c06b1b?q=80&w=1200&auto=format&fit=crop",
-      name: "Nike Ice Runner",
-      sold: "30K+ Sold",
-      price: "$395"
-    },
-
-    {
-      image: "https://images.unsplash.com/photo-1491553895911-0055eca6402d?q=80&w=1200&auto=format&fit=crop",
-      name: "Jordan Skyline Pro",
-      sold: "24K+ Sold",
-      price: "$355"
     }
 
   ];
 
   return (
 
-    <section className="bg-[#f5f5f5] min-h-screen px-6 lg:px-16 py-14">
+    <section className="bg-[#f3f3f3] min-h-screen pb-20">
 
-      <div className="flex items-center justify-between">
+      {/* HERO SECTION */}
 
-        <div>
+      <div className="relative h-[520px] overflow-hidden rounded-b-[50px]">
 
-          <p className="text-[#8da27f] tracking-[4px] text-[12px] font-bold">
+        <img
+          src="https://images.unsplash.com/photo-1491553895911-0055eca6402d?q=80&w=1800&auto=format&fit=crop"
+          alt=""
+          className="absolute inset-0 w-full h-full object-cover"
+        />
 
-            TOP SELLING COLLECTION
+        <div className="absolute inset-0 bg-black/70"></div>
+
+        {/* BACK BUTTON */}
+
+        <Link
+          to="/mainhome"
+          className="absolute top-8 left-6 lg:left-16 z-20 w-[52px] h-[52px] rounded-full bg-white/20 backdrop-blur-md text-white flex items-center justify-center hover:bg-white hover:text-black transition duration-300"
+        >
+
+          <ArrowLeft size={22} />
+
+        </Link>
+
+        {/* HERO CONTENT */}
+
+        <div className="relative z-10 h-full flex flex-col justify-center px-6 lg:px-16">
+
+          <p className="text-[#d7e5d0] tracking-[4px] text-[12px] font-bold">
+
+            BRAND_SHOE PREMIUM COLLECTION
 
           </p>
 
-          <h1 className="text-[60px] leading-[90%] font-black tracking-[-5px] mt-4">
+          <h1 className="text-white text-[65px] lg:text-[95px] leading-[88%] font-black tracking-[-6px] mt-5">
 
             MOST SOLD
             <br />
@@ -140,20 +106,77 @@ export default function MostSoldPage() {
 
           </h1>
 
+          <p className="text-gray-200 text-[16px] leading-[32px] mt-7 max-w-[720px]">
+
+            Discover the most loved premium sneakers trusted by thousands
+            of sneaker enthusiasts worldwide.
+
+          </p>
+
         </div>
+
+      </div>
+
+      {/* TOP BUTTONS */}
+
+      <div className="flex flex-wrap gap-4 px-6 lg:px-16 mt-12">
+
+        {/* NEW COLLECTION */}
 
         <Link
           to="/collections"
-          className="h-[54px] px-8 rounded-full bg-black text-white flex items-center justify-center font-bold tracking-[2px]"
+          className={`h-[54px] px-8 rounded-full font-bold tracking-[2px] text-[12px] flex items-center gap-2 shadow-lg transition ${
+            location.pathname === "/collections"
+              ? "bg-[#8da27f] text-white"
+              : "bg-white text-black hover:bg-black hover:text-white"
+          }`}
         >
 
-          BACK
+          <Sparkles size={18} />
+
+          NEW COLLECTIONS
+
+        </Link>
+
+        {/* MOST SOLD */}
+
+        <Link
+          to="/mostsold"
+          className={`h-[54px] px-8 rounded-full font-bold tracking-[2px] text-[12px] flex items-center gap-2 shadow-lg transition ${
+            location.pathname === "/mostsold"
+              ? "bg-[#8da27f] text-white"
+              : "bg-white text-black hover:bg-black hover:text-white"
+          }`}
+        >
+
+          <Flame size={18} />
+
+          MOST SOLD
+
+        </Link>
+
+        {/* OFFERS */}
+
+        <Link
+          to="/offers"
+          className={`h-[54px] px-8 rounded-full font-bold tracking-[2px] text-[12px] flex items-center gap-2 shadow-lg transition ${
+            location.pathname === "/offers"
+              ? "bg-[#8da27f] text-white"
+              : "bg-white text-black hover:bg-black hover:text-white"
+          }`}
+        >
+
+          <Tag size={18} />
+
+          OFFERS
 
         </Link>
 
       </div>
 
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mt-16">
+      {/* PRODUCTS */}
+
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 px-6 lg:px-16 py-16">
 
         {shoes.map((shoe, index) => (
 
@@ -161,6 +184,8 @@ export default function MostSoldPage() {
             key={index}
             className="bg-white rounded-[34px] overflow-hidden shadow-xl hover:-translate-y-2 transition duration-500"
           >
+
+            {/* IMAGE */}
 
             <div className="relative h-[290px] overflow-hidden">
 
@@ -170,6 +195,8 @@ export default function MostSoldPage() {
                 className="w-full h-full object-cover hover:scale-110 transition duration-700"
               />
 
+              {/* WISHLIST */}
+
               <button className="absolute top-5 right-5 w-[42px] h-[42px] rounded-full bg-white flex items-center justify-center shadow-lg hover:bg-black hover:text-white transition">
 
                 <Heart size={18} />
@@ -177,6 +204,8 @@ export default function MostSoldPage() {
               </button>
 
             </div>
+
+            {/* CONTENT */}
 
             <div className="p-6">
 

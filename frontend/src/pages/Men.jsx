@@ -1,12 +1,24 @@
+import Navbar from "./Navbar";
+
 export default function Men() {
 
   return (
 
-    <div className="min-h-screen flex items-center justify-center text-[40px] font-black">
+    <>
 
-      MEN PAGE
+      <Navbar />
 
-    </div>
+      <section className="min-h-screen bg-white pt-[90px]">
+
+        <h1 className="text-5xl font-black text-center">
+
+          MEN COLLECTION
+
+        </h1>
+
+      </section>
+
+    </>
 
   );
 
