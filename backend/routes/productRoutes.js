@@ -1,14 +1,14 @@
 import express from "express";
 
 import {
-
-    addProduct,
-    getProducts,
-    getSingleProduct,
-    deleteProduct,
-    updateProduct,
-    getMenProducts
-
+  addProduct,
+  getProducts,
+  getSingleProduct,
+  deleteProduct,
+  updateProduct,
+  getMenProducts,
+  getWomenProducts,
+  getKidsProducts
 } from "../controllers/productController.js";
 
 const router = express.Router();
@@ -43,5 +43,12 @@ router.delete("/deleteproduct/:id", deleteProduct);
 router.get("/men", getMenProducts);
 
 
+// WOMEN PRODUCTS
+
+router.get("/women", getWomenProducts);
+
+// KIDS PRODUCTS
+
+router.get("/kids", getKidsProducts);
 
 export default router;

@@ -7,20 +7,22 @@ export const addProduct = async (req, res) => {
 
     try {
 
-        const {
-            name,
-            category,
-            price,
-            quantity,
-            description,
-            image
-        } = req.body;
+       const {
+    name,
+    category,
+    gender,
+    price,
+    quantity,
+    description,
+    image
+} = req.body;
 
         // VALIDATION
 
         if (
             !name ||
             !category ||
+            !gender ||
             !price ||
             !quantity ||
             !description ||
@@ -35,28 +37,25 @@ export const addProduct = async (req, res) => {
         }
 
         // INSERT PRODUCT
+const newProduct = await pool.query(
+`
+INSERT INTO products
+(name, category, gender, price, quantity, description, image)
 
-        const newProduct = await pool.query(
+VALUES($1,$2,$3,$4,$5,$6,$7)
 
-            `
-            INSERT INTO products
-            (name, category, price, quantity, description, image)
-
-            VALUES($1,$2,$3,$4,$5,$6)
-
-            RETURNING *
-            `,
-
-            [
-                name,
-                category,
-                price,
-                quantity,
-                description,
-                image
-            ]
-
-        );
+RETURNING *
+`,
+[
+    name,
+    category,
+    gender,
+    price,
+    quantity,
+    description,
+    image
+]
+);
 
         res.status(201).json({
 
@@ -301,28 +300,68 @@ export const updateProduct = async (req, res) => {
 
 };
 
-// ================= GET MEN PRODUCTS =================
+// ================= MEN PRODUCTS =================
 
 export const getMenProducts = async (req, res) => {
-    try {
+  try {
+    const products = await pool.query(
+      "SELECT * FROM products WHERE gender = 'Men' ORDER BY id DESC"
+    );
 
-        const products = await pool.query(
-            "SELECT * FROM products WHERE category = 'Men' ORDER BY id DESC"
-        );
+    res.status(200).json({
+      success: true,
+      products: products.rows,
+    });
+  } catch (error) {
+    console.log(error);
 
-        res.status(200).json({
-            success: true,
-            products: products.rows
-        });
+    res.status(500).json({
+      success: false,
+      message: "Server Error",
+    });
+  }
+};
 
-    } catch (error) {
+// ================= WOMEN PRODUCTS =================
 
-        console.log(error);
+export const getWomenProducts = async (req, res) => {
+  try {
+    const products = await pool.query(
+      "SELECT * FROM products WHERE gender = 'Women' ORDER BY id DESC"
+    );
 
-        res.status(500).json({
-            success: false,
-            message: "Server Error"
-        });
+    res.status(200).json({
+      success: true,
+      products: products.rows,
+    });
+  } catch (error) {
+    console.log(error);
 
-    }
+    res.status(500).json({
+      success: false,
+      message: "Server Error",
+    });
+  }
+};
+
+// ================= KIDS PRODUCTS =================
+
+export const getKidsProducts = async (req, res) => {
+  try {
+    const products = await pool.query(
+      "SELECT * FROM products WHERE gender = 'Kids' ORDER BY id DESC"
+    );
+
+    res.status(200).json({
+      success: true,
+      products: products.rows,
+    });
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      success: false,
+      message: "Server Error",
+    });
+  }
 };
