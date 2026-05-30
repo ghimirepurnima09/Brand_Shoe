@@ -36,23 +36,35 @@ export default function Women() {
             Brand Shoe
           </p>
 
-          <h1 className="text-white text-6xl font-black mt-4">
+          <h1 className="text-white text-6xl font-black mt-4 leading-none">
             WOMEN
             <br />
             COLLECTION
           </h1>
+
+          <p className="text-gray-400 mt-4">
+            Products Found: {products.length}
+          </p>
         </div>
 
         {loading ? (
-          <h1 className="text-white text-center text-2xl">
-            Loading Products...
-          </h1>
+          <div className="flex justify-center items-center h-[300px]">
+            <h1 className="text-white text-2xl font-bold">
+              Loading Products...
+            </h1>
+          </div>
+        ) : products.length === 0 ? (
+          <div className="flex justify-center items-center h-[300px]">
+            <h1 className="text-red-500 text-2xl font-bold">
+              No Women's Products Found
+            </h1>
+          </div>
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {products.map((product) => (
               <div
                 key={product.id}
-                className="bg-[#161616] rounded-[32px] overflow-hidden"
+                className="bg-[#161616] rounded-[32px] overflow-hidden border border-white/10 hover:-translate-y-2 transition duration-500"
               >
                 <div className="h-[280px] overflow-hidden">
                   <img
@@ -63,7 +75,7 @@ export default function Women() {
                 </div>
 
                 <div className="p-6">
-                  <p className="text-[#8da27f] uppercase text-xs">
+                  <p className="text-[#8da27f] uppercase text-xs tracking-[3px]">
                     {product.category}
                   </p>
 
@@ -71,7 +83,7 @@ export default function Women() {
                     {product.name}
                   </h2>
 
-                  <p className="text-gray-400 mt-4">
+                  <p className="text-gray-400 mt-4 line-clamp-3">
                     {product.description}
                   </p>
 
@@ -80,7 +92,7 @@ export default function Women() {
                       Rs. {product.price}
                     </h3>
 
-                    <button className="px-5 h-12 rounded-full bg-[#8da27f] text-white font-bold">
+                    <button className="px-5 h-12 rounded-full bg-[#8da27f] text-white font-bold tracking-[2px] hover:bg-white hover:text-black transition">
                       ADD TO CART
                     </button>
                   </div>
