@@ -6,7 +6,8 @@ import {
     getProducts,
     getSingleProduct,
     deleteProduct,
-    updateProduct
+    updateProduct,
+    getMenProducts
 
 } from "../controllers/productController.js";
 
@@ -36,6 +37,11 @@ router.put("/updateproduct/:id", updateProduct);
 // DELETE PRODUCT
 
 router.delete("/deleteproduct/:id", deleteProduct);
+
+// MEN PRODUCTS
+
+router.get("/men", getMenProducts);
+
 
 
 export default router;

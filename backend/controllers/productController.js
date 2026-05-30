@@ -300,3 +300,29 @@ export const updateProduct = async (req, res) => {
     }
 
 };
+
+// ================= GET MEN PRODUCTS =================
+
+export const getMenProducts = async (req, res) => {
+    try {
+
+        const products = await pool.query(
+            "SELECT * FROM products WHERE category = 'Men' ORDER BY id DESC"
+        );
+
+        res.status(200).json({
+            success: true,
+            products: products.rows
+        });
+
+    } catch (error) {
+
+        console.log(error);
+
+        res.status(500).json({
+            success: false,
+            message: "Server Error"
+        });
+
+    }
+};
