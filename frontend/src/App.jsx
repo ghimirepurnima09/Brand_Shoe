@@ -14,6 +14,7 @@ import ForgotPassword from "./pages/ForgetPassword";
 import ResetPassword from "./pages/ResetPassword";
 
 import MainHome from "./pages/MainHome";
+import Wishlist from "./pages/Wishlist";
 
 import CollectionsPage from "./pages/CollectionsPage";
 import MostSoldPage from "./pages/MostSoldPage";
@@ -94,6 +95,11 @@ export default function App() {
       <Route
         path="/offers"
         element={<OffersPage />}
+      />
+      {/* ================= WISHLIST ================= */}
+      <Route
+        path="/wishlist"
+       element={<Wishlist />}
       />
 
       {/* ================= CATEGORY PAGES ================= */}

@@ -1,10 +1,15 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Navbar from "./Navbar";
+import { Heart } from "lucide-react";
+import { useWishlist } from "../context/WishlistContext";
+import toast from "react-hot-toast";
 
 export default function Women() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const { wishlist, addToWishlist } = useWishlist();
 
   useEffect(() => {
     const fetchWomenProducts = async () => {
@@ -41,10 +46,6 @@ export default function Women() {
             <br />
             COLLECTION
           </h1>
-
-          <p className="text-gray-400 mt-4">
-            Products Found: {products.length}
-          </p>
         </div>
 
         {loading ? (
@@ -66,12 +67,37 @@ export default function Women() {
                 key={product.id}
                 className="bg-[#161616] rounded-[32px] overflow-hidden border border-white/10 hover:-translate-y-2 transition duration-500"
               >
-                <div className="h-[280px] overflow-hidden">
+                <div className="relative h-[280px] overflow-hidden">
                   <img
                     src={product.image}
                     alt={product.name}
                     className="w-full h-full object-cover hover:scale-110 transition duration-700"
+                    onError={(e) => {
+                      e.target.src =
+                        "https://via.placeholder.com/500x500?text=No+Image";
+                    }}
                   />
+
+                  <button
+                    onClick={() => {
+                      addToWishlist(product);
+                      toast.success("Added to Wishlist");
+                    }}
+                    className={`absolute top-4 right-4 w-10 h-10 rounded-full flex items-center justify-center shadow-lg transition ${
+                      wishlist.some((item) => item.id === product.id)
+                        ? "bg-red-500 text-white"
+                        : "bg-white text-black hover:bg-red-500 hover:text-white"
+                    }`}
+                  >
+                    <Heart
+                      size={18}
+                      fill={
+                        wishlist.some((item) => item.id === product.id)
+                          ? "currentColor"
+                          : "none"
+                      }
+                    />
+                  </button>
                 </div>
 
                 <div className="p-6">

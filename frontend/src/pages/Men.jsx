@@ -1,10 +1,15 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Navbar from "./Navbar";
+import { Heart } from "lucide-react";
+import toast from "react-hot-toast";
+import { useWishlist } from "../context/WishlistContext";
 
 export default function Men() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const { wishlist, addToWishlist } = useWishlist();
 
   useEffect(() => {
     const fetchMenProducts = async () => {
@@ -12,8 +17,6 @@ export default function Men() {
         const response = await axios.get(
           "http://localhost:5000/api/products/men"
         );
-
-        console.log("API Response:", response.data);
 
         if (response.data.success) {
           setProducts(response.data.products);
@@ -33,7 +36,6 @@ export default function Men() {
       <Navbar />
 
       <section className="min-h-screen bg-black px-6 lg:px-16 pt-[120px] pb-20">
-        {/* Heading */}
         <div className="mb-16">
           <p className="text-[#8da27f] uppercase tracking-[4px] text-sm font-bold">
             Brand Shoe
@@ -46,7 +48,6 @@ export default function Men() {
           </h1>
         </div>
 
-        {/* Loading */}
         {loading ? (
           <div className="flex justify-center items-center h-[300px]">
             <h1 className="text-white text-2xl font-bold">
@@ -66,21 +67,39 @@ export default function Men() {
                 key={product.id}
                 className="bg-[#161616] rounded-[32px] overflow-hidden border border-white/10 hover:-translate-y-2 transition duration-500"
               >
-                {/* IMAGE */}
-                <div className="h-[280px] overflow-hidden bg-gray-800">
+                <div className="relative h-[280px] overflow-hidden">
                   <img
                     src={product.image}
                     alt={product.name}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover hover:scale-110 transition duration-700"
+                    onError={(e) => {
+                      e.target.src =
+                        "https://via.placeholder.com/500x500?text=No+Image";
+                    }}
                   />
 
-                  {/* DEBUG PATH */}
-                  <p className="text-red-500 text-[10px] p-2 break-all">
-                    {product.image}
-                  </p>
+                  <button
+                    onClick={() => {
+                      addToWishlist(product);
+                      toast.success("Added to Wishlist");
+                    }}
+                    className={`absolute top-4 right-4 w-10 h-10 rounded-full flex items-center justify-center shadow-lg transition ${
+                      wishlist.some((item) => item.id === product.id)
+                        ? "bg-red-500 text-white"
+                        : "bg-white text-black hover:bg-red-500 hover:text-white"
+                    }`}
+                  >
+                    <Heart
+                      size={18}
+                      fill={
+                        wishlist.some((item) => item.id === product.id)
+                          ? "currentColor"
+                          : "none"
+                      }
+                    />
+                  </button>
                 </div>
 
-                {/* CONTENT */}
                 <div className="p-6">
                   <p className="text-[#8da27f] text-xs tracking-[3px] uppercase font-semibold">
                     {product.category}
@@ -90,7 +109,7 @@ export default function Men() {
                     {product.name}
                   </h2>
 
-                  <p className="text-gray-400 text-sm mt-4">
+                  <p className="text-gray-400 text-sm mt-4 line-clamp-3">
                     {product.description}
                   </p>
 

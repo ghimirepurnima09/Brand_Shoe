@@ -5,22 +5,15 @@ import Collections from "./Collections";
 import Guarantee from "./Guarantee";
 import Footer from "./Footer";
 
-
 export default function MainHome() {
-
   return (
-
     <div className="bg-white overflow-hidden scroll-smooth">
-
       <Navbar />
       <Hero />
       <Trending />
       <Collections />
       <Guarantee />
       <Footer />
-
     </div>
-
   );
-
 }

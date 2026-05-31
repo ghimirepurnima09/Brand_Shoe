@@ -3,35 +3,35 @@
 // ======================================
 
 import { Link, useLocation } from "react-router-dom";
+import { useWishlist } from "../context/WishlistContext";
 
 import {
   Search,
   ShoppingCart,
   CircleUserRound,
-  Heart
+  Heart,
 } from "lucide-react";
 
 import logo from "../assets/logo.png";
 
 export default function Navbar() {
-
   const location = useLocation();
+
+  const { wishlist } = useWishlist();
 
   const isLoggedInHome =
     location.pathname === "/mainhome" ||
     location.pathname === "/collections" ||
     location.pathname === "/women" ||
     location.pathname === "/kids" ||
-    location.pathname === "/men";
+    location.pathname === "/men" ||
+    location.pathname === "/wishlist";
 
   return (
-
     <nav className="fixed top-0 left-0 w-full h-[82px] bg-white flex items-center justify-between px-6 lg:px-14 border-b border-gray-200 z-[9999] shadow-sm">
-
       {/* LEFT LOGO */}
 
       <div className="flex items-center gap-3">
-
         <img
           src={logo}
           alt=""
@@ -39,17 +39,13 @@ export default function Navbar() {
         />
 
         <h1 className="text-[34px] font-black tracking-[-3px] text-black">
-
           Brand_Shoe
-
         </h1>
-
       </div>
 
       {/* CENTER MENU */}
 
       <div className="hidden lg:flex items-center gap-9 text-[15px] font-semibold">
-
         <Link
           to="/mainhome"
           className={`transition duration-300 ${
@@ -104,69 +100,59 @@ export default function Navbar() {
         >
           New Arrival
         </Link>
-
       </div>
 
       {/* RIGHT SIDE */}
 
       <div className="flex items-center gap-4">
-
         <div className="hidden lg:flex items-center gap-3 bg-[#f5f5f5] border border-gray-200 px-5 rounded-full w-[290px] h-[48px]">
-
-          <Search
-            size={17}
-            className="text-gray-500"
-          />
+          <Search size={17} className="text-gray-500" />
 
           <input
             type="text"
             placeholder="Search sneakers..."
             className="bg-transparent outline-none text-[14px] w-full"
           />
-
         </div>
 
         {isLoggedInHome ? (
-
           <>
+            {/* WISHLIST */}
 
-            <button className="w-[46px] h-[46px] rounded-full border border-gray-200 bg-white flex items-center justify-center hover:bg-[#8da27f] hover:text-white transition duration-300 shadow-sm">
-
+            <Link
+              to="/wishlist"
+              className="relative w-[46px] h-[46px] rounded-full border border-gray-200 bg-white flex items-center justify-center hover:bg-[#8da27f] hover:text-white transition duration-300 shadow-sm"
+            >
               <Heart size={19} />
 
-            </button>
+              {wishlist.length > 0 && (
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] w-5 h-5 rounded-full flex items-center justify-center">
+                  {wishlist.length}
+                </span>
+              )}
+            </Link>
+
+            {/* CART */}
 
             <button className="w-[46px] h-[46px] rounded-full bg-black text-white flex items-center justify-center hover:bg-[#8da27f] transition duration-300 shadow-lg">
-
               <ShoppingCart size={19} />
-
             </button>
+
+            {/* USER */}
 
             <button className="w-[46px] h-[46px] rounded-full border border-gray-200 bg-white flex items-center justify-center hover:bg-black hover:text-white transition duration-300 shadow-sm">
-
               <CircleUserRound size={20} />
-
             </button>
-
           </>
-
         ) : (
-
           <Link
             to="/login"
             className="px-7 h-[48px] rounded-full bg-black text-white flex items-center justify-center text-[14px] font-semibold hover:bg-[#8da27f] transition duration-300 shadow-md"
           >
-
             LOGIN
-
           </Link>
-
         )}
-
       </div>
-
     </nav>
-
   );
-
 }
