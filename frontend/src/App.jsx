@@ -15,6 +15,7 @@ import ResetPassword from "./pages/ResetPassword";
 
 import MainHome from "./pages/MainHome";
 import Wishlist from "./pages/Wishlist";
+import ProductDetails from "./pages/ProductDetails";
 
 import CollectionsPage from "./pages/CollectionsPage";
 import MostSoldPage from "./pages/MostSoldPage";
@@ -118,6 +119,9 @@ export default function App() {
         path="/kids"
         element={<Kids />}
       />
+      <Route path="/product/:id" 
+      element={<ProductDetails />}
+       />
 
       {/* ================= ADD PRODUCT ================= */}
 

@@ -4,6 +4,7 @@ import Navbar from "./Navbar";
 import { Heart } from "lucide-react";
 import { useWishlist } from "../context/WishlistContext";
 import toast from "react-hot-toast";
+import { Link } from "react-router-dom";
 
 export default function Kids() {
   const [products, setProducts] = useState([]);
@@ -68,15 +69,17 @@ export default function Kids() {
                 className="bg-[#161616] rounded-[32px] overflow-hidden border border-white/10 hover:-translate-y-2 transition duration-500"
               >
                 <div className="relative h-[280px] overflow-hidden">
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                    className="w-full h-full object-cover hover:scale-110 transition duration-700"
-                    onError={(e) => {
-                      e.target.src =
+                  <Link to={`/product/${product._id || product.id}`}>
+                    <img
+                      src={product.image}
+                      alt={product.name}
+                      className="w-full h-full object-cover hover:scale-110 transition duration-700 cursor-pointer"
+                      onError={(e) => {
+                        e.target.src =
                         "https://via.placeholder.com/500x500?text=No+Image";
                     }}
                   />
+                  </Link>
 
                  <button
                    onClick={() => {
