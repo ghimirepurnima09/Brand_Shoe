@@ -4,6 +4,7 @@ import axios from "axios";
 import Navbar from "./Navbar";
 import { Heart, ShoppingCart, ArrowLeft, Shield, RotateCcw, Truck } from "lucide-react";
 import { useWishlist } from "../context/WishlistContext";
+import { useCart } from "../context/CartContext";
 import toast from "react-hot-toast";
 
 const sizes = [7, 8, 9, 10, 11, 12, 13, 14];
@@ -13,6 +14,7 @@ export default function ProductDetails() {
   const navigate = useNavigate();
 
   const { wishlist, addToWishlist } = useWishlist();
+  const { addToCart } = useCart();
 
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -44,7 +46,9 @@ export default function ProductDetails() {
       toast.error("Please select a size first!");
       return;
     }
+    addToCart(product, selectedSize);
     toast.success(`Added to cart — Size ${selectedSize}`);
+    navigate("/cart");
   };
 
   // ── WISHLIST ──
@@ -98,7 +102,7 @@ export default function ProductDetails() {
         {/* ── BACK BUTTON ── */}
         <button
           onClick={() => navigate(-1)}
-          className="flex items-center gap-2 text-[#8da27f] font-bold uppercase tracking-[3px] text-sm mb-12 hover:text-white transition"
+          className="flex items-center gap-2 text-[#8da27f] font-bold uppercase tracking-[3px] text-sm mb-12 hover:text-black transition"
         >
           <ArrowLeft size={18} />
           Back

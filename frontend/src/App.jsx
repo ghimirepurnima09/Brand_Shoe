@@ -20,10 +20,12 @@ import ProductDetails from "./pages/ProductDetails";
 import CollectionsPage from "./pages/CollectionsPage";
 import MostSoldPage from "./pages/MostSoldPage";
 import OffersPage from "./pages/OffersPage";
+import Payment from "./pages/Payment";
 
 import Women from "./pages/Women";
 import Men from "./pages/Men";
 import Kids from "./pages/Kids";
+import Cart from "./pages/Cart";
 
 // ADD PRODUCT PAGE
 
@@ -122,6 +124,10 @@ export default function App() {
       <Route path="/product/:id" 
       element={<ProductDetails />}
        />
+      <Route path="/cart" 
+      element={<Cart />}
+       />
+       <Route path="/payment" element={<Payment />} />
 
       {/* ================= ADD PRODUCT ================= */}
 
