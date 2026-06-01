@@ -5,7 +5,7 @@ import { Heart, ShoppingCart } from "lucide-react";
 import { useWishlist } from "../context/WishlistContext";
 import { useCart } from "../context/CartContext";
 import toast from "react-hot-toast";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export default function Women() {
   const [products, setProducts] = useState([]);
@@ -13,7 +13,6 @@ export default function Women() {
 
   const { wishlist, addToWishlist } = useWishlist();
   const { addToCart, cart } = useCart();
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchWomenProducts = async () => {
@@ -34,7 +33,7 @@ export default function Women() {
   const handleAddToCart = (product) => {
     addToCart(product, "Default");
     toast.success("Added to Cart!");
-    navigate("/cart");
+    // stays on same page
   };
 
   const getCartCount = (productId) => {

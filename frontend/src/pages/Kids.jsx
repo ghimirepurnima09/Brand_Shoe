@@ -5,7 +5,7 @@ import { Heart, ShoppingCart } from "lucide-react";
 import { useWishlist } from "../context/WishlistContext";
 import { useCart } from "../context/CartContext";
 import toast from "react-hot-toast";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export default function Kids() {
   const [products, setProducts] = useState([]);
@@ -13,14 +13,11 @@ export default function Kids() {
 
   const { wishlist, addToWishlist } = useWishlist();
   const { addToCart, cart } = useCart();
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchKidsProducts = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:5000/api/products/kids"
-        );
+        const response = await axios.get("http://localhost:5000/api/products/kids");
         if (response.data.success) {
           setProducts(response.data.products);
         }
@@ -37,7 +34,7 @@ export default function Kids() {
   const handleAddToCart = (product) => {
     addToCart(product, "Default");
     toast.success("Added to Cart!");
-    navigate("/cart");
+    // NO navigate — stays on Kids page
   };
 
   const getCartCount = (productId) => {
@@ -55,7 +52,6 @@ export default function Kids() {
           <p className="text-[#8da27f] uppercase tracking-[4px] text-sm font-bold">
             Brand Shoe
           </p>
-
           <h1 className="text-white text-6xl font-black mt-4 leading-none">
             KIDS
             <br />
@@ -65,15 +61,11 @@ export default function Kids() {
 
         {loading ? (
           <div className="flex justify-center items-center h-[300px]">
-            <h1 className="text-white text-2xl font-bold">
-              Loading Products...
-            </h1>
+            <h1 className="text-white text-2xl font-bold">Loading Products...</h1>
           </div>
         ) : products.length === 0 ? (
           <div className="flex justify-center items-center h-[300px]">
-            <h1 className="text-red-500 text-2xl font-bold">
-              No Kids Products Found
-            </h1>
+            <h1 className="text-red-500 text-2xl font-bold">No Kids Products Found</h1>
           </div>
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -89,8 +81,7 @@ export default function Kids() {
                       alt={product.name}
                       className="w-full h-full object-cover hover:scale-110 transition duration-700 cursor-pointer"
                       onError={(e) => {
-                        e.target.src =
-                          "https://via.placeholder.com/500x500?text=No+Image";
+                        e.target.src = "https://via.placeholder.com/500x500?text=No+Image";
                       }}
                     />
                   </Link>
@@ -129,19 +120,11 @@ export default function Kids() {
                   <p className="text-[#8da27f] uppercase text-xs tracking-[3px] font-semibold">
                     {product.category}
                   </p>
-
-                  <h2 className="text-white text-2xl font-black mt-3">
-                    {product.name}
-                  </h2>
-
-                  <p className="text-gray-400 text-sm mt-4 line-clamp-3">
-                    {product.description}
-                  </p>
+                  <h2 className="text-white text-2xl font-black mt-3">{product.name}</h2>
+                  <p className="text-gray-400 text-sm mt-4 line-clamp-3">{product.description}</p>
 
                   <div className="flex justify-between items-center mt-8">
-                    <h3 className="text-white text-3xl font-black">
-                      Rs. {product.price}
-                    </h3>
+                    <h3 className="text-white text-3xl font-black">Rs. {product.price}</h3>
 
                     <button
                       onClick={() => handleAddToCart(product)}

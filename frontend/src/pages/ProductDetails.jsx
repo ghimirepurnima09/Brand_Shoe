@@ -48,7 +48,17 @@ export default function ProductDetails() {
     }
     addToCart(product, selectedSize);
     toast.success(`Added to cart — Size ${selectedSize}`);
-    navigate("/cart");
+    // stays on same page
+  };
+
+  // ── BUY NOW ──
+  const handleBuyNow = () => {
+    if (!selectedSize) {
+      toast.error("Please select a size first!");
+      return;
+    }
+    addToCart(product, selectedSize);
+    navigate("/payment");
   };
 
   // ── WISHLIST ──
@@ -156,7 +166,7 @@ export default function ProductDetails() {
               />
             </div>
 
-            {/* Thumbnail Row — same image x4 as views */}
+            {/* Thumbnail Row */}
             <div className="grid grid-cols-4 gap-3">
               {[0, 1, 2, 3].map((i) => (
                 <div
@@ -258,7 +268,11 @@ export default function ProductDetails() {
                 Add to Cart
               </button>
 
-              <button className="w-full h-[58px] rounded-full border border-white/30 text-white font-bold tracking-[3px] uppercase hover:bg-white hover:text-black transition duration-300 backdrop-blur-md">
+              {/* ── BUY NOW ── */}
+              <button
+                onClick={handleBuyNow}
+                className="w-full h-[58px] rounded-full border border-white/30 text-white font-bold tracking-[3px] uppercase hover:bg-white hover:text-black transition duration-300 backdrop-blur-md"
+              >
                 Buy Now
               </button>
             </div>
