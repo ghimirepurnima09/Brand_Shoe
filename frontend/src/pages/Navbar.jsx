@@ -15,13 +15,11 @@ export default function Navbar() {
 
   const isLoggedInHome = !!localStorage.getItem("token");
 
-  // ── SEARCH STATE ──
   const [query, setQuery] = useState("");
   const [allProducts, setAllProducts] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const searchRef = useRef(null);
 
-  // Fetch all products once on mount
   useEffect(() => {
     const fetchAll = async () => {
       try {
@@ -34,7 +32,6 @@ export default function Navbar() {
     fetchAll();
   }, []);
 
-  // ── Compute suggestions directly — no useEffect ──
   const suggestions = query.trim().length === 0
     ? []
     : allProducts
@@ -48,7 +45,6 @@ export default function Navbar() {
         })
         .slice(0, 6);
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (searchRef.current && !searchRef.current.contains(e.target)) {
@@ -98,17 +94,14 @@ export default function Navbar() {
       {/* RIGHT SIDE */}
       <div className="flex items-center gap-4">
 
-        {/* ── SEARCH BAR WITH DROPDOWN ── */}
+        {/* SEARCH */}
         <div ref={searchRef} className="hidden lg:block relative">
           <div className="flex items-center gap-3 bg-[#f5f5f5] border border-gray-200 px-5 rounded-full w-[290px] h-[48px] focus-within:border-[#8da27f] transition">
             <Search size={17} className="text-gray-500 shrink-0" />
             <input
               type="text"
               value={query}
-              onChange={(e) => {
-                setQuery(e.target.value);
-                setShowDropdown(true);
-              }}
+              onChange={(e) => { setQuery(e.target.value); setShowDropdown(true); }}
               onKeyDown={handleSearchEnter}
               onFocus={() => setShowDropdown(true)}
               placeholder="Search sneakers..."
@@ -121,12 +114,10 @@ export default function Navbar() {
             )}
           </div>
 
-          {/* ── DROPDOWN ── */}
+          {/* DROPDOWN */}
           {showDropdown && suggestions.length > 0 && (
             <div className="absolute top-[56px] left-0 w-full bg-white border border-gray-200 rounded-[20px] shadow-2xl overflow-hidden z-[99999]">
-              <p className="text-[10px] font-bold uppercase tracking-[3px] text-gray-400 px-5 pt-4 pb-2">
-                Suggestions
-              </p>
+              <p className="text-[10px] font-bold uppercase tracking-[3px] text-gray-400 px-5 pt-4 pb-2">Suggestions</p>
               {suggestions.map((product) => (
                 <div
                   key={product.id}
@@ -134,28 +125,17 @@ export default function Navbar() {
                   className="flex items-center gap-4 px-4 py-3 hover:bg-[#f5f5f5] cursor-pointer transition group"
                 >
                   <div className="w-12 h-12 rounded-xl overflow-hidden bg-gray-100 shrink-0">
-                    <img
-                      src={product.image}
-                      alt={product.name}
-                      className="w-full h-full object-cover"
-                      onError={(e) => { e.target.src = "https://via.placeholder.com/48x48?text=Img"; }}
-                    />
+                    <img src={product.image} alt={product.name} className="w-full h-full object-cover"
+                      onError={(e) => { e.target.src = "https://via.placeholder.com/48x48?text=Img"; }} />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-black text-sm font-bold truncate group-hover:text-[#8da27f] transition">
-                      {product.name}
-                    </p>
-                    <p className="text-gray-400 text-xs mt-0.5">
-                      {product.category} • {product.gender}
-                    </p>
+                    <p className="text-black text-sm font-bold truncate group-hover:text-[#8da27f] transition">{product.name}</p>
+                    <p className="text-gray-400 text-xs mt-0.5">{product.category} • {product.gender}</p>
                   </div>
                 </div>
               ))}
               <button
-                onClick={() => {
-                  setShowDropdown(false);
-                  navigate(`/search?q=${encodeURIComponent(query.trim())}`);
-                }}
+                onClick={() => { setShowDropdown(false); navigate(`/search?q=${encodeURIComponent(query.trim())}`); }}
                 className="w-full py-3 text-center text-[#8da27f] text-xs font-bold uppercase tracking-[2px] border-t border-gray-100 hover:bg-[#8da27f] hover:text-white transition"
               >
                 See all results for "{query}"
@@ -193,17 +173,12 @@ export default function Navbar() {
               )}
             </button>
 
-            {/* USER */}
-            <button className="w-[46px] h-[46px] rounded-full border border-gray-200 bg-white flex items-center justify-center hover:bg-black hover:text-white transition duration-300 shadow-sm">
-              <CircleUserRound size={20} />
-            </button>
-
-            {/* LOGOUT */}
+            {/* USER → PROFILE */}
             <button
-              onClick={() => { localStorage.removeItem("token"); localStorage.removeItem("user"); window.location.reload(); }}
-              className="text-sm font-bold text-gray-500 hover:text-red-500 transition"
+              onClick={() => navigate("/profile")}
+              className="w-[46px] h-[46px] rounded-full border border-gray-200 bg-white flex items-center justify-center hover:bg-black hover:text-white transition duration-300 shadow-sm"
             >
-              Logout
+              <CircleUserRound size={20} />
             </button>
           </>
         ) : (

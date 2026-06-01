@@ -26,6 +26,7 @@ import Women from "./pages/Women";
 import Men from "./pages/Men";
 import Kids from "./pages/Kids";
 import Cart from "./pages/Cart";
+import Profile from "./pages/Profile";
 
 // ADD PRODUCT PAGE
 
@@ -130,6 +131,7 @@ export default function App() {
        <Route path="/payment" element={<Payment />} />
 
       {/* ================= ADD PRODUCT ================= */}
+      <Route path="/profile" element={<Profile />} />
 
       <Route
         path="/addproduct"
