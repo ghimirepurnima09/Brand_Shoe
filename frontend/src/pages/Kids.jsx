@@ -1,16 +1,19 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Navbar from "./Navbar";
-import { Heart } from "lucide-react";
+import { Heart, ShoppingCart } from "lucide-react";
 import { useWishlist } from "../context/WishlistContext";
+import { useCart } from "../context/CartContext";
 import toast from "react-hot-toast";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Kids() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const { wishlist, addToWishlist } = useWishlist();
+  const { addToCart, cart } = useCart();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchKidsProducts = async () => {
@@ -18,7 +21,6 @@ export default function Kids() {
         const response = await axios.get(
           "http://localhost:5000/api/products/kids"
         );
-
         if (response.data.success) {
           setProducts(response.data.products);
         }
@@ -31,6 +33,18 @@ export default function Kids() {
 
     fetchKidsProducts();
   }, []);
+
+  const handleAddToCart = (product) => {
+    addToCart(product, "Default");
+    toast.success("Added to Cart!");
+    navigate("/cart");
+  };
+
+  const getCartCount = (productId) => {
+    return cart
+      .filter((item) => item.id === productId)
+      .reduce((sum, item) => sum + item.quantity, 0);
+  };
 
   return (
     <>
@@ -76,36 +90,39 @@ export default function Kids() {
                       className="w-full h-full object-cover hover:scale-110 transition duration-700 cursor-pointer"
                       onError={(e) => {
                         e.target.src =
-                        "https://via.placeholder.com/500x500?text=No+Image";
-                    }}
-                  />
+                          "https://via.placeholder.com/500x500?text=No+Image";
+                      }}
+                    />
                   </Link>
 
-                 <button
-                   onClick={() => {
-                     addToWishlist(product);
-                     toast.success("Added to Wishlist");
-                }}
- 
-                className={`absolute top-4 right-4 w-10 h-10 rounded-full flex items-center justify-center shadow-lg transition ${
-   
-                  wishlist.some((item) => item.id === product.id)
-      
-                  ? "bg-red-500 text-white"
-      
-                  : "bg-white text-black hover:bg-red-500 hover:text-white"
- 
-                }`}
-         >
-               <Heart
-                 size={18}
+                  {/* Wishlist */}
+                  <button
+                    onClick={() => {
+                      addToWishlist(product);
+                      toast.success("Added to Wishlist");
+                    }}
+                    className={`absolute top-4 right-4 w-10 h-10 rounded-full flex items-center justify-center shadow-lg transition ${
+                      wishlist.some((item) => item.id === product.id)
+                        ? "bg-red-500 text-white"
+                        : "bg-white text-black hover:bg-red-500 hover:text-white"
+                    }`}
+                  >
+                    <Heart
+                      size={18}
                       fill={
-                     wishlist.some((item) => item.id === product.id)
+                        wishlist.some((item) => item.id === product.id)
                           ? "currentColor"
-                            : "none"
-               }
-                />
-                     </button>
+                          : "none"
+                      }
+                    />
+                  </button>
+
+                  {/* Cart count badge */}
+                  {getCartCount(product.id) > 0 && (
+                    <div className="absolute top-4 left-4 bg-[#8da27f] text-white text-xs font-black w-7 h-7 rounded-full flex items-center justify-center">
+                      {getCartCount(product.id)}
+                    </div>
+                  )}
                 </div>
 
                 <div className="p-6">
@@ -126,7 +143,11 @@ export default function Kids() {
                       Rs. {product.price}
                     </h3>
 
-                    <button className="px-5 h-12 rounded-full bg-[#8da27f] text-white font-bold tracking-[2px] hover:bg-white hover:text-black transition">
+                    <button
+                      onClick={() => handleAddToCart(product)}
+                      className="flex items-center gap-2 px-5 h-12 rounded-full bg-[#8da27f] text-white font-bold tracking-[2px] hover:bg-white hover:text-black transition"
+                    >
+                      <ShoppingCart size={15} />
                       ADD TO CART
                     </button>
                   </div>
