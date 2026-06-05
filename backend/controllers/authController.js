@@ -3,6 +3,9 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import nodemailer from "nodemailer";
 
+
+
+
 // ================= REGISTER =================
 
 export const register = async (req, res) => {
@@ -172,51 +175,5 @@ export const resetPassword = async (req, res) => {
     }
 };
 
-// ================= VALIDATE ESEWA ID =================
 
-export const validateEsewa = async (req, res) => {
-    try {
-        const { esewaId } = req.body;
 
-        console.log("ESEWA RECEIVED:", esewaId);
-        console.log("BODY:", req.body);
-
-        if (!esewaId) {
-            return res.status(400).json({
-                success: false,
-                message: "eSewa ID is required"
-            });
-        }
-
-        // Must be exactly 10 digits
-        const phoneRegex = /^\d{10}$/;
-        if (!phoneRegex.test(esewaId)) {
-            return res.status(400).json({
-                success: false,
-                message: "eSewa ID must be exactly 10 digits"
-            });
-        }
-
-        // Must exist in the users table (registered user only)
-        const user = await pool.query(
-            "SELECT * FROM users WHERE phone=$1",
-            [esewaId]
-        );
-
-        if (user.rows.length === 0) {
-            return res.status(400).json({
-                success: false,
-                message: "Invalid eSewa ID! No registered account found with this number."
-            });
-        }
-
-        res.status(200).json({
-            success: true,
-            message: "eSewa ID verified successfully!"
-        });
-
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({ success: false, message: "Server Error" });
-    }
-};

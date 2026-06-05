@@ -163,8 +163,8 @@ export default function Navbar() {
               )}
             </Link>
 
-            {/* CART */}
-            <button onClick={() => navigate("/cart")} className="relative w-[46px] h-[46px] rounded-full bg-black text-white flex items-center justify-center hover:bg-[#8da27f] transition duration-300 shadow-lg">
+            {/* CART — white with green hover instead of black */}
+            <button onClick={() => navigate("/cart")} className="relative w-[46px] h-[46px] rounded-full border border-gray-200 bg-white text-gray-700 flex items-center justify-center hover:bg-[#8da27f] hover:text-white hover:border-[#8da27f] transition duration-300 shadow-sm">
               <ShoppingCart size={19} />
               {totalItems > 0 && (
                 <span className="absolute -top-1 -right-1 bg-[#8da27f] text-white text-[10px] w-5 h-5 rounded-full flex items-center justify-center font-bold border-2 border-white">

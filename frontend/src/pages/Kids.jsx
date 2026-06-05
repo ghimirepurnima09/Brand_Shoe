@@ -5,7 +5,7 @@ import { Heart, ShoppingCart, SlidersHorizontal, X, ChevronDown, ChevronUp } fro
 import toast from "react-hot-toast";
 import { useWishlist } from "../context/WishlistContext";
 import { useCart } from "../context/CartContext";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const ALL_SIZES = [6, 7, 8, 9, 10, 11, 12, 13, 14];
 
@@ -15,6 +15,7 @@ export default function Kids() {
   const [showFilters, setShowFilters] = useState(true);
   const [selectedBrands, setSelectedBrands] = useState([]);
   const [selectedSizes, setSelectedSizes] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("All");
   const [priceRange, setPriceRange] = useState([0, 100000]);
   const [maxPrice, setMaxPrice] = useState(100000);
   const [openBrand, setOpenBrand] = useState(true);
@@ -23,10 +24,9 @@ export default function Kids() {
 
   const { wishlist, addToWishlist } = useWishlist();
   const { addToCart, cart } = useCart();
-  const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchMenProducts = async () => {
+    const fetchProducts = async () => {
       try {
         const response = await axios.get("http://localhost:5000/api/products/kids");
         if (response.data.success) {
@@ -37,12 +37,12 @@ export default function Kids() {
           setPriceRange([0, max]);
         }
       } catch (error) {
-        console.log("Error fetching kids products:", error);
+        console.log("Error fetching kids's products:", error);
       } finally {
         setLoading(false);
       }
     };
-    fetchMenProducts();
+    fetchProducts();
   }, []);
 
   const brands = useMemo(() => {
@@ -50,16 +50,21 @@ export default function Kids() {
     return [...new Set(names)].sort();
   }, [products]);
 
+  // Extract unique categories from products
+  const categories = useMemo(() => {
+    const cats = products.map((p) => p.category).filter(Boolean);
+    return ["All", ...new Set(cats)];
+  }, [products]);
+
   const filtered = useMemo(() => {
     return products.filter((p) => {
-      const brandMatch =
-        selectedBrands.length === 0 ||
+      const brandMatch = selectedBrands.length === 0 ||
         selectedBrands.some((b) => p.name.toLowerCase().startsWith(b.toLowerCase()));
-      const priceMatch =
-        Number(p.price) >= priceRange[0] && Number(p.price) <= priceRange[1];
-      return brandMatch && priceMatch;
+      const priceMatch = Number(p.price) >= priceRange[0] && Number(p.price) <= priceRange[1];
+      const categoryMatch = selectedCategory === "All" || p.category === selectedCategory;
+      return brandMatch && priceMatch && categoryMatch;
     });
-  }, [products, selectedBrands, priceRange, selectedSizes]);
+  }, [products, selectedBrands, priceRange, selectedCategory]);
 
   const toggleBrand = (brand) =>
     setSelectedBrands((prev) =>
@@ -74,16 +79,17 @@ export default function Kids() {
   const clearFilters = () => {
     setSelectedBrands([]);
     setSelectedSizes([]);
+    setSelectedCategory("All");
     setPriceRange([0, maxPrice]);
   };
 
   const hasActiveFilters =
-    selectedBrands.length > 0 || selectedSizes.length > 0 || priceRange[0] > 0 || priceRange[1] < maxPrice;
+    selectedBrands.length > 0 || selectedSizes.length > 0 ||
+    selectedCategory !== "All" || priceRange[0] > 0 || priceRange[1] < maxPrice;
 
   const handleAddToCart = (product) => {
     addToCart(product, "Default");
     toast.success("Added to Cart!");
-    navigate("/cart");
   };
 
   const getCartCount = (productId) =>
@@ -111,6 +117,23 @@ export default function Kids() {
               {showFilters ? "Hide Filters" : "Show Filters"}
             </button>
           </div>
+        </div>
+
+        {/* CATEGORY TABS */}
+        <div className="flex gap-3 flex-wrap mb-8">
+          {categories.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setSelectedCategory(cat)}
+              className={`px-5 h-10 rounded-full text-xs font-bold uppercase tracking-[2px] transition duration-300 ${
+                selectedCategory === cat
+                  ? "bg-[#8da27f] text-white"
+                  : "border border-white/20 text-gray-400 hover:border-[#8da27f] hover:text-white"
+              }`}
+            >
+              {cat}
+            </button>
+          ))}
         </div>
 
         <div className="flex gap-10">
