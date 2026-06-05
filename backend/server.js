@@ -7,7 +7,7 @@ import { fileURLToPath } from "url";
 import productRoutes from "./routes/productRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import paymentRoutes from "./routes/paymentRoutes.js";
-import adminRoutes from "./routes/adminRoutes.js";
+import adminRoutes from "./routes/adminRoutes.js";  
 
 dotenv.config();
 

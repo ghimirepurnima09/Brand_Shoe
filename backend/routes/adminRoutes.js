@@ -1,22 +1,24 @@
 import express from "express";
+
 import {
-    adminLogin,
-    getDashboardStats,
-    getAllUsers,
-    deleteUser,
-    adminGetProducts,
-    adminAddProduct,
-    adminUpdateProduct,
-    adminDeleteProduct,
+  adminLogin,
+  getDashboardStats,
+  getAllUsers,
+  deleteUser,
+  adminGetProducts,
+  adminAddProduct,
+  adminUpdateProduct,
+  adminDeleteProduct,
 } from "../controllers/adminController.js";
+
 import { adminMiddleware } from "../middleware/adminMiddleware.js";
 
 const router = express.Router();
 
-// PUBLIC — Admin Login
+// PUBLIC
 router.post("/login", adminLogin);
 
-// PROTECTED — all routes below require admin token
+// PROTECTED
 router.get("/dashboard", adminMiddleware, getDashboardStats);
 
 router.get("/users", adminMiddleware, getAllUsers);

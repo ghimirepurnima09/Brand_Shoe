@@ -141,7 +141,7 @@ export default function AddProduct() {
               </label>
             ) : (
               <div className="relative w-full h-[220px] rounded-[14px] overflow-hidden border border-gray-200">
-                <img src={imagePreview} alt="preview" className="w-full h-full object-cover" />
+                <img src={`http://localhost:5000${imagePreview}`} alt="preview" className="w-full h-full object-cover" />
                 <button
                   onClick={removeImage}
                   className="absolute top-3 right-3 w-9 h-9 rounded-full bg-black text-white flex items-center justify-center hover:bg-red-500 transition"

@@ -73,7 +73,7 @@ export default function Dashboard() {
                   {recentProducts.map((p) => (
                     <div key={p.id} className="flex items-center gap-4 bg-black rounded-2xl border border-white/10 p-4">
                       <div className="w-12 h-12 rounded-xl overflow-hidden bg-[#161616] shrink-0">
-                        <img src={p.image} alt={p.name} className="w-full h-full object-cover"
+                        <img src={`http://localhost:5000${p.image}`} alt={p.name} className="w-full h-full object-cover"
                           onError={(e) => { e.target.src = "https://via.placeholder.com/48?text=Img"; }} />
                       </div>
                       <div className="flex-1 min-w-0">

@@ -11,47 +11,35 @@ export default function ManageUsers() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
 
-  const getHeaders = () => ({
-    Authorization: `Bearer ${localStorage.getItem("adminToken")}`,
-  });
+  const getHeaders = () => ({ Authorization: `Bearer ${localStorage.getItem("adminToken")}` });
 
-  useEffect(() => {
-    axios
-      .get(`${API}/users`, { headers: getHeaders() })
+  const fetchUsers = () => {
+    axios.get(`${API}/users`, { headers: getHeaders() })
       .then((res) => { if (res.data.success) setUsers(res.data.users); })
       .catch((e) => console.log(e))
       .finally(() => setLoading(false));
-  }, []);
-
-  const refetch = () => {
-    axios
-      .get(`${API}/users`, { headers: getHeaders() })
-      .then((res) => { if (res.data.success) setUsers(res.data.users); })
-      .catch((e) => console.log(e));
   };
+
+  useEffect(() => { fetchUsers(); }, []);
 
   const handleDelete = async (id) => {
     if (!window.confirm("Delete this user?")) return;
     try {
       await axios.delete(`${API}/users/${id}`, { headers: getHeaders() });
       toast.success("User Deleted!");
-      refetch();
-    } catch {
-      toast.error("Failed to delete user");
-    }
+      fetchUsers();
+    } catch { toast.error("Failed to delete user"); }
   };
 
-  const filtered = users.filter(
-    (u) =>
-      u.name.toLowerCase().includes(search.toLowerCase()) ||
-      u.email.toLowerCase().includes(search.toLowerCase())
+  const filtered = users.filter((u) =>
+    u.name.toLowerCase().includes(search.toLowerCase()) ||
+    u.email.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
     <div className="flex min-h-screen bg-black">
       <AdminSidebar />
       <main className="flex-1 p-10 overflow-y-auto">
-
         <div className="mb-10 flex items-end justify-between">
           <div>
             <p className="text-[#8da27f] uppercase tracking-[4px] text-sm font-bold">Brand Shoe Admin</p>
@@ -65,7 +53,6 @@ export default function ManageUsers() {
           </div>
         </div>
 
-        {/* Stats */}
         <div className="grid grid-cols-2 gap-5 mb-8">
           {[
             { label: "Total Users", value: users.length, color: "text-[#8da27f]" },
@@ -87,14 +74,15 @@ export default function ManageUsers() {
             <table className="w-full">
               <thead>
                 <tr className="border-b border-white/10">
-                  {["#", "Name", "Email", "Phone", "Action"].map((h) => (
+                  {/* ✅ Removed Phone column */}
+                  {["#", "Name", "Email", "Action"].map((h) => (
                     <th key={h} className="text-gray-500 text-xs uppercase tracking-[2px] font-bold px-6 py-4 text-left">{h}</th>
                   ))}
                 </tr>
               </thead>
               <tbody>
                 {filtered.length === 0 ? (
-                  <tr><td colSpan={5} className="text-center text-gray-500 py-10 text-sm">No users found</td></tr>
+                  <tr><td colSpan={4} className="text-center text-gray-500 py-10 text-sm">No users found</td></tr>
                 ) : (
                   filtered.map((u, i) => (
                     <tr key={u.id} className="border-b border-white/5 hover:bg-white/5 transition">
@@ -108,7 +96,7 @@ export default function ManageUsers() {
                         </div>
                       </td>
                       <td className="px-6 py-4 text-gray-400 text-sm">{u.email}</td>
-                      <td className="px-6 py-4 text-gray-400 text-sm">{u.phone || "—"}</td>
+                      {/* ✅ Removed phone cell */}
                       <td className="px-6 py-4">
                         <button onClick={() => handleDelete(u.id)}
                           className="w-9 h-9 rounded-full bg-red-500/20 text-red-400 flex items-center justify-center hover:bg-red-500 hover:text-white transition">
