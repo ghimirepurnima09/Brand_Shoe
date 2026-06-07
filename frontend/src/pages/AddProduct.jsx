@@ -14,17 +14,19 @@ export default function AddProduct() {
   const [imagePreview, setImagePreview] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  // IMAGE HANDLER
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
     const allowed = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
     if (!allowed.includes(file.type)) {
-      toast.error("Only JPG, PNG, WEBP images allowed!");
+      toast.error("Only JPG, PNG, WEBP allowed!");
       return;
     }
+
     if (file.size > 5 * 1024 * 1024) {
-      toast.error("Image must be under 5MB!");
+      toast.error("Max size 5MB!");
       return;
     }
 
@@ -37,16 +39,16 @@ export default function AddProduct() {
     setImagePreview(null);
   };
 
+  // SUBMIT
   const handleAddProduct = async () => {
     if (!name || !category || !gender || !price || !quantity || !description || !imageFile) {
-      toast.error("Please fill all fields and upload an image!");
+      toast.error("Please fill all fields!");
       return;
     }
 
     try {
       setLoading(true);
 
-      // Use FormData to send file
       const formData = new FormData();
       formData.append("name", name);
       formData.append("category", category);
@@ -54,17 +56,21 @@ export default function AddProduct() {
       formData.append("price", price);
       formData.append("quantity", quantity);
       formData.append("description", description);
+
+      // IMPORTANT: must match backend upload.single("image")
       formData.append("image", imageFile);
 
-      const response = await axios.post(
+      const res = await axios.post(
         "http://localhost:5000/api/products/addproduct",
         formData,
-        { headers: { "Content-Type": "multipart/form-data" } }
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
       );
 
-      toast.success(response.data.message);
+      toast.success(res.data.message || "Product added!");
 
-      // Reset form
+      // reset
       setName("");
       setCategory("");
       setGender("");
@@ -74,8 +80,8 @@ export default function AddProduct() {
       setImageFile(null);
       setImagePreview(null);
 
-    } catch (error) {
-      toast.error(error.response?.data?.message || "Something went wrong");
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Error adding product");
     } finally {
       setLoading(false);
     }
@@ -89,83 +95,84 @@ export default function AddProduct() {
 
         <div className="space-y-5 mt-8">
 
-          {/* PRODUCT NAME */}
           <input
-            type="text" placeholder="Product Name" value={name}
+            type="text"
+            placeholder="Product Name"
+            value={name}
             onChange={(e) => setName(e.target.value)}
-            className="w-full h-[58px] rounded-[14px] border border-gray-300 px-4 outline-none focus:border-black transition"
+            className="w-full h-[58px] rounded-[14px] border px-4"
           />
 
-          {/* CATEGORY */}
           <input
-            type="text" placeholder="Category (e.g. Runner, Sneaker, Casual)"
-            value={category} onChange={(e) => setCategory(e.target.value)}
-            className="w-full h-[58px] rounded-[14px] border border-gray-300 px-4 outline-none focus:border-black transition"
+            type="text"
+            placeholder="Category"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            className="w-full h-[58px] rounded-[14px] border px-4"
           />
 
-          {/* GENDER */}
           <select
-            value={gender} onChange={(e) => setGender(e.target.value)}
-            className="w-full h-[58px] rounded-[14px] border border-gray-300 px-4 outline-none focus:border-black transition"
+            value={gender}
+            onChange={(e) => setGender(e.target.value)}
+            className="w-full h-[58px] rounded-[14px] border px-4"
           >
             <option value="">Select Gender</option>
-            <option value="Men">Men</option>
-            <option value="Women">Women</option>
-            <option value="Kids">Kids</option>
+            <option>Men</option>
+            <option>Women</option>
+            <option>Kids</option>
           </select>
 
-          {/* PRICE */}
           <input
-            type="number" placeholder="Price (Rs.)" value={price}
+            type="number"
+            placeholder="Price"
+            value={price}
             onChange={(e) => setPrice(e.target.value)}
-            className="w-full h-[58px] rounded-[14px] border border-gray-300 px-4 outline-none focus:border-black transition"
+            className="w-full h-[58px] rounded-[14px] border px-4"
           />
 
-          {/* QUANTITY */}
           <input
-            type="number" placeholder="Quantity" value={quantity}
+            type="number"
+            placeholder="Quantity"
+            value={quantity}
             onChange={(e) => setQuantity(e.target.value)}
-            className="w-full h-[58px] rounded-[14px] border border-gray-300 px-4 outline-none focus:border-black transition"
+            className="w-full h-[58px] border rounded-[14px] px-4"
           />
 
-          {/* IMAGE UPLOAD */}
-          <div>
-            <p className="text-sm font-bold text-gray-500 uppercase tracking-[2px] mb-3">Product Image</p>
+          {/* IMAGE */}
+          {!imagePreview ? (
+            <label className="flex flex-col items-center justify-center w-full h-[180px] border-dashed border-2 cursor-pointer rounded-[14px]">
+              <UploadCloud />
+              <p>Upload Image</p>
+              <input type="file" hidden onChange={handleImageChange} />
+            </label>
+          ) : (
+            <div className="relative h-[220px]">
+              <img
+                src={imagePreview}
+                alt="preview"
+                className="w-full h-full object-cover rounded-[14px]"
+              />
 
-            {!imagePreview ? (
-              <label className="flex flex-col items-center justify-center w-full h-[180px] rounded-[14px] border-2 border-dashed border-gray-300 cursor-pointer hover:border-black transition bg-gray-50">
-                <UploadCloud size={36} className="text-gray-400 mb-3" />
-                <p className="text-gray-500 font-semibold text-sm">Click to upload image</p>
-                <p className="text-gray-400 text-xs mt-1">JPG, PNG, WEBP — Max 5MB</p>
-                <input type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
-              </label>
-            ) : (
-              <div className="relative w-full h-[220px] rounded-[14px] overflow-hidden border border-gray-200">
-                <img src={`http://localhost:5000${imagePreview}`} alt="preview" className="w-full h-full object-cover" />
-                <button
-                  onClick={removeImage}
-                  className="absolute top-3 right-3 w-9 h-9 rounded-full bg-black text-white flex items-center justify-center hover:bg-red-500 transition"
-                >
-                  <X size={16} />
-                </button>
-                <div className="absolute bottom-3 left-3 bg-black/70 text-white text-xs px-3 py-1.5 rounded-full font-semibold">
-                  {imageFile?.name}
-                </div>
-              </div>
-            )}
-          </div>
+              <button
+                onClick={removeImage}
+                className="absolute top-3 right-3 bg-black text-white p-2 rounded-full"
+              >
+                <X size={16} />
+              </button>
+            </div>
+          )}
 
-          {/* DESCRIPTION */}
           <textarea
-            placeholder="Description" value={description}
+            placeholder="Description"
+            value={description}
             onChange={(e) => setDescription(e.target.value)}
-            className="w-full h-[150px] rounded-[14px] border border-gray-300 px-4 py-4 outline-none resize-none focus:border-black transition"
+            className="w-full h-[120px] border rounded-[14px] p-3"
           />
 
-          {/* BUTTON */}
           <button
-            onClick={handleAddProduct} disabled={loading}
-            className="w-full h-[58px] rounded-[14px] bg-black text-white font-bold tracking-[2px] hover:bg-[#8da27f] transition disabled:opacity-60"
+            onClick={handleAddProduct}
+            disabled={loading}
+            className="w-full h-[58px] bg-black text-white rounded-[14px]"
           >
             {loading ? "ADDING..." : "ADD PRODUCT"}
           </button>

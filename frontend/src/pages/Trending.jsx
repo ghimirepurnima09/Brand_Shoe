@@ -6,6 +6,14 @@ import toast from "react-hot-toast";
 import { useWishlist } from "../context/WishlistContext";
 import { useCart } from "../context/CartContext";
 
+const FRONTEND = "http://localhost:5173";
+
+const resolveImg = (src) => {
+  if (!src) return null;
+  if (src.startsWith("http")) return src;
+  return `${FRONTEND}${src}`;
+};
+
 export default function Trending() {
   const location = useLocation();
   const isActualHome = location.pathname === "/mainhome";
@@ -21,7 +29,6 @@ export default function Trending() {
       try {
         const res = await axios.get("http://localhost:5000/api/products/getproducts");
         if (res.data.success) {
-          // Show only first 4 as trending
           setProducts(res.data.products.slice(0, 4));
         }
       } catch (err) {
@@ -80,12 +87,11 @@ export default function Trending() {
               <Link to={isActualHome ? `/product/${product._id || product.id}` : "/login"}>
                 <div className="relative mt-6">
                   <img
-                    src={product.image}
+                    src={resolveImg(product.image)}
                     alt={product.name}
                     className="w-full h-[180px] object-cover rounded-2xl group-hover:scale-105 transition duration-700"
-                    onError={(e) => { e.target.src = "https://via.placeholder.com/400x200?text=No+Image"; }}
+                    onError={(e) => { e.target.style.display = "none"; }}
                   />
-                  {/* Cart count badge */}
                   {getCartCount(product.id) > 0 && (
                     <div className="absolute top-2 left-2 bg-[#8da27f] text-white text-xs font-black w-7 h-7 rounded-full flex items-center justify-center">
                       {getCartCount(product.id)}

@@ -9,31 +9,33 @@ import { useCart } from "../context/CartContext";
 
 const ALL_SIZES = [6, 7, 8, 9, 10, 11, 12, 13, 14];
 
-// Randomly assign a discount % to each product for display
-const DISCOUNTS = [10, 15, 20, 25, 30];
-const getDiscount = (id) => DISCOUNTS[String(id).charCodeAt(0) % DISCOUNTS.length];
+const getProductImage = (product) => {
+  if (Array.isArray(product.image_urls) && product.image_urls.length > 0) return product.image_urls[0];
+  return product.image || "https://via.placeholder.com/500x500?text=No+Image";
+};
 
 export default function OffersPage() {
   const location = useLocation();
   const { wishlist, addToWishlist } = useWishlist();
   const { addToCart, cart } = useCart();
 
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [showFilters, setShowFilters] = useState(false);
-  const [selectedBrands, setSelectedBrands] = useState([]);
-  const [selectedSizes, setSelectedSizes] = useState([]);
+  const [products, setProducts]           = useState([]);
+  const [loading, setLoading]             = useState(true);
+  const [showFilters, setShowFilters]     = useState(false);
+  const [selectedBrands, setSelectedBrands]   = useState([]);
+  const [selectedSizes, setSelectedSizes]     = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("All");
-  const [priceRange, setPriceRange] = useState([0, 100000]);
-  const [maxPrice, setMaxPrice] = useState(100000);
-  const [openBrand, setOpenBrand] = useState(true);
-  const [openSize, setOpenSize] = useState(true);
-  const [openPrice, setOpenPrice] = useState(true);
+  const [priceRange, setPriceRange]       = useState([0, 100000]);
+  const [maxPrice, setMaxPrice]           = useState(100000);
+  const [openBrand, setOpenBrand]         = useState(true);
+  const [openSize, setOpenSize]           = useState(true);
+  const [openPrice, setOpenPrice]         = useState(true);
 
   useEffect(() => {
-    const fetch = async () => {
+    const fetchData = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/products/getproducts");
+        // ✅ Uses /offers — returns products where discount > 0 (up to 20)
+        const res = await axios.get("http://localhost:5000/api/products/offers");
         if (res.data.success) {
           const data = res.data.products;
           setProducts(data);
@@ -47,15 +49,15 @@ export default function OffersPage() {
         setLoading(false);
       }
     };
-    fetch();
+    fetchData();
   }, []);
 
-  const brands = useMemo(() => [...new Set(products.map((p) => p.name.split(" ")[0]))].sort(), [products]);
+  const brands     = useMemo(() => [...new Set(products.map((p) => p.name.split(" ")[0]))].sort(), [products]);
   const categories = useMemo(() => ["All", ...new Set(products.map((p) => p.category).filter(Boolean))], [products]);
 
   const filtered = useMemo(() => products.filter((p) => {
-    const brandMatch = selectedBrands.length === 0 || selectedBrands.some((b) => p.name.toLowerCase().startsWith(b.toLowerCase()));
-    const priceMatch = Number(p.price) >= priceRange[0] && Number(p.price) <= priceRange[1];
+    const brandMatch    = selectedBrands.length === 0 || selectedBrands.some((b) => p.name.toLowerCase().startsWith(b.toLowerCase()));
+    const priceMatch    = Number(p.price) >= priceRange[0] && Number(p.price) <= priceRange[1];
     const categoryMatch = selectedCategory === "All" || p.category === selectedCategory;
     return brandMatch && priceMatch && categoryMatch;
   }), [products, selectedBrands, priceRange, selectedCategory]);
@@ -70,7 +72,7 @@ export default function OffersPage() {
 
       {/* HERO */}
       <div className="relative h-[520px] overflow-hidden rounded-b-[50px]">
-        <img src="https://images.unsplash.com/photo-1491553895911-0055eca6402d?q=80&w=1800&auto=format&fit=crop" alt="" className="absolute inset-0 w-full h-full object-cover" />
+        <img src="https://images.unsplash.com/photo-1607522370275-f14206abe5d3?q=80&w=1800&auto=format&fit=crop" alt="" className="absolute inset-0 w-full h-full object-cover" />
         <div className="absolute inset-0 bg-black/70" />
         <Link to="/mainhome" className="absolute top-8 left-6 lg:left-16 z-20 w-[52px] h-[52px] rounded-full bg-white/20 backdrop-blur-md text-white flex items-center justify-center hover:bg-white hover:text-black transition duration-300 shadow-lg">
           <ArrowLeft size={22} />
@@ -86,8 +88,8 @@ export default function OffersPage() {
       <div className="flex flex-wrap gap-4 px-6 lg:px-16 mt-12">
         {[
           { to: "/collections", icon: <Sparkles size={18} />, label: "NEW COLLECTIONS" },
-          { to: "/mostsold", icon: <Flame size={18} />, label: "MOST SOLD" },
-          { to: "/offers", icon: <Tag size={18} />, label: "OFFERS" },
+          { to: "/mostsold",    icon: <Flame size={18} />,    label: "MOST SOLD" },
+          { to: "/offers",      icon: <Tag size={18} />,      label: "OFFERS" },
         ].map(({ to, icon, label }) => (
           <Link key={to} to={to} className={`h-[54px] px-8 rounded-full font-bold tracking-[2px] text-[12px] flex items-center gap-2 shadow-lg transition ${location.pathname === to ? "bg-[#8da27f] text-white" : "bg-[#161616] text-gray-400 border border-white/10 hover:border-[#8da27f] hover:text-white"}`}>
             {icon}{label}
@@ -172,27 +174,36 @@ export default function OffersPage() {
           </div>
         )}
 
-        {/* PRODUCTS */}
+        {/* PRODUCTS GRID */}
         <div className="flex-1">
           {loading ? (
-            <div className="flex justify-center items-center h-[300px]"><h1 className="text-white text-2xl font-bold">Loading Products...</h1></div>
+            <div className="flex justify-center items-center h-[300px]"><h1 className="text-white text-2xl font-bold">Loading Offers...</h1></div>
           ) : filtered.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-[300px] gap-4">
-              <p className="text-gray-400 text-xl font-bold">No products match your filters</p>
+              <p className="text-gray-400 text-xl font-bold">No offers match your filters</p>
               <button onClick={clearFilters} className="px-6 h-10 rounded-full bg-[#8da27f] text-white text-sm font-bold uppercase hover:bg-white hover:text-black transition">Clear Filters</button>
             </div>
           ) : (
             <div className={`grid gap-8 ${showFilters ? "md:grid-cols-2 lg:grid-cols-3" : "md:grid-cols-2 lg:grid-cols-4"}`}>
               {filtered.map((product) => {
-                const discount = getDiscount(product.id);
-                const originalPrice = Math.round(Number(product.price) / (1 - discount / 100));
+                // ✅ Use real discount from DB column
+                const discount = Number(product.discount) || 0;
+                const originalPrice = discount > 0
+                  ? Math.round(Number(product.price) / (1 - discount / 100))
+                  : Number(product.price);
+
                 return (
                   <div key={product.id} className="bg-[#161616] rounded-[32px] overflow-hidden border border-white/10 hover:-translate-y-2 transition duration-500">
                     <div className="relative h-[280px] overflow-hidden">
-                      <Link to={`/product/${product._id || product.id}`}>
-                        <img src={product.image} alt={product.name} className="w-full h-full object-cover hover:scale-110 transition duration-700 cursor-pointer" onError={(e) => { e.target.src = "https://via.placeholder.com/500x500?text=No+Image"; }} />
+                      <Link to={`/product/${product.id}`}>
+                        <img
+                          src={getProductImage(product)}
+                          alt={product.name}
+                          className="w-full h-full object-cover hover:scale-110 transition duration-700 cursor-pointer"
+                          onError={(e) => { e.target.src = "https://via.placeholder.com/500x500?text=No+Image"; }}
+                        />
                       </Link>
-                      {/* DISCOUNT BADGE */}
+                      {/* DISCOUNT BADGE from real DB value */}
                       <div className="absolute top-4 left-4 bg-[#8da27f] text-white px-4 py-1.5 rounded-full text-[11px] tracking-[2px] font-bold flex items-center gap-1.5">
                         <Tag size={12} /> {discount}% OFF
                       </div>
@@ -209,7 +220,9 @@ export default function OffersPage() {
                       <h2 className="text-white text-2xl font-black mt-2">{product.name}</h2>
                       <div className="flex items-center gap-4 mt-4">
                         <h3 className="text-white text-3xl font-black">Rs. {Number(product.price).toLocaleString()}</h3>
-                        <p className="text-gray-500 line-through text-lg">Rs. {originalPrice.toLocaleString()}</p>
+                        {discount > 0 && (
+                          <p className="text-gray-500 line-through text-lg">Rs. {originalPrice.toLocaleString()}</p>
+                        )}
                       </div>
                       <button onClick={() => { addToCart(product, "Default"); toast.success("Added to Cart!"); }}
                         className="w-full flex items-center justify-center gap-2 h-[48px] rounded-full bg-[#8da27f] text-white text-xs font-bold tracking-[2px] hover:bg-white hover:text-black transition mt-5">
