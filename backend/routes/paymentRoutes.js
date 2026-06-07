@@ -1,11 +1,11 @@
 import express from "express";
 import { createPaymentIntent } from "../controllers/paymentController.js";
-console.log("paymentRoutes loaded");
+
 const router = express.Router();
 
 router.post("/create-payment-intent", createPaymentIntent);
 router.get("/test", (req, res) => {
-  res.send("Payment Route Working");
+    res.send("Payment Route Working");
 });
 
 export default router;

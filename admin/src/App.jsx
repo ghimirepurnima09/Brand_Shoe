@@ -3,11 +3,14 @@ import AdminLogin from "./pages/AdminLogin";
 import Dashboard from "./pages/Dashboard";
 import ManageProducts from "./pages/ManageProducts";
 import ManageUsers from "./pages/ManageUsers";
+import ManageOrders from "./pages/ManageOrders";
+import Payments     from "./pages/Payments";
 
 const ProtectedRoute = ({ children }) => {
   const token = localStorage.getItem("adminToken");
   return token ? children : <Navigate to="/admin/login" />;
 };
+
 
 export default function App() {
   return (
@@ -40,6 +43,9 @@ export default function App() {
           </ProtectedRoute>
         }
       />
+      <Route path="/admin/orders"   element={<ManageOrders />} />
+      <Route path="/admin/payments" element={<Payments />} /> 
+  
 
       <Route path="*" element={<Navigate to="/admin/login" />} />
     </Routes>

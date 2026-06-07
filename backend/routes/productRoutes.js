@@ -1,40 +1,32 @@
 import express from "express";
-import upload from "../middleware/multer.js";
+import upload from "../middleware/upload.js";
 import {
     addProduct,
     getProducts,
     getSingleProduct,
-    deleteProduct,
     updateProduct,
+    deleteProduct,
     getMenProducts,
     getWomenProducts,
-    getKidsProducts
+    getKidsProducts,
+    getMostSoldProducts,
+    getNewArrivalProducts,
+    getOffersProducts,
 } from "../controllers/productController.js";
 
 const router = express.Router();
 
-// ADD PRODUCT — with image upload
-router.post("/addproduct", upload.single("image"), addProduct);
-
-// GET ALL PRODUCTS
-router.get("/getproducts", getProducts);
-
-// GET SINGLE PRODUCT
-router.get("/singleproduct/:id", getSingleProduct);
-
-// UPDATE PRODUCT — with optional image upload
-router.put("/updateproduct/:id", upload.single("image"), updateProduct);
-
-// DELETE PRODUCT
+router.post("/addproduct",          upload.single("image"), addProduct);
+router.put("/updateproduct/:id",    upload.single("image"), updateProduct);
+router.get("/allproducts",          getProducts);
+router.get("/getproducts",          getProducts);
+router.get("/singleproduct/:id",    getSingleProduct);
 router.delete("/deleteproduct/:id", deleteProduct);
-
-// MEN PRODUCTS
-router.get("/men", getMenProducts);
-
-// WOMEN PRODUCTS
-router.get("/women", getWomenProducts);
-
-// KIDS PRODUCTS
-router.get("/kids", getKidsProducts);
+router.get("/men",                  getMenProducts);
+router.get("/women",                getWomenProducts);
+router.get("/kids",                 getKidsProducts);
+router.get("/mostsold",             getMostSoldProducts);
+router.get("/newarrivals",          getNewArrivalProducts);
+router.get("/offers",               getOffersProducts);
 
 export default router;

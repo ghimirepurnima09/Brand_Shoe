@@ -7,11 +7,13 @@ import toast from "react-hot-toast";
 const API = "http://localhost:5000/api/admin";
 
 export default function ManageUsers() {
-  const [users, setUsers] = useState([]);
+  const [users,   setUsers]   = useState([]);
   const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState("");
+  const [search,  setSearch]  = useState("");
 
-  const getHeaders = () => ({ Authorization: `Bearer ${localStorage.getItem("adminToken")}` });
+  const getHeaders = () => ({
+    Authorization: `Bearer ${localStorage.getItem("adminToken")}`
+  });
 
   const fetchUsers = () => {
     axios.get(`${API}/users`, { headers: getHeaders() })
@@ -40,6 +42,8 @@ export default function ManageUsers() {
     <div className="flex min-h-screen bg-black">
       <AdminSidebar />
       <main className="flex-1 p-10 overflow-y-auto">
+
+        {/* Header */}
         <div className="mb-10 flex items-end justify-between">
           <div>
             <p className="text-[#8da27f] uppercase tracking-[4px] text-sm font-bold">Brand Shoe Admin</p>
@@ -53,10 +57,11 @@ export default function ManageUsers() {
           </div>
         </div>
 
+        {/* Stats */}
         <div className="grid grid-cols-2 gap-5 mb-8">
           {[
-            { label: "Total Users", value: users.length, color: "text-[#8da27f]" },
-            { label: "Showing", value: filtered.length, color: "text-blue-400" },
+            { label: "Total Users", value: users.length,    color: "text-[#8da27f]" },
+            { label: "Showing",     value: filtered.length, color: "text-blue-400"  },
           ].map(({ label, value, color }) => (
             <div key={label} className="bg-[#161616] rounded-[24px] border border-white/10 p-6">
               <p className={`text-4xl font-black ${color}`}>{value}</p>
@@ -65,6 +70,7 @@ export default function ManageUsers() {
           ))}
         </div>
 
+        {/* Table */}
         {loading ? (
           <div className="flex items-center justify-center h-[300px]">
             <div className="w-12 h-12 border-4 border-[#8da27f] border-t-transparent rounded-full animate-spin" />
@@ -74,7 +80,6 @@ export default function ManageUsers() {
             <table className="w-full">
               <thead>
                 <tr className="border-b border-white/10">
-                  {/* ✅ Removed Phone column */}
                   {["#", "Name", "Email", "Action"].map((h) => (
                     <th key={h} className="text-gray-500 text-xs uppercase tracking-[2px] font-bold px-6 py-4 text-left">{h}</th>
                   ))}
@@ -83,29 +88,26 @@ export default function ManageUsers() {
               <tbody>
                 {filtered.length === 0 ? (
                   <tr><td colSpan={4} className="text-center text-gray-500 py-10 text-sm">No users found</td></tr>
-                ) : (
-                  filtered.map((u, i) => (
-                    <tr key={u.id} className="border-b border-white/5 hover:bg-white/5 transition">
-                      <td className="px-6 py-4 text-gray-500 text-sm">{i + 1}</td>
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-3">
-                          <div className="w-9 h-9 rounded-full bg-[#8da27f]/20 flex items-center justify-center shrink-0">
-                            <span className="text-[#8da27f] font-black text-sm">{u.name.charAt(0).toUpperCase()}</span>
-                          </div>
-                          <p className="text-white font-bold text-sm">{u.name}</p>
+                ) : filtered.map((u, i) => (
+                  <tr key={u.id} className="border-b border-white/5 hover:bg-white/5 transition">
+                    <td className="px-6 py-4 text-gray-500 text-sm">{i + 1}</td>
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-9 h-9 rounded-full bg-[#8da27f]/20 flex items-center justify-center shrink-0">
+                          <span className="text-[#8da27f] font-black text-sm">{u.name.charAt(0).toUpperCase()}</span>
                         </div>
-                      </td>
-                      <td className="px-6 py-4 text-gray-400 text-sm">{u.email}</td>
-                      {/* ✅ Removed phone cell */}
-                      <td className="px-6 py-4">
-                        <button onClick={() => handleDelete(u.id)}
-                          className="w-9 h-9 rounded-full bg-red-500/20 text-red-400 flex items-center justify-center hover:bg-red-500 hover:text-white transition">
-                          <Trash2 size={14} />
-                        </button>
-                      </td>
-                    </tr>
-                  ))
-                )}
+                        <p className="text-white font-bold text-sm">{u.name}</p>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 text-gray-400 text-sm">{u.email}</td>
+                    <td className="px-6 py-4">
+                      <button onClick={() => handleDelete(u.id)}
+                        className="w-9 h-9 rounded-full bg-red-500/20 text-red-400 flex items-center justify-center hover:bg-red-500 hover:text-white transition">
+                        <Trash2 size={14} />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
