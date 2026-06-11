@@ -3,7 +3,13 @@ import pool from "../config/db.js";
 // ================= ADD PRODUCT =================
 export const addProduct = async (req, res) => {
     try {
-        const { name, category, gender, price, quantity, size, description, image: bodyImage } = req.body;
+        const {
+            name, category, gender, price, quantity, size, description,
+            image: bodyImage,
+            image2, image3, image4, image5,
+            sizes,
+            is_most_sold, is_new, discount, is_out_of_stock,
+        } = req.body;
 
         const image = req.file ? req.file.path : bodyImage;
 
@@ -12,9 +18,25 @@ export const addProduct = async (req, res) => {
         }
 
         const newProduct = await pool.query(
-            `INSERT INTO products (name, category, gender, price, quantity, size, description, image)
-             VALUES($1,$2,$3,$4,$5,$6,$7,$8) RETURNING *`,
-            [name, category, gender, price, quantity, size || "6,7,8,9,10,11", description, image]
+            `INSERT INTO products 
+             (name, category, gender, price, quantity, size, description,
+              image, image2, image3, image4, image5,
+              sizes, is_most_sold, is_new, discount, is_out_of_stock)
+             VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17) RETURNING *`,
+            [
+                name, category, gender, price, quantity,
+                size || "6,7,8,9,10,11",
+                description, image,
+                image2  || null,
+                image3  || null,
+                image4  || null,
+                image5  || null,
+                sizes   || "[]",
+                is_most_sold    === "true" || is_most_sold    === true  ? true : false,
+                is_new          === "true" || is_new          === true  ? true : false,
+                discount ? parseInt(discount) : 0,
+                is_out_of_stock === "true" || is_out_of_stock === true  ? true : false,
+            ]
         );
 
         res.status(201).json({
@@ -59,7 +81,13 @@ export const getSingleProduct = async (req, res) => {
 export const updateProduct = async (req, res) => {
     try {
         const { id } = req.params;
-        const { name, category, gender, price, quantity, size, description, image: bodyImage } = req.body;
+        const {
+            name, category, gender, price, quantity, size, description,
+            image: bodyImage,
+            image2, image3, image4, image5,
+            sizes,
+            is_most_sold, is_new, discount, is_out_of_stock,
+        } = req.body;
 
         const product = await pool.query("SELECT * FROM products WHERE id=$1", [id]);
         if (product.rows.length === 0)
@@ -70,8 +98,10 @@ export const updateProduct = async (req, res) => {
 
         const updatedProduct = await pool.query(
             `UPDATE products 
-             SET name=$1, category=$2, gender=$3, price=$4, quantity=$5, size=$6, description=$7, image=$8
-             WHERE id=$9 RETURNING *`,
+             SET name=$1, category=$2, gender=$3, price=$4, quantity=$5, size=$6, description=$7,
+                 image=$8, image2=$9, image3=$10, image4=$11, image5=$12,
+                 sizes=$13, is_most_sold=$14, is_new=$15, discount=$16, is_out_of_stock=$17
+             WHERE id=$18 RETURNING *`,
             [
                 name        || existing.name,
                 category    || existing.category,
@@ -81,6 +111,21 @@ export const updateProduct = async (req, res) => {
                 size        || existing.size,
                 description || existing.description,
                 image,
+                image2  !== undefined ? (image2  || null) : existing.image2,
+                image3  !== undefined ? (image3  || null) : existing.image3,
+                image4  !== undefined ? (image4  || null) : existing.image4,
+                image5  !== undefined ? (image5  || null) : existing.image5,
+                sizes   !== undefined ? sizes : existing.sizes,
+                is_most_sold    !== undefined
+                    ? (is_most_sold    === "true" || is_most_sold    === true)
+                    : existing.is_most_sold,
+                is_new          !== undefined
+                    ? (is_new          === "true" || is_new          === true)
+                    : existing.is_new,
+                discount !== undefined ? parseInt(discount) : existing.discount,
+                is_out_of_stock !== undefined
+                    ? (is_out_of_stock === "true" || is_out_of_stock === true)
+                    : existing.is_out_of_stock,
                 id,
             ]
         );

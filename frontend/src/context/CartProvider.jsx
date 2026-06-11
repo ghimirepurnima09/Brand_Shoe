@@ -16,6 +16,9 @@ export function CartProvider({ children }) {
     localStorage.setItem("cart", JSON.stringify(cart));
   }, [cart]);
 
+  // ── ADD TO CART ──
+  // Requires product object and size (number).
+  // If same product+size already exists, just increments quantity.
   const addToCart = (product, size) => {
     setCart((prev) => {
       const exists = prev.find(
@@ -32,12 +35,14 @@ export function CartProvider({ children }) {
     });
   };
 
+  // ── REMOVE FROM CART ──
   const removeFromCart = (id, size) => {
     setCart((prev) =>
       prev.filter((item) => !(item.id === id && item.size === size))
     );
   };
 
+  // ── INCREASE QUANTITY ──
   const increaseQty = (id, size) => {
     setCart((prev) =>
       prev.map((item) =>
@@ -48,6 +53,7 @@ export function CartProvider({ children }) {
     );
   };
 
+  // ── DECREASE QUANTITY (removes if hits 0) ──
   const decreaseQty = (id, size) => {
     setCart((prev) =>
       prev
@@ -60,8 +66,10 @@ export function CartProvider({ children }) {
     );
   };
 
+  // ── CLEAR CART ──
   const clearCart = () => setCart([]);
 
+  // ── TOTALS ──
   const totalPrice = cart.reduce(
     (sum, item) => sum + Number(item.price) * item.quantity,
     0

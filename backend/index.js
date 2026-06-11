@@ -20,6 +20,7 @@ app.use("/api/payment",  paymentRoutes);
 app.use("/api/admin",    adminRoutes);
 app.use("/api/orders",   orderRoutes);
 
-app.listen(process.env.PORT, () => {
-    console.log(`Server Running On Port ${process.env.PORT}`);
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+    console.log(`Server Running On Port ${PORT}`);
 });

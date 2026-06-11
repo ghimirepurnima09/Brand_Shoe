@@ -21,6 +21,8 @@ import CollectionsPage from "./pages/CollectionsPage";
 import MostSoldPage from "./pages/MostSoldPage";
 import OffersPage from "./pages/OffersPage";
 import Payment from "./pages/Payment";
+import Orders from "./pages/Orders"; 
+
 
 import Women from "./pages/Women";
 import Men from "./pages/Men";
@@ -129,6 +131,7 @@ export default function App() {
       element={<Cart />}
        />
        <Route path="/payment" element={<Payment />} />
+        <Route path="/orders" element={<Orders />} />
 
       {/* ================= ADD PRODUCT ================= */}
       <Route path="/profile" element={<Profile />} />

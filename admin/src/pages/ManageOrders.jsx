@@ -4,8 +4,8 @@ import AdminSidebar from "../components/AdminSidebar";
 import { Trash2, RefreshCw } from "lucide-react";
 import toast from "react-hot-toast";
 
-const API  = "http://localhost:5000/api/orders";
-const IMG = "http://localhost:5173";
+const API     = "http://localhost:5000/api/orders";
+const BACKEND = "http://localhost:5000"; // ✅ FIXED: was pointing to 5173 (Vite), now correctly points to backend
 
 const STATUS_COLORS = {
   pending:    "bg-yellow-500/20 text-yellow-400 border-yellow-500/30",
@@ -15,10 +15,13 @@ const STATUS_COLORS = {
   cancelled:  "bg-red-500/20 text-red-400 border-red-500/30",
 };
 
+// ✅ FIXED: Only prepend BACKEND for /uploads/ (multer files)
+// /men/ /women/ /kids/ images are served by Vite from public folder — use as-is
 const resolveImg = (src) => {
   if (!src) return null;
   if (src.startsWith("http")) return src;
-  return `${IMG}${src}`;
+  if (src.startsWith("/uploads/")) return `${BACKEND}${src}`;
+  return src;
 };
 
 export default function ManageOrders() {
@@ -82,10 +85,10 @@ export default function ManageOrders() {
         {/* Stats */}
         <div className="grid grid-cols-4 gap-5 mb-8">
           {[
-            { label: "Total Orders",  value: orders.length,                                              color: "text-[#8da27f]"  },
-            { label: "Pending",       value: orders.filter(o => o.status === "pending").length,          color: "text-yellow-400" },
-            { label: "Delivered",     value: orders.filter(o => o.status === "delivered").length,        color: "text-green-400"  },
-            { label: "Cancelled",     value: orders.filter(o => o.status === "cancelled").length,        color: "text-red-400"    },
+            { label: "Total Orders", value: orders.length,                                       color: "text-[#8da27f]"  },
+            { label: "Pending",      value: orders.filter(o => o.status === "pending").length,   color: "text-yellow-400" },
+            { label: "Delivered",    value: orders.filter(o => o.status === "delivered").length, color: "text-green-400"  },
+            { label: "Cancelled",    value: orders.filter(o => o.status === "cancelled").length, color: "text-red-400"    },
           ].map(({ label, value, color }) => (
             <div key={label} className="bg-[#161616] rounded-[24px] border border-white/10 p-6">
               <p className={`text-4xl font-black ${color}`}>{value}</p>
@@ -162,14 +165,13 @@ export default function ManageOrders() {
                   <div className="flex flex-wrap gap-6 border-t border-white/10 pt-4">
                     {[
                       ["Subtotal", `Rs.${Number(order.subtotal || 0).toLocaleString()}`],
-                      ["Shipping", `Rs.${Number(order.shipping || 0).toLocaleString()}`],
-                      ["Tax",      `Rs.${Number(order.tax || 0).toLocaleString()}`],
+                      ["Shipping", "Free"],
                       ["Total",    `Rs.${Number(order.total_price || 0).toLocaleString()}`],
                       ["Payment",  (order.payment_method || "cod").toUpperCase()],
                     ].map(([label, val]) => (
                       <div key={label}>
                         <p className="text-gray-600 text-xs uppercase tracking-[1px]">{label}</p>
-                        <p className={`font-black mt-0.5 text-sm ${label === "Total" ? "text-[#8da27f] text-base" : "text-white"}`}>{val}</p>
+                        <p className={`font-black mt-0.5 text-sm ${label === "Total" ? "text-[#8da27f] text-base" : label === "Shipping" ? "text-[#8da27f]" : "text-white"}`}>{val}</p>
                       </div>
                     ))}
                   </div>

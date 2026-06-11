@@ -3,7 +3,6 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
 // ================= ADMIN LOGIN =================
-
 export const adminLogin = async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -37,7 +36,6 @@ export const adminLogin = async (req, res) => {
 };
 
 // ================= DASHBOARD STATS =================
-
 export const getDashboardStats = async (req, res) => {
     try {
         const totalProducts  = await pool.query("SELECT COUNT(*) FROM products");
@@ -73,7 +71,6 @@ export const getDashboardStats = async (req, res) => {
 };
 
 // ================= GET ALL USERS =================
-
 export const getAllUsers = async (req, res) => {
     try {
         const users = await pool.query("SELECT id, name, email FROM users ORDER BY id DESC");
@@ -85,7 +82,6 @@ export const getAllUsers = async (req, res) => {
 };
 
 // ================= DELETE USER =================
-
 export const deleteUser = async (req, res) => {
     try {
         const { id } = req.params;
@@ -101,7 +97,6 @@ export const deleteUser = async (req, res) => {
 };
 
 // ================= GET ALL PRODUCTS (ADMIN) =================
-
 export const adminGetProducts = async (req, res) => {
     try {
         const products = await pool.query("SELECT * FROM products ORDER BY id DESC");
@@ -113,21 +108,42 @@ export const adminGetProducts = async (req, res) => {
 };
 
 // ================= ADD PRODUCT (ADMIN) =================
-
 export const adminAddProduct = async (req, res) => {
     try {
-        const { name, category, gender, price, quantity, size, description } = req.body;
+        const {
+            name, category, gender, price, quantity, size, description,
+            image: bodyImage,
+            image2, image3, image4, image5,
+            sizes,
+            is_most_sold, is_new, discount, is_out_of_stock,
+        } = req.body;
 
-        // Image URL comes from Cloudinary via multer middleware
-        const image = req.file ? req.file.path : null;
+        // Image comes from Cloudinary via multer, or from body URL
+        const image = req.file ? req.file.path : (bodyImage || null);
 
         if (!name || !category || !gender || !price || !quantity || !description || !image)
             return res.status(400).json({ success: false, message: "Please fill all fields including image" });
 
         const newProduct = await pool.query(
-            `INSERT INTO products (name, category, gender, price, quantity, size, description, image)
-             VALUES($1,$2,$3,$4,$5,$6,$7,$8) RETURNING *`,
-            [name, category, gender, price, quantity, size || "39,40,41,42,43", description, image]
+            `INSERT INTO products 
+             (name, category, gender, price, quantity, size, description,
+              image, image2, image3, image4, image5,
+              sizes, is_most_sold, is_new, discount, is_out_of_stock)
+             VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17) RETURNING *`,
+            [
+                name, category, gender, price, quantity,
+                size || "6,7,8,9,10,11",
+                description, image,
+                image2  || null,
+                image3  || null,
+                image4  || null,
+                image5  || null,
+                sizes   || "[]",
+                is_most_sold    === "true" || is_most_sold    === true  ? true : false,
+                is_new          === "true" || is_new          === true  ? true : false,
+                discount ? parseInt(discount) : 0,
+                is_out_of_stock === "true" || is_out_of_stock === true  ? true : false,
+            ]
         );
 
         res.status(201).json({
@@ -142,32 +158,56 @@ export const adminAddProduct = async (req, res) => {
 };
 
 // ================= UPDATE PRODUCT (ADMIN) =================
-
 export const adminUpdateProduct = async (req, res) => {
     try {
         const { id } = req.params;
-        const { name, category, gender, price, quantity, size, description } = req.body;
+        const {
+            name, category, gender, price, quantity, size, description,
+            image: bodyImage,
+            image2, image3, image4, image5,
+            sizes,
+            is_most_sold, is_new, discount, is_out_of_stock,
+        } = req.body;
 
         const product = await pool.query("SELECT * FROM products WHERE id=$1", [id]);
         if (product.rows.length === 0)
             return res.status(404).json({ success: false, message: "Product Not Found" });
 
-        // Use new uploaded image from Cloudinary, or keep existing one
-        const image = req.file ? req.file.path : product.rows[0].image;
+        const existing = product.rows[0];
+
+        // Use new uploaded image from Cloudinary, or body URL, or keep existing
+        const image = req.file ? req.file.path : (bodyImage || existing.image);
 
         const updatedProduct = await pool.query(
             `UPDATE products 
-             SET name=$1, category=$2, gender=$3, price=$4, quantity=$5, size=$6, description=$7, image=$8
-             WHERE id=$9 RETURNING *`,
+             SET name=$1, category=$2, gender=$3, price=$4, quantity=$5, size=$6, description=$7,
+                 image=$8, image2=$9, image3=$10, image4=$11, image5=$12,
+                 sizes=$13, is_most_sold=$14, is_new=$15, discount=$16, is_out_of_stock=$17
+             WHERE id=$18 RETURNING *`,
             [
-                name        || product.rows[0].name,
-                category    || product.rows[0].category,
-                gender      || product.rows[0].gender,
-                price       || product.rows[0].price,
-                quantity    || product.rows[0].quantity,
-                size        || product.rows[0].size,
-                description || product.rows[0].description,
+                name        || existing.name,
+                category    || existing.category,
+                gender      || existing.gender,
+                price       || existing.price,
+                quantity    || existing.quantity,
+                size        || existing.size,
+                description || existing.description,
                 image,
+                image2  !== undefined ? (image2  || null) : existing.image2,
+                image3  !== undefined ? (image3  || null) : existing.image3,
+                image4  !== undefined ? (image4  || null) : existing.image4,
+                image5  !== undefined ? (image5  || null) : existing.image5,
+                sizes   !== undefined ? sizes : (existing.sizes || "[]"),
+                is_most_sold !== undefined
+                    ? (is_most_sold === "true" || is_most_sold === true)
+                    : existing.is_most_sold,
+                is_new !== undefined
+                    ? (is_new === "true" || is_new === true)
+                    : existing.is_new,
+                discount !== undefined ? parseInt(discount) : existing.discount,
+                is_out_of_stock !== undefined
+                    ? (is_out_of_stock === "true" || is_out_of_stock === true)
+                    : existing.is_out_of_stock,
                 id,
             ]
         );
@@ -184,7 +224,6 @@ export const adminUpdateProduct = async (req, res) => {
 };
 
 // ================= DELETE PRODUCT (ADMIN) =================
-
 export const adminDeleteProduct = async (req, res) => {
     try {
         const { id } = req.params;
@@ -200,7 +239,6 @@ export const adminDeleteProduct = async (req, res) => {
 };
 
 // ================= GET ALL ORDERS =================
-
 export const getAllOrders = async (req, res) => {
     try {
         const orders = await pool.query("SELECT * FROM orders ORDER BY created_at DESC");
@@ -212,7 +250,6 @@ export const getAllOrders = async (req, res) => {
 };
 
 // ================= UPDATE ORDER STATUS =================
-
 export const updateOrderStatus = async (req, res) => {
     try {
         const { id } = req.params;
@@ -233,7 +270,6 @@ export const updateOrderStatus = async (req, res) => {
 };
 
 // ================= DELETE ORDER =================
-
 export const deleteOrder = async (req, res) => {
     try {
         const { id } = req.params;
