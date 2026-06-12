@@ -1,6 +1,6 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useWishlist } from "../context/WishlistContext";
-import { useCart } from "../context/CartContext";
+import { useCart }     from "../context/CartContext";
 import { Search, ShoppingCart, CircleUserRound, Heart, X, Bell } from "lucide-react";
 import logo from "../assets/logo.png";
 import { useState, useEffect, useRef, useCallback } from "react";
@@ -8,13 +8,11 @@ import axios from "axios";
 
 const BACKEND = "http://localhost:5000";
 
-// ✅ FIXED: only add BACKEND prefix for /uploads/ (multer files)
-// /men/ /women/ /kids/ images are in Vite public folder — no prefix needed
 const resolveImg = (src) => {
   if (!src) return null;
   if (src.startsWith("http")) return src;
   if (src.startsWith("/uploads/")) return `${BACKEND}${src}`;
-  return src; // /men/... /women/... /kids/... served by Vite
+  return src;
 };
 
 const STATUS_COLORS = {
@@ -41,7 +39,9 @@ export default function Navbar() {
   const { wishlist }   = useWishlist();
   const { totalItems } = useCart();
 
-  const isLoggedIn = !!localStorage.getItem("token");
+  // Re-evaluate on every render so logout instantly hides the bell/icons
+  const token      = localStorage.getItem("token");
+  const isLoggedIn = !!token && token !== "null" && token !== "undefined";
 
   const [query,        setQuery]        = useState("");
   const [allProducts,  setAllProducts]  = useState([]);
@@ -53,6 +53,7 @@ export default function Navbar() {
   const searchRef = useRef(null);
   const bellRef   = useRef(null);
 
+  // ── Fetch products for search ────────────────────────────────
   const fetchProducts = useCallback(async () => {
     try {
       const res = await axios.get(`${BACKEND}/api/products/getproducts`);
@@ -60,29 +61,35 @@ export default function Navbar() {
     } catch { /* silent */ }
   }, []);
 
+  // ── Fetch user orders for bell notifications ─────────────────
   const fetchOrders = useCallback(async () => {
     if (!isLoggedIn) return;
+
+    const storedToken = localStorage.getItem("token");
+    if (!storedToken || storedToken === "null" || storedToken === "undefined") return;
+
     try {
-      const token = localStorage.getItem("token");
       const res = await axios.get(`${BACKEND}/api/orders/myorders`, {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: { Authorization: `Bearer ${storedToken}` },
       });
+
       if (!res.data.success) return;
 
       const fetchedOrders = res.data.orders;
       const prevStatuses  = JSON.parse(localStorage.getItem(PREV_STATUSES_KEY) || "{}");
-      const readIds       = JSON.parse(localStorage.getItem("readNotifs") || "[]");
+      const readIds       = JSON.parse(localStorage.getItem("readNotifs")       || "[]");
 
       let newUnread = 0;
       fetchedOrders.forEach((o) => {
-        const prev    = prevStatuses[o.id];
-        const changed = prev && prev !== o.status;
+        const prev     = prevStatuses[o.id];
+        const changed  = prev && prev !== o.status;
         const neverSeen = !prev;
         if ((changed || neverSeen) && !readIds.includes(`${o.id}-${o.status}`)) {
           newUnread++;
         }
       });
 
+      // Persist latest statuses so next poll can detect changes
       const newStatuses = {};
       fetchedOrders.forEach((o) => { newStatuses[o.id] = o.status; });
       localStorage.setItem(PREV_STATUSES_KEY, JSON.stringify(newStatuses));
@@ -90,8 +97,14 @@ export default function Navbar() {
       setOrders(fetchedOrders);
       setUnread(newUnread);
     } catch (err) {
-      // ✅ Silent fail — don't crash navbar if orders endpoint fails
-      console.log("Orders fetch error:", err?.response?.status);
+      const status = err?.response?.status;
+      // If token is truly expired, clear storage so the user is prompted to log in
+      if (status === 401) {
+        console.warn("Token expired or invalid — clearing session");
+        localStorage.removeItem("token");
+        localStorage.removeItem("userId");
+        localStorage.removeItem("user");
+      }
     }
   }, [isLoggedIn]);
 
@@ -103,6 +116,7 @@ export default function Navbar() {
     return () => clearInterval(interval);
   }, [fetchOrders]);
 
+  // ── Close dropdowns on outside click ────────────────────────
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (searchRef.current && !searchRef.current.contains(e.target)) setShowDropdown(false);
@@ -123,16 +137,17 @@ export default function Navbar() {
     });
   };
 
-  const handleViewOrder = (orderId) => {
+  const handleViewOrder = () => {
     setShowBell(false);
     navigate("/orders");
   };
 
+  // ── Search suggestions ───────────────────────────────────────
   const suggestions = query.trim().length === 0 ? [] : allProducts
     .filter((p) => {
       const q = query.toLowerCase();
       return (
-        p.name.toLowerCase().includes(q) ||
+        p.name.toLowerCase().includes(q)     ||
         p.category.toLowerCase().includes(q) ||
         p.gender.toLowerCase().includes(q)
       );
@@ -212,8 +227,11 @@ export default function Navbar() {
             <div className="absolute top-[56px] left-0 w-full bg-white border border-gray-200 rounded-[20px] shadow-2xl overflow-hidden z-[99999]">
               <p className="text-[10px] font-bold uppercase tracking-[3px] text-gray-400 px-5 pt-4 pb-2">Suggestions</p>
               {suggestions.map((product) => (
-                <div key={product.id} onMouseDown={() => handleSelectProduct(product)}
-                  className="flex items-center gap-4 px-4 py-3 hover:bg-[#f5f5f5] cursor-pointer transition group">
+                <div
+                  key={product.id}
+                  onMouseDown={() => handleSelectProduct(product)}
+                  className="flex items-center gap-4 px-4 py-3 hover:bg-[#f5f5f5] cursor-pointer transition group"
+                >
                   <div className="w-12 h-12 rounded-xl overflow-hidden bg-gray-100 shrink-0">
                     <img
                       src={resolveImg(product.image)}
@@ -230,11 +248,13 @@ export default function Navbar() {
               ))}
               <button
                 onClick={() => { setShowDropdown(false); navigate(`/search?q=${encodeURIComponent(query.trim())}`); }}
-                className="w-full py-3 text-center text-[#8da27f] text-xs font-bold uppercase tracking-[2px] border-t border-gray-100 hover:bg-[#8da27f] hover:text-white transition">
+                className="w-full py-3 text-center text-[#8da27f] text-xs font-bold uppercase tracking-[2px] border-t border-gray-100 hover:bg-[#8da27f] hover:text-white transition"
+              >
                 See all results for "{query}"
               </button>
             </div>
           )}
+
           {showDropdown && suggestions.length === 0 && query.trim().length > 0 && (
             <div className="absolute top-[56px] left-0 w-full bg-white border border-gray-200 rounded-[20px] shadow-2xl px-5 py-5 text-center z-[99999]">
               <p className="text-gray-400 text-sm font-semibold">No results for "{query}"</p>
@@ -275,7 +295,9 @@ export default function Navbar() {
                       {orders.map((order) => {
                         const statusKey = (order.status || "pending").toLowerCase();
                         const items = typeof order.items === "string"
-                          ? JSON.parse(order.items) : (order.items || []);
+                          ? (() => { try { return JSON.parse(order.items); } catch { return []; } })()
+                          : (order.items || []);
+
                         return (
                           <div key={order.id} className="px-4 py-4 hover:bg-gray-50 transition">
                             <div className="flex items-start justify-between gap-3 mb-2">
@@ -295,10 +317,10 @@ export default function Navbar() {
                             <p className="text-xs font-semibold text-gray-500 mb-3">
                               {STATUS_MSG[statusKey] || "Order status updated"}
                             </p>
-                            {/* ✅ "View Complete Order" now goes to /orders page */}
                             <button
-                              onClick={() => handleViewOrder(order.id)}
-                              className="w-full h-8 rounded-xl bg-black text-white text-xs font-bold uppercase tracking-[1px] hover:bg-[#8da27f] transition">
+                              onClick={handleViewOrder}
+                              className="w-full h-8 rounded-xl bg-black text-white text-xs font-bold uppercase tracking-[1px] hover:bg-[#8da27f] transition"
+                            >
                               View Complete Order
                             </button>
                           </div>
@@ -307,10 +329,10 @@ export default function Navbar() {
                     </div>
                   )}
 
-                  {/* ✅ FIXED: "View All Orders" instead of "View All Complaints" */}
                   <button
                     onClick={() => { setShowBell(false); navigate("/orders"); }}
-                    className="w-full py-3 text-center text-[#8da27f] text-xs font-bold uppercase tracking-[2px] border-t border-gray-100 hover:bg-[#8da27f] hover:text-white transition">
+                    className="w-full py-3 text-center text-[#8da27f] text-xs font-bold uppercase tracking-[2px] border-t border-gray-100 hover:bg-[#8da27f] hover:text-white transition"
+                  >
                     View All Orders
                   </button>
                 </div>
@@ -318,8 +340,10 @@ export default function Navbar() {
             </div>
 
             {/* WISHLIST */}
-            <Link to="/wishlist"
-              className="relative w-[46px] h-[46px] rounded-full border border-gray-200 bg-white flex items-center justify-center hover:bg-[#8da27f] hover:text-white transition duration-300 shadow-sm">
+            <Link
+              to="/wishlist"
+              className="relative w-[46px] h-[46px] rounded-full border border-gray-200 bg-white flex items-center justify-center hover:bg-[#8da27f] hover:text-white transition duration-300 shadow-sm"
+            >
               <Heart size={19} />
               {wishlist.length > 0 && (
                 <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] w-5 h-5 rounded-full flex items-center justify-center font-bold">
@@ -331,7 +355,8 @@ export default function Navbar() {
             {/* CART */}
             <button
               onClick={() => navigate("/cart")}
-              className="relative w-[46px] h-[46px] rounded-full border border-gray-200 bg-white text-gray-700 flex items-center justify-center hover:bg-[#8da27f] hover:text-white hover:border-[#8da27f] transition duration-300 shadow-sm">
+              className="relative w-[46px] h-[46px] rounded-full border border-gray-200 bg-white text-gray-700 flex items-center justify-center hover:bg-[#8da27f] hover:text-white hover:border-[#8da27f] transition duration-300 shadow-sm"
+            >
               <ShoppingCart size={19} />
               {totalItems > 0 && (
                 <span className="absolute -top-1 -right-1 bg-[#8da27f] text-white text-[10px] w-5 h-5 rounded-full flex items-center justify-center font-bold border-2 border-white">
@@ -343,13 +368,16 @@ export default function Navbar() {
             {/* PROFILE */}
             <button
               onClick={() => navigate("/profile")}
-              className="w-[46px] h-[46px] rounded-full border border-gray-200 bg-white flex items-center justify-center hover:bg-black hover:text-white transition duration-300 shadow-sm">
+              className="w-[46px] h-[46px] rounded-full border border-gray-200 bg-white flex items-center justify-center hover:bg-black hover:text-white transition duration-300 shadow-sm"
+            >
               <CircleUserRound size={20} />
             </button>
           </>
         ) : (
-          <Link to="/login"
-            className="px-7 h-[48px] rounded-full bg-black text-white flex items-center justify-center text-[14px] font-semibold hover:bg-[#8da27f] transition duration-300 shadow-md">
+          <Link
+            to="/login"
+            className="px-7 h-[48px] rounded-full bg-black text-white flex items-center justify-center text-[14px] font-semibold hover:bg-[#8da27f] transition duration-300 shadow-md"
+          >
             LOGIN
           </Link>
         )}

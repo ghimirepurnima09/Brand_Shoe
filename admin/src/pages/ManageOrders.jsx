@@ -2,10 +2,10 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import AdminSidebar from "../components/AdminSidebar";
 import { Trash2, RefreshCw } from "lucide-react";
-import toast from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 
 const API     = "http://localhost:5000/api/orders";
-const BACKEND = "http://localhost:5000"; // ✅ FIXED: was pointing to 5173 (Vite), now correctly points to backend
+const BACKEND = "http://localhost:5000";
 
 const STATUS_COLORS = {
   pending:    "bg-yellow-500/20 text-yellow-400 border-yellow-500/30",
@@ -15,8 +15,6 @@ const STATUS_COLORS = {
   cancelled:  "bg-red-500/20 text-red-400 border-red-500/30",
 };
 
-// ✅ FIXED: Only prepend BACKEND for /uploads/ (multer files)
-// /men/ /women/ /kids/ images are served by Vite from public folder — use as-is
 const resolveImg = (src) => {
   if (!src) return null;
   if (src.startsWith("http")) return src;
@@ -29,10 +27,11 @@ export default function ManageOrders() {
   const [loading, setLoading] = useState(true);
 
   const getHeaders = () => ({
-    Authorization: `Bearer ${localStorage.getItem("adminToken")}`
+    Authorization: `Bearer ${localStorage.getItem("adminToken")}`,
   });
 
   const fetchOrders = async () => {
+    setLoading(true);
     try {
       const res = await axios.get(`${API}/all`, { headers: getHeaders() });
       setOrders(res.data.orders);
@@ -44,16 +43,20 @@ export default function ManageOrders() {
   };
 
   useEffect(() => {
-    const load = async () => { await fetchOrders(); };
-    load();
+    fetchOrders();
   }, []);
 
   const handleStatusChange = async (id, status) => {
     try {
       await axios.put(`${API}/${id}/status`, { status }, { headers: getHeaders() });
-      toast.success("Status updated!");
-      fetchOrders();
-    } catch { toast.error("Failed to update status"); }
+      toast.success(`Status updated to ${status}!`);
+      // Fix: compare as strings to avoid number vs string mismatch
+      setOrders((prev) =>
+        prev.map((o) => (String(o.id) === String(id) ? { ...o, status } : o))
+      );
+    } catch {
+      toast.error("Failed to update status");
+    }
   };
 
   const handleDelete = async (id) => {
@@ -61,12 +64,15 @@ export default function ManageOrders() {
     try {
       await axios.delete(`${API}/${id}`, { headers: getHeaders() });
       toast.success("Order deleted!");
-      fetchOrders();
-    } catch { toast.error("Failed to delete order"); }
+      setOrders((prev) => prev.filter((o) => String(o.id) !== String(id)));
+    } catch {
+      toast.error("Failed to delete order");
+    }
   };
 
   return (
     <div className="flex min-h-screen bg-black">
+      <Toaster position="top-right" />
       <AdminSidebar />
       <main className="flex-1 p-10 overflow-y-auto">
 
@@ -76,8 +82,10 @@ export default function ManageOrders() {
             <p className="text-[#8da27f] uppercase tracking-[4px] text-sm font-bold">Brand Shoe Admin</p>
             <h1 className="text-white text-5xl font-black mt-2 leading-none">ORDERS</h1>
           </div>
-          <button onClick={fetchOrders}
-            className="flex items-center gap-2 px-6 h-12 rounded-full border border-white/10 text-gray-400 hover:text-white hover:border-white/30 transition font-bold uppercase tracking-[2px] text-sm">
+          <button
+            onClick={fetchOrders}
+            className="flex items-center gap-2 px-6 h-12 rounded-full border border-white/10 text-gray-400 hover:text-white hover:border-white/30 transition font-bold uppercase tracking-[2px] text-sm"
+          >
             <RefreshCw size={15} /> Refresh
           </button>
         </div>
@@ -85,10 +93,10 @@ export default function ManageOrders() {
         {/* Stats */}
         <div className="grid grid-cols-4 gap-5 mb-8">
           {[
-            { label: "Total Orders", value: orders.length,                                       color: "text-[#8da27f]"  },
-            { label: "Pending",      value: orders.filter(o => o.status === "pending").length,   color: "text-yellow-400" },
-            { label: "Delivered",    value: orders.filter(o => o.status === "delivered").length, color: "text-green-400"  },
-            { label: "Cancelled",    value: orders.filter(o => o.status === "cancelled").length, color: "text-red-400"    },
+            { label: "Total Orders", value: orders.length,                                        color: "text-[#8da27f]"  },
+            { label: "Pending",      value: orders.filter(o => o.status === "pending").length,    color: "text-yellow-400" },
+            { label: "Delivered",    value: orders.filter(o => o.status === "delivered").length,  color: "text-green-400"  },
+            { label: "Cancelled",    value: orders.filter(o => o.status === "cancelled").length,  color: "text-red-400"    },
           ].map(({ label, value, color }) => (
             <div key={label} className="bg-[#161616] rounded-[24px] border border-white/10 p-6">
               <p className={`text-4xl font-black ${color}`}>{value}</p>
@@ -109,7 +117,9 @@ export default function ManageOrders() {
         ) : (
           <div className="flex flex-col gap-4">
             {orders.map((order) => {
-              const items     = typeof order.items === "string" ? JSON.parse(order.items) : (order.items || []);
+              const items     = typeof order.items === "string"
+                ? (() => { try { return JSON.parse(order.items); } catch { return []; } })()
+                : (order.items || []);
               const statusKey = (order.status || "pending").toLowerCase();
 
               return (
@@ -128,16 +138,21 @@ export default function ManageOrders() {
                       <span className={`px-3 py-1 rounded-full border text-xs font-black uppercase tracking-wide ${STATUS_COLORS[statusKey] || STATUS_COLORS.pending}`}>
                         {order.status}
                       </span>
-                      <select value={order.status} onChange={(e) => handleStatusChange(order.id, e.target.value)}
-                        className="bg-black border border-white/10 text-white text-xs rounded-xl px-3 py-2 outline-none focus:border-[#8da27f] transition">
+                      <select
+                        value={order.status}
+                        onChange={(e) => handleStatusChange(order.id, e.target.value)}
+                        className="bg-black border border-white/10 text-white text-xs rounded-xl px-3 py-2 outline-none focus:border-[#8da27f] transition"
+                      >
                         <option value="pending">Pending</option>
                         <option value="processing">Processing</option>
                         <option value="shipped">Shipped</option>
                         <option value="delivered">Delivered</option>
                         <option value="cancelled">Cancelled</option>
                       </select>
-                      <button onClick={() => handleDelete(order.id)}
-                        className="w-9 h-9 rounded-xl bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-400 hover:bg-red-500/20 transition">
+                      <button
+                        onClick={() => handleDelete(order.id)}
+                        className="w-9 h-9 rounded-xl bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-400 hover:bg-red-500/20 transition"
+                      >
                         <Trash2 size={15} />
                       </button>
                     </div>
@@ -148,9 +163,12 @@ export default function ManageOrders() {
                     {items.map((item, i) => (
                       <div key={i} className="flex items-center gap-3 bg-black border border-white/10 rounded-2xl px-4 py-2">
                         {resolveImg(item.image) && (
-                          <img src={resolveImg(item.image)} alt={item.name}
+                          <img
+                            src={resolveImg(item.image)}
+                            alt={item.name}
                             className="w-10 h-10 rounded-xl object-cover bg-gray-800"
-                            onError={(e) => { e.target.style.display = "none"; }} />
+                            onError={(e) => { e.target.style.display = "none"; }}
+                          />
                         )}
                         <div>
                           <p className="text-white text-xs font-bold">{item.name}</p>
@@ -164,14 +182,20 @@ export default function ManageOrders() {
                   {/* Totals */}
                   <div className="flex flex-wrap gap-6 border-t border-white/10 pt-4">
                     {[
-                      ["Subtotal", `Rs.${Number(order.subtotal || 0).toLocaleString()}`],
+                      ["Subtotal", `Rs.${Number(order.subtotal   || 0).toLocaleString()}`],
                       ["Shipping", "Free"],
                       ["Total",    `Rs.${Number(order.total_price || 0).toLocaleString()}`],
                       ["Payment",  (order.payment_method || "cod").toUpperCase()],
                     ].map(([label, val]) => (
                       <div key={label}>
                         <p className="text-gray-600 text-xs uppercase tracking-[1px]">{label}</p>
-                        <p className={`font-black mt-0.5 text-sm ${label === "Total" ? "text-[#8da27f] text-base" : label === "Shipping" ? "text-[#8da27f]" : "text-white"}`}>{val}</p>
+                        <p className={`font-black mt-0.5 text-sm ${
+                          label === "Total"    ? "text-[#8da27f] text-base" :
+                          label === "Shipping" ? "text-[#8da27f]"           :
+                          "text-white"
+                        }`}>
+                          {val}
+                        </p>
                       </div>
                     ))}
                   </div>

@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { io } from "socket.io-client";
+import toast, { Toaster } from "react-hot-toast";
 import Navbar from "./Navbar";
-import { ShoppingBag, Package, Truck, CheckCircle, XCircle, Clock } from "lucide-react";
+import {
+  ShoppingBag, Package, Truck, CheckCircle, XCircle, Clock,
+} from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const BACKEND = "http://localhost:5000";
@@ -30,6 +34,14 @@ const STATUS_MSG = {
   cancelled:  "Your order was cancelled",
 };
 
+const TOAST_ICON = {
+  pending:    "🕐",
+  processing: "📦",
+  shipped:    "🚚",
+  delivered:  "✅",
+  cancelled:  "❌",
+};
+
 const resolveImg = (src) => {
   if (!src) return null;
   if (src.startsWith("http")) return src;
@@ -42,20 +54,67 @@ export default function Orders() {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
+  const fetchOrders = (token) => {
+    axios
+      .get(`${BACKEND}/api/orders/myorders`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((res) => { if (res.data.success) setOrders(res.data.orders); })
+      .catch(() => toast.error("Failed to load orders"))
+      .finally(() => setLoading(false));
+  };
+
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token  = localStorage.getItem("token");
+    const userId = localStorage.getItem("userId"); // saved during login
+
     if (!token) { navigate("/login"); return; }
 
-    axios.get(`${BACKEND}/api/orders/myorders`, {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-      .then((res) => { if (res.data.success) setOrders(res.data.orders); })
-      .catch(console.log)
-      .finally(() => setLoading(false));
+    fetchOrders(token);
+
+    // ── Socket.IO ──────────────────────────────────────────────
+    const socket = io(BACKEND, {
+      transports: ["websocket"],
+      reconnectionAttempts: 5,
+    });
+
+    socket.on("connect", () => {
+      console.log("🟢 Socket connected:", socket.id);
+      if (userId) socket.emit("join_user_room", userId);
+    });
+
+    socket.on("order_status_updated", ({ orderId, status }) => {
+      // Fix: compare as strings — Postgres id (number) vs socket string
+      setOrders((prev) =>
+        prev.map((o) =>
+          String(o.id) === String(orderId) ? { ...o, status } : o
+        )
+      );
+
+      const icon = TOAST_ICON[status] || "🔔";
+      toast(`${icon} Order #${orderId} is now ${status.toUpperCase()}`, {
+        style: {
+          background:   "#1a1a1a",
+          color:        "#fff",
+          border:       "1px solid rgba(255,255,255,0.1)",
+          borderRadius: "16px",
+          fontWeight:   "700",
+          padding:      "14px 20px",
+        },
+        duration: 5000,
+      });
+    });
+
+    socket.on("disconnect", () => {
+      console.log("🔴 Socket disconnected");
+    });
+
+    return () => socket.disconnect();
   }, [navigate]);
 
   return (
     <>
+      <Toaster position="top-right" />
       <Navbar />
       <section className="min-h-screen bg-black pt-[120px] px-6 lg:px-16 pb-20">
 
@@ -73,8 +132,10 @@ export default function Orders() {
           <div className="flex flex-col items-center justify-center h-[300px] gap-6">
             <ShoppingBag size={64} className="text-white/20" />
             <h2 className="text-gray-400 text-2xl font-bold">No orders yet</h2>
-            <button onClick={() => navigate("/mainhome")}
-              className="px-8 h-12 rounded-full bg-[#8da27f] text-white font-bold tracking-[2px] uppercase hover:bg-white hover:text-black transition">
+            <button
+              onClick={() => navigate("/mainhome")}
+              className="px-8 h-12 rounded-full bg-[#8da27f] text-white font-bold tracking-[2px] uppercase hover:bg-white hover:text-black transition"
+            >
               Start Shopping
             </button>
           </div>
@@ -94,8 +155,9 @@ export default function Orders() {
                     <div>
                       <p className="text-white font-black text-xl">Order #{order.id}</p>
                       <p className="text-gray-500 text-sm mt-1">
-                        Placed on {new Date(order.created_at).toLocaleDateString("en-US", {
-                          year: "numeric", month: "long", day: "numeric"
+                        Placed on{" "}
+                        {new Date(order.created_at).toLocaleDateString("en-US", {
+                          year: "numeric", month: "long", day: "numeric",
                         })}
                       </p>
                     </div>
@@ -118,9 +180,12 @@ export default function Orders() {
                       <div key={i} className="flex items-center gap-4 bg-black rounded-2xl border border-white/5 p-4">
                         <div className="w-16 h-16 rounded-xl overflow-hidden bg-[#161616] shrink-0">
                           {resolveImg(item.image) ? (
-                            <img src={resolveImg(item.image)} alt={item.name}
+                            <img
+                              src={resolveImg(item.image)}
+                              alt={item.name}
                               className="w-full h-full object-cover"
-                              onError={(e) => { e.target.style.display = "none"; }} />
+                              onError={(e) => { e.target.style.display = "none"; }}
+                            />
                           ) : (
                             <div className="w-full h-full flex items-center justify-center text-gray-600 text-xs">IMG</div>
                           )}
@@ -129,7 +194,8 @@ export default function Orders() {
                           <p className="text-white font-bold text-sm truncate">{item.name}</p>
                           <p className="text-gray-500 text-xs mt-0.5">
                             Size: <span className="text-white font-bold">US {item.size}</span>
-                            {" · "}Qty: <span className="text-white font-bold">{item.quantity}</span>
+                            {" · "}
+                            Qty: <span className="text-white font-bold">{item.quantity}</span>
                           </p>
                         </div>
                         <p className="text-white font-black text-sm shrink-0">
@@ -151,6 +217,7 @@ export default function Orders() {
                       </p>
                     </div>
                   </div>
+
                 </div>
               );
             })}
