@@ -5,6 +5,7 @@ import { Search, ShoppingCart, CircleUserRound, Heart, X, Bell } from "lucide-re
 import logo from "../assets/logo.png";
 import { useState, useEffect, useRef, useCallback } from "react";
 import axios from "axios";
+import { io } from "socket.io-client";
 
 const BACKEND = "http://localhost:5000";
 
@@ -39,7 +40,6 @@ export default function Navbar() {
   const { wishlist }   = useWishlist();
   const { totalItems } = useCart();
 
-  // Re-evaluate on every render so logout instantly hides the bell/icons
   const token      = localStorage.getItem("token");
   const isLoggedIn = !!token && token !== "null" && token !== "undefined";
 
@@ -61,10 +61,9 @@ export default function Navbar() {
     } catch { /* silent */ }
   }, []);
 
-  // ── Fetch user orders for bell notifications ─────────────────
+  // ── Fetch orders for bell ────────────────────────────────────
   const fetchOrders = useCallback(async () => {
     if (!isLoggedIn) return;
-
     const storedToken = localStorage.getItem("token");
     if (!storedToken || storedToken === "null" || storedToken === "undefined") return;
 
@@ -72,7 +71,6 @@ export default function Navbar() {
       const res = await axios.get(`${BACKEND}/api/orders/myorders`, {
         headers: { Authorization: `Bearer ${storedToken}` },
       });
-
       if (!res.data.success) return;
 
       const fetchedOrders = res.data.orders;
@@ -81,15 +79,14 @@ export default function Navbar() {
 
       let newUnread = 0;
       fetchedOrders.forEach((o) => {
-        const prev     = prevStatuses[o.id];
-        const changed  = prev && prev !== o.status;
+        const prev      = prevStatuses[o.id];
+        const changed   = prev && prev !== o.status;
         const neverSeen = !prev;
         if ((changed || neverSeen) && !readIds.includes(`${o.id}-${o.status}`)) {
           newUnread++;
         }
       });
 
-      // Persist latest statuses so next poll can detect changes
       const newStatuses = {};
       fetchedOrders.forEach((o) => { newStatuses[o.id] = o.status; });
       localStorage.setItem(PREV_STATUSES_KEY, JSON.stringify(newStatuses));
@@ -98,9 +95,7 @@ export default function Navbar() {
       setUnread(newUnread);
     } catch (err) {
       const status = err?.response?.status;
-      // If token is truly expired, clear storage so the user is prompted to log in
       if (status === 401) {
-        console.warn("Token expired or invalid — clearing session");
         localStorage.removeItem("token");
         localStorage.removeItem("userId");
         localStorage.removeItem("user");
@@ -116,6 +111,46 @@ export default function Navbar() {
     return () => clearInterval(interval);
   }, [fetchOrders]);
 
+  // ── Socket: real-time bell increment when admin changes status ─
+  useEffect(() => {
+    if (!isLoggedIn) return;
+
+    const userId = localStorage.getItem("userId");
+    if (!userId) return;
+
+    const socket = io(BACKEND, {
+      transports: ["websocket"],
+      reconnectionAttempts: 5,
+    });
+
+    socket.on("connect", () => {
+      socket.emit("join_user_room", userId);
+    });
+
+    socket.on("order_status_updated", ({ orderId, status }) => {
+      // Update the order in state
+      setOrders((prev) =>
+        prev.map((o) =>
+          String(o.id) === String(orderId) ? { ...o, status } : o
+        )
+      );
+
+      // Increment bell badge — this is the real-time fix
+      setUnread((prev) => prev + 1);
+
+      // Update persisted statuses so polling stays in sync
+      const prevStatuses = JSON.parse(localStorage.getItem(PREV_STATUSES_KEY) || "{}");
+      prevStatuses[orderId] = status;
+      localStorage.setItem(PREV_STATUSES_KEY, JSON.stringify(prevStatuses));
+    });
+
+    socket.on("disconnect", () => {
+      console.log("🔴 Navbar socket disconnected");
+    });
+
+    return () => socket.disconnect();
+  }, [isLoggedIn]);
+
   // ── Close dropdowns on outside click ────────────────────────
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -129,6 +164,7 @@ export default function Navbar() {
   const handleBellOpen = () => {
     setShowBell((prev) => {
       if (!prev) {
+        // Mark all current orders as read
         const readIds = orders.map((o) => `${o.id}-${o.status}`);
         localStorage.setItem("readNotifs", JSON.stringify(readIds));
         setUnread(0);
@@ -340,10 +376,8 @@ export default function Navbar() {
             </div>
 
             {/* WISHLIST */}
-            <Link
-              to="/wishlist"
-              className="relative w-[46px] h-[46px] rounded-full border border-gray-200 bg-white flex items-center justify-center hover:bg-[#8da27f] hover:text-white transition duration-300 shadow-sm"
-            >
+            <Link to="/wishlist"
+              className="relative w-[46px] h-[46px] rounded-full border border-gray-200 bg-white flex items-center justify-center hover:bg-[#8da27f] hover:text-white transition duration-300 shadow-sm">
               <Heart size={19} />
               {wishlist.length > 0 && (
                 <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] w-5 h-5 rounded-full flex items-center justify-center font-bold">
@@ -374,10 +408,8 @@ export default function Navbar() {
             </button>
           </>
         ) : (
-          <Link
-            to="/login"
-            className="px-7 h-[48px] rounded-full bg-black text-white flex items-center justify-center text-[14px] font-semibold hover:bg-[#8da27f] transition duration-300 shadow-md"
-          >
+          <Link to="/login"
+            className="px-7 h-[48px] rounded-full bg-black text-white flex items-center justify-center text-[14px] font-semibold hover:bg-[#8da27f] transition duration-300 shadow-md">
             LOGIN
           </Link>
         )}
