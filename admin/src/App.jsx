@@ -5,6 +5,8 @@ import ManageProducts from "./pages/ManageProducts";
 import ManageUsers from "./pages/ManageUsers";
 import ManageOrders from "./pages/ManageOrders";
 import Payments     from "./pages/Payments";
+import UploadCEO from "./pages/UploadCEO";
+import ManageCEO from "./pages/ManageCEO";
 
 const ProtectedRoute = ({ children }) => {
   const token = localStorage.getItem("adminToken");
@@ -45,6 +47,9 @@ export default function App() {
       />
       <Route path="/admin/orders"   element={<ManageOrders />} />
       <Route path="/admin/payments" element={<Payments />} /> 
+      <Route path="/upload-ceo" element={<UploadCEO />} />
+      <Route path="/admin/ceo" element={<ManageCEO />} />
+      
   
 
       <Route path="*" element={<Navigate to="/admin/login" />} />

@@ -13,8 +13,10 @@ import authRoutes    from "./routes/authRoutes.js";
 import paymentRoutes from "./routes/paymentRoutes.js";
 import adminRoutes   from "./routes/adminRoutes.js";
 import orderRoutes   from "./routes/orderRoutes.js";
+import ceoRoutes from "./routes/ceoRoutes.js";
 
 import { setIO } from "./socket.js";
+import uploadRoutes from "./routes/uploadRoutes.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname  = path.dirname(__filename);
@@ -63,6 +65,9 @@ app.use("/api/products", productRoutes);
 app.use("/api/payment",  paymentRoutes);
 app.use("/api/admin",    adminRoutes);
 app.use("/api/orders",   orderRoutes);
+app.use("/uploads", express.static("uploads"));
+app.use("/api", uploadRoutes);
+app.use("/api/admin", ceoRoutes);
 
 // ── Start ─────────────────────────────────────────────────────
 httpServer.listen(process.env.PORT || 5000, () => {
