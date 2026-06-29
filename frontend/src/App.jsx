@@ -19,6 +19,7 @@ import Kids           from "./pages/Kids";
 import Cart           from "./pages/Cart";
 import Profile        from "./pages/Profile";
 import AddProduct     from "./pages/AddProduct";
+import AboutUs from "./pages/AboutUs";
 
 export default function App() {
   return (
@@ -42,6 +43,7 @@ export default function App() {
       <Route path="/orders"        element={<Orders />} />
       <Route path="/profile"       element={<Profile />} />
       <Route path="/addproduct"    element={<AddProduct />} />
+      <Route path="/aboutus"       element={<AboutUs/>}/>
     </Routes>
   );
 }

@@ -76,11 +76,12 @@ export default function Hero() {
 
             </Link>
 
-            <button className="px-9 h-[58px] rounded-full border border-white/60 text-white font-semibold hover:bg-white hover:text-black transition duration-300 backdrop-blur-md">
-
+            <Link
+            to="/collections"
+              className="px-9 h-[58px] rounded-full border border-white/60 text-white font-semibold hover:bg-white hover:text-black transition duration-300 backdrop-blur-md flex items-center justify-center"
+               >
               EXPLORE
-
-            </button>
+              </Link>
 
           </div>
 

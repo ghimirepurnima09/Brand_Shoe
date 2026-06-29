@@ -1,11 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "./Navbar";
 import { useWishlist } from "../context/WishlistContext";
-
 import {
     User, Mail, Phone, Lock, LogOut, ShoppingBag, Heart,
-    Eye, EyeOff, CheckCircle, ChevronRight, X,
+    Eye, EyeOff, CheckCircle, ChevronRight, X, Camera,
 } from "lucide-react";
 import axios from "axios";
 import toast from "react-hot-toast";
@@ -28,11 +27,30 @@ const STATUS_COLORS = {
 export default function Profile() {
     const navigate  = useNavigate();
     const { wishlist } = useWishlist();
-   
 
     const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
     const [user] = useState(storedUser);
     const [activeTab, setActiveTab] = useState("profile");
+
+    // ✅ Profile picture state
+    const [profilePic, setProfilePic] = useState(
+        localStorage.getItem("profilePic") || null
+    );
+    const picInputRef = useRef(null);
+
+    const handleProfilePicChange = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        if (!file.type.startsWith("image/")) {
+            toast.error("Please select an image file");
+            return;
+        }
+        const url = URL.createObjectURL(file);
+        setProfilePic(url);
+        localStorage.setItem("profilePic", url);
+        toast.success("Profile picture updated!");
+        e.target.value = "";
+    };
 
     // Orders state
     const [orders,        setOrders]        = useState([]);
@@ -46,7 +64,6 @@ export default function Profile() {
     const [showConfirm,  setShowConfirm]  = useState(false);
     const [changingPass, setChangingPass] = useState(false);
 
-    // Fetch real orders
     useEffect(() => {
         if (activeTab !== "orders") return;
         const fetchOrders = async () => {
@@ -127,10 +144,10 @@ export default function Profile() {
     };
 
     const tabs = [
-        { id: "profile",  label: "My Profile",       icon: <User size={18} /> },
-        { id: "orders",   label: "Order History",     icon: <ShoppingBag size={18} /> },
-        { id: "wishlist", label: "Wishlist",          icon: <Heart size={18} /> },
-        { id: "password", label: "Change Password",   icon: <Lock size={18} /> },
+        { id: "profile",  label: "My Profile",     icon: <User size={18} /> },
+        { id: "orders",   label: "Order History",   icon: <ShoppingBag size={18} /> },
+        { id: "wishlist", label: "Wishlist",        icon: <Heart size={18} /> },
+        { id: "password", label: "Change Password", icon: <Lock size={18} /> },
     ];
 
     return (
@@ -148,15 +165,56 @@ export default function Profile() {
                     {/* SIDEBAR */}
                     <div className="lg:col-span-1 flex flex-col gap-4">
                         <div className="bg-[#161616] rounded-[32px] border border-white/10 p-8 flex flex-col items-center gap-4">
-                            <div className="w-24 h-24 rounded-full bg-[#8da27f]/20 border-2 border-[#8da27f] flex items-center justify-center">
-                                <span className="text-[#8da27f] text-4xl font-black">
-                                    {user.name ? user.name.charAt(0).toUpperCase() : "U"}
-                                </span>
+
+                            {/* ✅ Clickable profile picture */}
+                            <div
+                                onClick={() => picInputRef.current?.click()}
+                                className="relative w-24 h-24 rounded-full cursor-pointer group"
+                                title="Click to change profile picture"
+                            >
+                                {profilePic ? (
+                                    <img
+                                        src={profilePic}
+                                        alt="Profile"
+                                        className="w-24 h-24 rounded-full object-cover border-2 border-[#8da27f]"
+                                    />
+                                ) : (
+                                    <div className="w-24 h-24 rounded-full bg-[#8da27f]/20 border-2 border-[#8da27f] flex items-center justify-center">
+                                        <span className="text-[#8da27f] text-4xl font-black">
+                                            {user.name ? user.name.charAt(0).toUpperCase() : "U"}
+                                        </span>
+                                    </div>
+                                )}
+                                {/* Camera hover overlay */}
+                                <div className="absolute inset-0 rounded-full bg-black/60 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition duration-300">
+                                    <Camera size={20} className="text-[#8da27f]" />
+                                    <span className="text-[#8da27f] text-[9px] font-bold mt-1 uppercase tracking-[1px]">Change</span>
+                                </div>
                             </div>
+
+                            {/* Hidden file input */}
+                            <input
+                                type="file"
+                                accept="image/*"
+                                ref={picInputRef}
+                                onChange={handleProfilePicChange}
+                                className="hidden"
+                            />
+
                             <div className="text-center">
                                 <h2 className="text-white text-xl font-black">{user.name || "User"}</h2>
                                 <p className="text-gray-500 text-sm mt-1">{user.email || ""}</p>
+                                {/* ✅ Remove photo button */}
+                                {profilePic && (
+                                    <button
+                                        onClick={() => { setProfilePic(null); localStorage.removeItem("profilePic"); toast.success("Photo removed"); }}
+                                        className="text-[10px] text-gray-600 hover:text-red-400 uppercase tracking-[1px] mt-2 transition"
+                                    >
+                                        Remove Photo
+                                    </button>
+                                )}
                             </div>
+
                             <div className="w-full grid grid-cols-2 gap-3 mt-2">
                                 <div className="bg-black rounded-2xl p-3 text-center border border-white/10">
                                     <p className="text-[#8da27f] text-2xl font-black">{orders.length}</p>
@@ -186,10 +244,9 @@ export default function Profile() {
                         </div>
                     </div>
 
-                    {/* MAIN CONTENT */}
+                    {/* MAIN CONTENT — completely unchanged below */}
                     <div className="lg:col-span-3">
 
-                        {/* PROFILE TAB */}
                         {activeTab === "profile" && (
                             <div className="bg-[#161616] rounded-[32px] border border-white/10 p-8">
                                 <h2 className="text-white text-2xl font-black uppercase tracking-tight mb-8">Personal Information</h2>
@@ -215,11 +272,9 @@ export default function Profile() {
                             </div>
                         )}
 
-                        {/* ORDERS TAB */}
                         {activeTab === "orders" && (
                             <div className="bg-[#161616] rounded-[32px] border border-white/10 p-8">
                                 <h2 className="text-white text-2xl font-black uppercase tracking-tight mb-8">Order History</h2>
-
                                 {ordersLoading ? (
                                     <div className="flex justify-center h-[200px] items-center">
                                         <div className="w-10 h-10 border-4 border-[#8da27f] border-t-transparent rounded-full animate-spin" />
@@ -240,10 +295,8 @@ export default function Profile() {
                                                 ? JSON.parse(order.items) : (order.items || []);
                                             const statusKey = (order.status || "pending").toLowerCase();
                                             const canCancel = !["delivered", "cancelled"].includes(statusKey);
-
                                             return (
                                                 <div key={order.id} className="bg-black rounded-2xl border border-white/10 p-5">
-                                                    {/* Order Header */}
                                                     <div className="flex items-start justify-between gap-3 mb-4">
                                                         <div>
                                                             <p className="text-white font-black text-base">Order #{order.id}</p>
@@ -266,8 +319,6 @@ export default function Profile() {
                                                             )}
                                                         </div>
                                                     </div>
-
-                                                    {/* Status message */}
                                                     <div className="mb-4 px-3 py-2 rounded-xl bg-white/5 text-xs font-semibold text-gray-400">
                                                         {statusKey === "pending"    && "⏳ Your order is being reviewed"}
                                                         {statusKey === "processing" && "📦 Your order is being prepared"}
@@ -275,8 +326,6 @@ export default function Profile() {
                                                         {statusKey === "delivered"  && "✅ Your order has been delivered!"}
                                                         {statusKey === "cancelled"  && "❌ Your order was cancelled"}
                                                     </div>
-
-                                                    {/* Items */}
                                                     <div className="flex flex-col gap-3 mb-4">
                                                         {items.map((item, i) => (
                                                             <div key={i} className="flex items-center gap-4">
@@ -295,8 +344,6 @@ export default function Profile() {
                                                             </div>
                                                         ))}
                                                     </div>
-
-                                                    {/* Total */}
                                                     <div className="flex justify-between items-center border-t border-white/10 pt-3">
                                                         <span className="text-gray-500 text-xs uppercase tracking-[2px]">Total</span>
                                                         <span className="text-white font-black text-lg">Rs.{Number(order.total_price).toLocaleString()}</span>
@@ -309,7 +356,6 @@ export default function Profile() {
                             </div>
                         )}
 
-                        {/* WISHLIST TAB */}
                         {activeTab === "wishlist" && (
                             <div className="bg-[#161616] rounded-[32px] border border-white/10 p-8">
                                 <h2 className="text-white text-2xl font-black uppercase tracking-tight mb-8">My Wishlist</h2>
@@ -345,7 +391,6 @@ export default function Profile() {
                             </div>
                         )}
 
-                        {/* CHANGE PASSWORD TAB */}
                         {activeTab === "password" && (
                             <div className="bg-[#161616] rounded-[32px] border border-white/10 p-8">
                                 <h2 className="text-white text-2xl font-black uppercase tracking-tight mb-8">Change Password</h2>
@@ -412,6 +457,7 @@ export default function Profile() {
                                 </div>
                             </div>
                         )}
+
                     </div>
                 </div>
             </section>
