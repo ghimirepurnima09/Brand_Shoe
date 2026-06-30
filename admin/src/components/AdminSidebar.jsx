@@ -1,5 +1,5 @@
 import { useNavigate, useLocation } from "react-router-dom";
-import { LayoutDashboard, Package, Users, ShoppingBag, CreditCard, LogOut } from "lucide-react";
+import { LayoutDashboard, Package, Users, ShoppingBag, CreditCard, LogOut, UserCircle } from "lucide-react";
 
 export default function AdminSidebar() {
     const navigate = useNavigate();
@@ -13,11 +13,12 @@ export default function AdminSidebar() {
     };
 
     const links = [
-        { path: "/admin/dashboard", label: "Dashboard",  icon: <LayoutDashboard size={18} /> },
-        { path: "/admin/products",  label: "Products",   icon: <Package size={18} /> },
-        { path: "/admin/users",     label: "Users",      icon: <Users size={18} /> },
-        { path: "/admin/orders",    label: "Orders",     icon: <ShoppingBag size={18} /> },
-        { path: "/admin/payments",  label: "Payments",   icon: <CreditCard size={18} /> },
+        { path: "/admin/dashboard", label: "Dashboard", icon: <LayoutDashboard size={18} /> },
+        { path: "/admin/products",  label: "Products",  icon: <Package size={18} /> },
+        { path: "/admin/users",     label: "Users",     icon: <Users size={18} /> },
+        { path: "/admin/orders",    label: "Orders",    icon: <ShoppingBag size={18} /> },
+        { path: "/admin/payments",  label: "Payments",  icon: <CreditCard size={18} /> },
+        { path: "/admin/ceo",       label: "CEO",       icon: <UserCircle size={18} /> }, // ✅ added
     ];
 
     return (

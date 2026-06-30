@@ -12,6 +12,7 @@ import {
     updateOrderStatus,
     deleteOrder,
 } from "../controllers/adminController.js";
+import { getCEO, uploadCEO } from "../controllers/ceoController.js"; // ✅ added
 import { adminMiddleware } from "../middleware/adminMiddleware.js";
 import upload from "../middleware/upload.js";
 
@@ -37,5 +38,9 @@ router.delete("/products/:id", adminMiddleware, adminDeleteProduct);
 router.get("/orders",            adminMiddleware, getAllOrders);
 router.put("/orders/:id/status", adminMiddleware, updateOrderStatus);
 router.delete("/orders/:id",     adminMiddleware, deleteOrder);
+
+// CEO ✅ added
+router.get("/ceo",         getCEO);
+router.post("/upload-ceo", upload.single("image"), uploadCEO);
 
 export default router;

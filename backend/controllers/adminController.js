@@ -46,7 +46,7 @@ export const getDashboardStats = async (req, res) => {
         const womenProducts  = await pool.query("SELECT COUNT(*) FROM products WHERE gender='Women'");
         const kidsProducts   = await pool.query("SELECT COUNT(*) FROM products WHERE gender='Kids'");
         const recentProducts = await pool.query("SELECT * FROM products ORDER BY id DESC LIMIT 5");
-        const recentUsers    = await pool.query("SELECT id, name, email FROM users ORDER BY id DESC LIMIT 5");
+        const recentUsers    = await pool.query("SELECT id, name, email, image FROM users ORDER BY id DESC LIMIT 5"); // ✅ image added
         const recentOrders   = await pool.query("SELECT * FROM orders ORDER BY created_at DESC LIMIT 5");
 
         res.status(200).json({
@@ -73,7 +73,9 @@ export const getDashboardStats = async (req, res) => {
 // ================= GET ALL USERS =================
 export const getAllUsers = async (req, res) => {
     try {
-        const users = await pool.query("SELECT id, name, email FROM users ORDER BY id DESC");
+        const users = await pool.query(
+            "SELECT id, name, email, image FROM users ORDER BY id DESC" // ✅ image added
+        );
         res.status(200).json({ success: true, users: users.rows });
     } catch (error) {
         console.log(error);
@@ -118,7 +120,6 @@ export const adminAddProduct = async (req, res) => {
             is_most_sold, is_new, discount, is_out_of_stock,
         } = req.body;
 
-        // Image comes from Cloudinary via multer, or from body URL
         const image = req.file ? req.file.path : (bodyImage || null);
 
         if (!name || !category || !gender || !price || !quantity || !description || !image)
@@ -139,10 +140,10 @@ export const adminAddProduct = async (req, res) => {
                 image4  || null,
                 image5  || null,
                 sizes   || "[]",
-                is_most_sold    === "true" || is_most_sold    === true  ? true : false,
-                is_new          === "true" || is_new          === true  ? true : false,
+                is_most_sold    === "true" || is_most_sold    === true ? true : false,
+                is_new          === "true" || is_new          === true ? true : false,
                 discount ? parseInt(discount) : 0,
-                is_out_of_stock === "true" || is_out_of_stock === true  ? true : false,
+                is_out_of_stock === "true" || is_out_of_stock === true ? true : false,
             ]
         );
 
@@ -175,7 +176,6 @@ export const adminUpdateProduct = async (req, res) => {
 
         const existing = product.rows[0];
 
-        // Use new uploaded image from Cloudinary, or body URL, or keep existing
         const image = req.file ? req.file.path : (bodyImage || existing.image);
 
         const updatedProduct = await pool.query(
@@ -262,7 +262,11 @@ export const updateOrderStatus = async (req, res) => {
             "UPDATE orders SET status=$1 WHERE id=$2 RETURNING *",
             [status, id]
         );
-        res.status(200).json({ success: true, message: "Order Status Updated", order: updated.rows[0] });
+        res.status(200).json({
+            success: true,
+            message: "Order Status Updated",
+            order: updated.rows[0],
+        });
     } catch (error) {
         console.log(error);
         res.status(500).json({ success: false, message: "Server Error" });
