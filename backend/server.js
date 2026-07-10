@@ -30,6 +30,10 @@ const io = new Server(httpServer, {
   },
 });
 
+//limit the user only allow 1000 user to login at a time
+
+//http loading chnage it to https
+
 setIO(io);
 
 io.on("connection", (socket) => {

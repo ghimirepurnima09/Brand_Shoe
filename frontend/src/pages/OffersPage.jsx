@@ -16,7 +16,7 @@ const getProductImage = (product) => {
 
 export default function OffersPage() {
   const location = useLocation();
-  const { wishlist, addToWishlist } = useWishlist();
+  const { wishlist, addToWishlist, removeFromWishlist } = useWishlist();
   const { addToCart, cart } = useCart();
 
   const [products, setProducts]           = useState([]);
@@ -65,6 +65,18 @@ export default function OffersPage() {
   const clearFilters = () => { setSelectedBrands([]); setSelectedSizes([]); setSelectedCategory("All"); setPriceRange([0, maxPrice]); };
   const hasActiveFilters = selectedBrands.length > 0 || selectedCategory !== "All" || priceRange[0] > 0 || priceRange[1] < maxPrice;
   const getCartCount = (productId) => cart.filter((item) => item.id === productId).reduce((sum, item) => sum + item.quantity, 0);
+
+  // ── WISHLIST TOGGLE — add if not present, remove if already present ──
+  const handleToggleWishlist = (product) => {
+    const already = wishlist.some((item) => item.id === product.id);
+    if (already) {
+      removeFromWishlist(product.id);
+      toast.success("Removed from Wishlist");
+    } else {
+      addToWishlist(product);
+      toast.success("Added to Wishlist");
+    }
+  };
 
   return (
     <section className="bg-black min-h-screen pb-20">
@@ -207,7 +219,8 @@ export default function OffersPage() {
                       <div className="absolute top-4 left-4 bg-[#8da27f] text-white px-4 py-1.5 rounded-full text-[11px] tracking-[2px] font-bold flex items-center gap-1.5">
                         <Tag size={12} /> {discount}% OFF
                       </div>
-                      <button onClick={() => { addToWishlist(product); toast.success("Added to Wishlist"); }}
+                      <button
+                        onClick={() => handleToggleWishlist(product)}
                         className={`absolute top-4 right-4 w-10 h-10 rounded-full flex items-center justify-center shadow-lg transition ${wishlist.some((item) => item.id === product.id) ? "bg-red-500 text-white" : "bg-white text-black hover:bg-red-500 hover:text-white"}`}>
                         <Heart size={18} fill={wishlist.some((item) => item.id === product.id) ? "currentColor" : "none"} />
                       </button>

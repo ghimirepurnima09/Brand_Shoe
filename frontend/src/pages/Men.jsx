@@ -30,7 +30,7 @@ export default function Men() {
   const [openSize,          setOpenSize]          = useState(true);
   const [openPrice,         setOpenPrice]         = useState(true);
 
-  const { wishlist, addToWishlist } = useWishlist();
+  const { wishlist, addToWishlist, removeFromWishlist } = useWishlist();
   const { addToCart, cart }         = useCart();
 
   useEffect(() => {
@@ -116,6 +116,18 @@ export default function Men() {
   const handleAddToCart = (product) => {
     addToCart(product, "Default");
     toast.success("Added to Cart!");
+  };
+
+  // ── WISHLIST TOGGLE — add if not present, remove if already present ──
+  const handleToggleWishlist = (product) => {
+    const already = wishlist.some((item) => item.id === product.id);
+    if (already) {
+      removeFromWishlist(product.id);
+      toast.success("Removed from Wishlist");
+    } else {
+      addToWishlist(product);
+      toast.success("Added to Wishlist");
+    }
   };
 
   const getCartCount = (productId) =>
@@ -274,7 +286,7 @@ export default function Men() {
                         />
                       </Link>
                       <button
-                        onClick={() => { addToWishlist(product); toast.success("Added to Wishlist"); }}
+                        onClick={() => handleToggleWishlist(product)}
                         className={`absolute top-4 right-4 w-10 h-10 rounded-full flex items-center justify-center shadow-lg transition ${
                           wishlist.some((item) => item.id === product.id)
                             ? "bg-red-500 text-white"

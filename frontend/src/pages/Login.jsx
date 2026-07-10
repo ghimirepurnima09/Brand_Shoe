@@ -4,12 +4,15 @@ import { Link } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import Shoe6 from "../assets/Shoe6.png";
 import logo from "../assets/logo.png";
+import { useWishlist } from "../context/WishlistContext";
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [email,        setEmail]        = useState("");
   const [password,     setPassword]     = useState("");
   const [loading,      setLoading]      = useState(false);
+
+  const { setActiveUser } = useWishlist();
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -33,6 +36,8 @@ export default function Login() {
         localStorage.setItem("token",  data.token);
         localStorage.setItem("userId", data.user.id);           // needed for socket room
         localStorage.setItem("user",   JSON.stringify(data.user));
+
+        setActiveUser(data.user.id);
 
         toast.success(data.message || "Login successful!");
         window.location.href = "/mainhome";

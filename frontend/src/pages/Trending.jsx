@@ -18,7 +18,7 @@ export default function Trending() {
   const location = useLocation();
   const isActualHome = location.pathname === "/mainhome";
 
-  const { wishlist, addToWishlist } = useWishlist();
+  const { wishlist, addToWishlist, removeFromWishlist } = useWishlist();
   const { addToCart, cart } = useCart();
 
   const [products, setProducts] = useState([]);
@@ -42,6 +42,18 @@ export default function Trending() {
 
   const getCartCount = (productId) =>
     cart.filter((item) => item.id === productId).reduce((sum, item) => sum + item.quantity, 0);
+
+  // ── WISHLIST TOGGLE — add if not present, remove if already present ──
+  const handleToggleWishlist = (product) => {
+    const already = wishlist.some((item) => item.id === product.id);
+    if (already) {
+      removeFromWishlist(product.id);
+      toast.success("Removed from Wishlist");
+    } else {
+      addToWishlist(product);
+      toast.success("Added to Wishlist");
+    }
+  };
 
   const STOCK_LABELS = ["LOW STOCK", "LIMITED", "IN STOCK", "NEW DROP"];
 
@@ -76,7 +88,7 @@ export default function Trending() {
               <div className="flex justify-between items-center">
                 <p className="bg-white px-4 py-2 rounded-full text-[11px] font-bold">AUTHENTIC SHIELD</p>
                 <button
-                  onClick={() => { addToWishlist(product); toast.success("Added to Wishlist"); }}
+                  onClick={() => handleToggleWishlist(product)}
                   className={`transition ${wishlist.some((item) => item.id === product.id) ? "text-red-500" : "text-gray-400 group-hover:text-red-500"}`}
                 >
                   <Heart size={20} fill={wishlist.some((item) => item.id === product.id) ? "currentColor" : "none"} />

@@ -255,9 +255,8 @@ function CheckoutForm({
                   ))}
                 </div>
                 <div className="bg-[#635bff]/10 border border-[#635bff]/20 rounded-xl p-3.5">
-                  <p className="text-[#635bff] text-[11px] font-black uppercase tracking-[1px] mb-1">Test Mode</p>
                   <p className="text-gray-400 text-xs leading-relaxed">
-                    Card: <span className="text-white font-mono tracking-wider">4242 4242 4242 4242</span> · Any future date · Any 3-digit CVV
+                    Card: <span className="text-white font-mono tracking-wider">4242 4242 4242 4242</span>
                   </p>
                 </div>
               </div>
@@ -380,8 +379,31 @@ export default function Payment() {
 
   const [paymentMethod, setPaymentMethod] = useState("card");
   const [orderPlaced,   setOrderPlaced]   = useState(false);
-  const [form, setForm] = useState({
-    firstName: "", lastName: "", email: "", address: "", city: "", state: "", zip: "",
+
+  // ── Auto-fill name/email from the registered/logged-in user ───
+  // Lazy initializer: runs once, synchronously, before first render —
+  // no useEffect/setState-in-effect needed.
+  const [form, setForm] = useState(() => {
+    const base = { firstName: "", lastName: "", email: "", address: "", city: "", state: "", zip: "" };
+    try {
+      const user = JSON.parse(localStorage.getItem("user") || "{}");
+      if (!user) return base;
+
+      // Support either a single "name" field or separate first/last fields
+      let firstName = user.firstName || "";
+      let lastName  = user.lastName  || "";
+
+      if (!firstName && !lastName && user.name) {
+        const parts = user.name.trim().split(" ");
+        firstName = parts[0] || "";
+        lastName  = parts.slice(1).join(" ") || "";
+      }
+
+      return { ...base, firstName, lastName, email: user.email || "" };
+    } catch {
+      // ignore malformed localStorage data
+      return base;
+    }
   });
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
@@ -393,22 +415,22 @@ export default function Payment() {
   };
 
   // ── Empty state — only show if BOTH cart and buyNow are empty ─
-  if (activeCart.length === 0) {
-    return (
-      <>
-        <Navbar />
-        <section className="min-h-screen bg-black flex flex-col items-center justify-center gap-6">
-          <p className="text-gray-400 text-2xl font-bold">Your cart is empty!</p>
-          <button
-            onClick={() => navigate("/mainhome")}
-            className="px-8 h-12 rounded-full bg-[#8da27f] text-white font-bold tracking-[2px] uppercase hover:bg-white hover:text-black transition"
-          >
-            Shop Now
-          </button>
-        </section>
-      </>
-    );
-  }
+  // if (activeCart.length === 0) {
+  //   return (
+  //     <>
+  //       <Navbar />
+  //       <section className="min-h-screen bg-black flex flex-col items-center justify-center gap-6">
+  //         <p className="text-gray-400 text-2xl font-bold">Your cart is empty!</p>
+  //         <button
+  //           onClick={() => navigate("/mainhome")}
+  //           className="px-8 h-12 rounded-full bg-[#8da27f] text-white font-bold tracking-[2px] uppercase hover:bg-white hover:text-black transition"
+  //         >
+  //           Shop Now
+  //         </button>
+  //       </section>
+  //     </>
+  //   );
+  // }
 
   if (orderPlaced) {
     return (

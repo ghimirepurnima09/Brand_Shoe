@@ -167,8 +167,17 @@ export default function Dashboard() {
                   ) : (
                     recentUsers.map((u) => (
                       <div key={u.id} className="flex items-center gap-4 bg-black rounded-2xl border border-white/10 p-4">
-                        <div className="w-10 h-10 rounded-full bg-[#8da27f]/20 flex items-center justify-center shrink-0">
-                          <span className="text-[#8da27f] font-black">{u.name.charAt(0).toUpperCase()}</span>
+                        <div className="w-10 h-10 rounded-full bg-[#8da27f]/20 flex items-center justify-center shrink-0 overflow-hidden">
+                          {u.image ? (
+                            <img
+                              src={resolveImg(u.image)}
+                              alt={u.name}
+                              className="w-full h-full object-cover"
+                              onError={(e) => { e.target.style.display = "none"; }}
+                            />
+                          ) : (
+                            <span className="text-[#8da27f] font-black">{u.name.charAt(0).toUpperCase()}</span>
+                          )}
                         </div>
                         <div className="flex-1 min-w-0">
                           <p className="text-white font-bold text-sm truncate">{u.name}</p>

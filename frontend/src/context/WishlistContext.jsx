@@ -1,45 +1,45 @@
-import { createContext, useContext, useState } from "react";
-
+import { createContext, useContext, useEffect, useState } from "react";
 
 const WishlistContext = createContext();
 
 export const WishlistProvider = ({ children }) => {
+  const [wishlist, setWishlist] = useState([]);
 
-  const [wishlist, setWishlist] = useState(
-    JSON.parse(localStorage.getItem("wishlist")) || []
-  );
+  const [userId, setUserId] = useState(() => {
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+    return user.id || null;
+  });
+
+  const getKey = (id) => `wishlist_${id || "guest"}`;
+
+  // Reload wishlist whenever the active user changes (login/logout/signup)
+  useEffect(() => {
+    const stored = JSON.parse(localStorage.getItem(getKey(userId)) || "[]");
+    setWishlist(stored);
+  }, [userId]);
+
+  // Call this after login/signup succeeds, and after logout (pass null)
+  const setActiveUser = (id) => {
+    setUserId(id || null);
+  };
+
+  const save = (items) => {
+    localStorage.setItem(getKey(userId), JSON.stringify(items));
+    setWishlist(items);
+  };
 
   const addToWishlist = (product) => {
-
-    const exists = wishlist.find(
-      (item) => item.id === product.id
-    );
-
-    if (!exists) {
-
-      const updatedWishlist = [...wishlist, product];
-
-      setWishlist(updatedWishlist);
-
-      localStorage.setItem(
-        "wishlist",
-        JSON.stringify(updatedWishlist)
-      );
-    }
+    const exists = wishlist.some((i) => i.id === product.id);
+    if (exists) return;
+    save([...wishlist, product]);
   };
 
   const removeFromWishlist = (id) => {
+    save(wishlist.filter((i) => i.id !== id));
+  };
 
-    const updatedWishlist = wishlist.filter(
-      (item) => item.id !== id
-    );
-
-    setWishlist(updatedWishlist);
-
-    localStorage.setItem(
-      "wishlist",
-      JSON.stringify(updatedWishlist)
-    );
+  const clearWishlist = () => {
+    save([]);
   };
 
   return (
@@ -48,6 +48,8 @@ export const WishlistProvider = ({ children }) => {
         wishlist,
         addToWishlist,
         removeFromWishlist,
+        clearWishlist,
+        setActiveUser,
       }}
     >
       {children}
@@ -55,6 +57,4 @@ export const WishlistProvider = ({ children }) => {
   );
 };
 
-export const useWishlist = () => {
-  return useContext(WishlistContext);
-};
+export const useWishlist = () => useContext(WishlistContext);

@@ -30,7 +30,7 @@ export default function Kids() {
   const [openSize,         setOpenSize]         = useState(true);
   const [openPrice,        setOpenPrice]        = useState(true);
 
-  const { wishlist, addToWishlist } = useWishlist();
+  const { wishlist, addToWishlist, removeFromWishlist } = useWishlist();
   const { addToCart, cart }         = useCart();
 
   useEffect(() => {
@@ -85,6 +85,18 @@ export default function Kids() {
   const hasActiveFilters = selectedBrands.length > 0 || selectedSizes.length > 0 || selectedCategory !== "All" || priceRange[0] > 0 || priceRange[1] < maxPrice;
   const handleAddToCart  = (product) => { addToCart(product, "Default"); toast.success("Added to Cart!"); };
   const getCartCount     = (productId) => cart.filter((item) => item.id === productId).reduce((sum, item) => sum + item.quantity, 0);
+
+  // ── WISHLIST TOGGLE — add if not present, remove if already present ──
+  const handleToggleWishlist = (product) => {
+    const already = wishlist.some((item) => item.id === product.id);
+    if (already) {
+      removeFromWishlist(product.id);
+      toast.success("Removed from Wishlist");
+    } else {
+      addToWishlist(product);
+      toast.success("Added to Wishlist");
+    }
+  };
 
   return (
     <>
@@ -196,7 +208,8 @@ export default function Kids() {
                       <Link to={`/product/${product._id || product.id}`}>
                         <img src={resolveImg(product.image)} alt={product.name} className="w-full h-full object-cover hover:scale-110 transition duration-700 cursor-pointer" onError={(e) => { e.target.src = "https://via.placeholder.com/500x500?text=No+Image"; }} />
                       </Link>
-                      <button onClick={() => { addToWishlist(product); toast.success("Added to Wishlist"); }}
+                      <button
+                        onClick={() => handleToggleWishlist(product)}
                         className={`absolute top-4 right-4 w-10 h-10 rounded-full flex items-center justify-center shadow-lg transition ${wishlist.some((item) => item.id === product.id) ? "bg-red-500 text-white" : "bg-white text-black hover:bg-red-500 hover:text-white"}`}>
                         <Heart size={18} fill={wishlist.some((item) => item.id === product.id) ? "currentColor" : "none"} />
                       </button>
